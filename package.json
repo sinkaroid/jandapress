@@ -2,16 +2,17 @@
   "name": "jandapress",
   "version": "1.0.1",
   "description": "A reimagined doujin API around the world",
-  "main": "index.ts",
+  "main": "build/index.js",
   "scripts": {
     "build": "rm -rf build && tsc",
+    "start": "node build/index.js",
     "test": "ts-node test/test.ts",
-    "start": "nodemon index.ts",
     "start:prod": "npm run build && node build/index.js",
+    "start:dev": "nodemon index.ts",
     "lint": "npx eslint . --ext .ts",
     "lint:fix": "npx eslint . --fix",
     "tsc": "tsc",
-    "postinstall": "npm run tsc"
+    "postinstall": "npm run build"
   },
   "keywords": [],
   "author": "sinkaroid",
