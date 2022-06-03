@@ -1,3 +1,5 @@
+import p from "phin";
+
 function getPururinInfo(value: string) {
   return value.replace(/\n/g, " ").replace(/\s\s+/g, " ").trim();
 }
@@ -44,6 +46,17 @@ function timeAgo(input: Date) {
   }
 }
 
+async function mock(url: string) {
+  const site = await p({ url: url });
+  if (site.statusCode === 200) {
+    return true;
+  } else if (site.statusCode === 308) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 
-export { getPururinInfo, getPururinPageCount, getUrl, getId, getDate, timeAgo };
+
+export { getPururinInfo, getPururinPageCount, getUrl, getId, getDate, timeAgo, mock };

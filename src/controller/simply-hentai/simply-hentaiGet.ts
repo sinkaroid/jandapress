@@ -1,11 +1,17 @@
-import { scrapeContent } from "../../scraper/nhentai/nhentaiGetController";
+import { scrapeContent } from "../../scraper/simply-hentai/simply-hentaiGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
+import { mock } from "../../utils/modifier";
 
-export async function getNhentai(req: any, res: any) {
+export async function getSimplyhentai(req: any, res: any) {
   try {
     const book = req.query.book || "";
-    const url = `${c.NHENTAI_IP}/api/gallery/${book}`;
+    if (!book) throw Error("Parameter book is required");
+
+    let actualAPI;
+    if (!await mock(c.SIMPLY_HENTAI)) actualAPI = c.SIMPLY_HENTAI_PROXIFIED;
+    
+    const url = `${actualAPI}/${book}`;
     const data = await scrapeContent(url);
     logger.info({
       path: req.path,

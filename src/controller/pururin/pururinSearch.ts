@@ -8,6 +8,7 @@ export async function searchPururin(req: any, res: any, next: any) {
     const key = req.query.key || "";
     const page = req.query.page || 1;
     const sort = req.query.sort || sorting[0];
+    if (!key) throw Error("Parameter key is required");
     if (!sorting.includes(sort)) throw Error("Invalid short: " + sorting.join(", "));
     const url = `${c.PURURIN}/search/${sort}?q=${key}&page=${page}`;
     const data = await scrapeContent(url);

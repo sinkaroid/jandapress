@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import scrapeRoutes from "./router/endpoint";
 import { slow, limiter } from "./utils/limit-options";
 import { logger } from "./utils/logger";
-import * as pkg from "./package.json";
+import * as pkg from "../package.json";
 const app = express();
 
     
@@ -44,8 +44,4 @@ app.use((error: any, res: Response) => {
   });
 });
 
-app.get("/favico.ico", (_req, res) => {
-  res.sendStatus(404);
-});
-
-app.listen(process.env.PORT || 3000, () => console.log("Server running in port 3000"));
+app.listen(process.env.PORT || 3000, () => console.log(`${pkg.name} running in port 3000`));

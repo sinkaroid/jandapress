@@ -5,5 +5,6 @@ export default {
   SIMPLY_HENTAI: "https://simply-hentai.com",
   SIMPLY_HENTAI_PROXIFIED: "https://simplyh.sinxdr.workers.dev",
   NHENTAI: "https://nhentai.net",
-  NHENTAI_IP: "http://35.186.156.165"
+  NHENTAI_IP: "http://35.186.156.165",
+  NHENTAI_IP_2: "http://173.82.30.99:3002",
 };

@@ -1,12 +1,12 @@
-import { scrapeContent } from "../../scraper/hentaifox/hentaifoxGetController";
+import { scrapeContent } from "../../scraper/hentai2read/hentai2readSearchController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
 
-export async function getHentaifox(req: any, res: any, next: any) {
+export async function searchHentai2read(req: any, res: any, next: any) {
   try {
-    const book = req.query.book || "";
-    if (isNaN(book)) throw Error("Book must be number");
-    const url = `${c.HENTAIFOX}/gallery/${book}/`;
+    const key = req.query.key || "";
+    if (!key) throw Error("Parameter book is required");
+    const url = `${c.HENTAI2READ}/hentai-list/search/${key}`;
     const data = await scrapeContent(url);
     logger.info({
       path: req.path,
