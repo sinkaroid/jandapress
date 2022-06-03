@@ -10,7 +10,8 @@
     "start:prod": "npm run build && node build/index.js",
     "lint": "npx eslint . --ext .ts",
     "lint:fix": "npx eslint . --fix",
-    "postinstall": "npm run build"
+    "tsc": "tsc",
+    "postinstall": "npm run tsc"
   },
   "keywords": [],
   "author": "sinkaroid",
