@@ -8,6 +8,12 @@ export async function scrapeContent(url: string) {
     const rawData: any = res.body;
   
     const content = [];
+    const GALLERY = "https://i.nhentai.net/galleries";
+    const TYPE: any = {
+      j: "jpg",
+      p: "png",
+      g: "gif",
+    };
     for (let i = 0; i < rawData.result.length; i++) {
       const time = new Date(rawData.result[i].upload_date * 1000);
       const objectData = {
@@ -16,6 +22,7 @@ export async function scrapeContent(url: string) {
         language: rawData.result[i].tags.find((tag: any) => tag.type === "language") ? rawData.result[i].tags.find((tag: any) => tag.type === "language").name : null,
         upload_date: `${getDate(time)} (${timeAgo(time)})`,
         total: rawData.result[i].num_pages,
+        cover: `${GALLERY}/${rawData.result[i].media_id}/1.${TYPE[rawData.result[i].images.cover.t]}`,
         tags: rawData.result[i].tags.map((tag: any) => tag.name),
         
       };
