@@ -4,6 +4,22 @@ import c from "../../utils/options";
 import { isText } from "domhandler";
 import { getPururinInfo, getPururinPageCount } from "../../utils/modifier";
 
+interface ISearchPururin {
+  title: string;
+  cover: string;
+  id: number;
+  info: string;
+  link: string;
+  total: number;
+}
+
+interface IData {
+  data: object;
+  page: number;
+  sort: string;
+  source: string;
+}
+
 export async function scrapeContent(url: string) {
   try {
     const res = await p(url);
@@ -20,25 +36,25 @@ export async function scrapeContent(url: string) {
     }
 
     const content = [];
-    for (const elm of dataRaw) {
+    for (const abc of dataRaw) {
 
-      const objectData = {
-        title: elm.attribs["alt"],
-        cover: elm.attribs["data-src"].replace(/^\/\//, "https://"),
-        id: elm.attribs["data-src"].split("data/")[1].split("/cover")[0],
-        info: infoBook[dataRaw.index(elm)],
-        link: `${c.PURURIN}/gallery/${elm.attribs["data-src"].split("data/")[1].split("/cover")[0]}/janda`,
-        total: getPururinPageCount(infoBook[dataRaw.index(elm)])
+      const objectData: ISearchPururin = {
+        title: abc.attribs["alt"],
+        cover: abc.attribs["data-src"].replace(/^\/\//, "https://"),
+        id: parseInt(abc.attribs["data-src"].split("data/")[1].split("/cover")[0]),
+        info: infoBook[dataRaw.index(abc)],
+        link: `${c.PURURIN}/gallery/${abc.attribs["data-src"].split("data/")[1].split("/cover")[0]}/janda`,
+        total: getPururinPageCount(infoBook[dataRaw.index(abc)])
       };
       content.push(objectData);
 
     }
 
-    const data = {
+    const data: IData = {
       data: content,
-      page: Number(url.split("&page=")[1]),
+      page: parseInt(url.split("&page=")[1]),
       sort: url.split("/search/")[1].split("?")[0],
-      source: c.PURURIN,
+      source: c.PURURIN
     };
     return data;
   } catch (err: any) {

@@ -2,6 +2,15 @@ import { load } from "cheerio";
 import p from "phin";
 import c from "../../utils/options";
 
+interface ISimplyHentaiGet {
+  title: string;
+  id: string;
+  tags: string[];
+  total: number;
+  image: string[];
+  language: string;
+}
+
 export async function scrapeContent(url: string) {
   try {
     const res = await p(url);
@@ -16,14 +25,13 @@ export async function scrapeContent(url: string) {
     const language = json.props.pageProps.data.language;
     const metaRaw= json.props.pageProps.meta;
    
-    const objectData = {
+    const objectData: ISimplyHentaiGet = {
       title: metaRaw.title,
       id: url.replace(c.SIMPLY_HENTAI_PROXIFIED, ""),
       tags: tags,
       total: images.length,
       image: images,
       language: language.slug
-
     };
 
     const data = {

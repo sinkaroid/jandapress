@@ -2,6 +2,23 @@ import p from "phin";
 import c from "../../utils/options";
 import { getDate, timeAgo } from "../../utils/modifier";
 
+interface INhentaiGet {
+  title: string;
+  optional_title: object;
+  id: number;
+  language: string;
+  tags: string[];
+  total: number;
+  image: string[];
+  num_pages: number;
+  num_favorites: number;
+  artist: string[];
+  group: string;
+  parodies: string;
+  characters: string[];
+  upload_date: string;
+}
+
 export async function scrapeContent(url: string) {
   try {
     const res = await p({ url: url, parse: "json" });
@@ -47,7 +64,7 @@ export async function scrapeContent(url: string) {
 
     const time = new Date(dataRaw.upload_date * 1000);
 
-    const objectData = {
+    const objectData: INhentaiGet = {
       title: dataRaw.title.pretty,
       optional_title: {
         english: dataRaw.title.english,
@@ -66,7 +83,6 @@ export async function scrapeContent(url: string) {
       parodies: parodies,
       characters: characters,
       upload_date: `${getDate(time)} (${timeAgo(time)})`,
-
     };
 
     const data = {

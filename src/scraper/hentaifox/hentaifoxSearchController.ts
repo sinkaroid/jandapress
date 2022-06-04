@@ -2,6 +2,14 @@ import { load } from "cheerio";
 import p from "phin";
 import c from "../../utils/options";
 
+interface IHentaiFoxSearch {
+  title: string;
+  cover: string;
+  id: number;
+  category: string;
+  link: string;
+}
+
 export async function scrapeContent(url: string) {
   try {
     const res = await p(url);
@@ -25,13 +33,12 @@ export async function scrapeContent(url: string) {
     
     const content = [];
     for (const abc of title) {
-      const objectData = {
+      const objectData: IHentaiFoxSearch = {
         title: title[title.indexOf(abc)],
         cover: imgSrcClean[title.indexOf(abc)],
-        id: link[title.indexOf(abc)],
+        id: parseInt(link[title.indexOf(abc)]),
         category: category[title.indexOf(abc)],
         link: `${c.HENTAIFOX}/gallery/${link[title.indexOf(abc)]}`,
-        
       };
       content.push(objectData);
 

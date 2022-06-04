@@ -3,14 +3,28 @@ import p from "phin";
 import c from "../../utils/options";
 import { getPururinInfo, getUrl } from "../../utils/modifier";
 
+interface IGetPururin {
+  title: string;
+  id: number;
+  tags: string[];
+  extension: string;
+  total: number;
+  image: string[];
+}
+
+interface IData{
+  data: object;
+  source: string;
+}
+
 export async function scrapeContent(url: string) {
   try {
     const res = await p(url);
     const $ = load(res.body);
-    const title = $("div.content-wrapper h1").html();
+    const title: string = $("div.content-wrapper h1").html() || "";
     
-    const tags: string[] = $("div.content-wrapper ul.list-inline li").map((i, elm) => {
-      return getPururinInfo($(elm).text());
+    const tags: string[] = $("div.content-wrapper ul.list-inline li").map((i, abc) => {
+      return getPururinInfo($(abc).text());
     }).get();
 
     const cover = $("meta[property='og:image']").attr("content");
@@ -23,18 +37,18 @@ export async function scrapeContent(url: string) {
       image.push(`${getUrl(cover?.replace("cover", `${i + 1}`) ?? "")}`);
     }
 
-    const objectData = {
-      title: title,
-      id: id,
-      tags: tags,
-      type: extension,
-      total: total,
-      image: image
+    const objectData: IGetPururin = {
+      title,
+      id,
+      tags,
+      extension,
+      total,
+      image
     };
 
-    const data = {
+    const data: IData = {
       data: objectData,
-      source: `${c.PURURIN}/gallery/${id}/janda`,
+      source: `${c.PURURIN}/gallery/${id}/janda`
     };
     return data;
   } catch (err: any) {

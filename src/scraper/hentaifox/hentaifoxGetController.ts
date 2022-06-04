@@ -2,11 +2,20 @@ import { load } from "cheerio";
 import p from "phin";
 import c from "../../utils/options";
 
+interface IHentaiFoxGet {
+  title: string;
+  id: number;
+  tags: string[];
+  type: string;
+  total: number;
+  image: string[];
+}
+
 export async function scrapeContent(url: string) {
   try {
     const res = await p(url);
     const $ = load(res.body as Buffer);
-    const id = $("a.g_button")?.attr("href")?.split("/")[2];
+    const id = parseInt($("a.g_button")?.attr("href")?.split("/")[2] || "");
   
     const category = $("a.tag_btn").map((i, abc) => {
       return $(abc)?.text()?.replace(/[0-9]/g, "").trim();
@@ -20,21 +29,20 @@ export async function scrapeContent(url: string) {
       return $(abc).text();
     }).get();
 
-    const pageCount = info[0].replace(/[^0-9]/g, "");
+    const pageCount = parseInt(info[0].replace(/[^0-9]/g, ""));
     const image = [];
     for (let i = 0; i < Number(pageCount); i++) {
       image.push(`${parameterImg}/${i + 1}${extensionImg}`);
     }
     const titleInfo = $("div.info").children("h1").text();
    
-    const objectData = {
+    const objectData: IHentaiFoxGet = {
       title: titleInfo,
       id: id,
-      tags: category,     
+      tags: category,
       type: extensionImg,
       total: pageCount,
       image: image,
-
     };
 
     const data = {
