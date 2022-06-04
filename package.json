@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rm -rf build && tsc",
     "start": "node build/src/index.js",
-    "test": "npx ts-node test/test.ts",
+    "test": "ts-node test/test.ts",
     "start:prod": "npm run build && node build/src/index.js",
     "start:dev": "nodemon src/index.ts",
     "lint": "npx eslint . --ext .ts",
@@ -34,6 +34,7 @@
     "eslint": "^7.32.0",
     "nodemon": "^2.0.15",
     "npx": "^10.2.2",
+    "ts-node": "^10.8.1",
     "typescript": "4.6.3"
   },
   "engines": {
