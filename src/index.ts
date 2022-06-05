@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import scrapeRoutes from "./router/endpoint";
 import { slow, limiter } from "./utils/limit-options";
 import { logger } from "./utils/logger";
+import { isNumeric } from "./utils/modifier";
 import * as pkg from "../package.json";
 const app = express();
 
@@ -24,6 +25,10 @@ app.get("/", slow, limiter, (req, res) => {
 });
 
 app.use(scrapeRoutes());
+app.get("/g/:id", slow, limiter, (req, res) => {
+  if (!isNumeric(req.params.id)) throw Error("Parameter id must be number");
+  res.redirect(301, `https://nhentai.net/g/${req.params.id}`);
+});
 
 
 app.use((req: Request, res: Response, next: NextFunction) => {
