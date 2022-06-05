@@ -26,7 +26,7 @@ app.get("/", slow, limiter, (req, res) => {
 
 app.use(scrapeRoutes());
 app.get("/g/:id", slow, limiter, (req, res) => {
-  if (!isNumeric(req.params.id)) throw Error("Parameter id must be number");
+  if (!isNumeric(req.params.id)) throw Error("This path need required number to work");
   res.redirect(301, `https://nhentai.net/g/${req.params.id}`);
 });
 
