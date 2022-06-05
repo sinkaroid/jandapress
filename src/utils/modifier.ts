@@ -57,6 +57,9 @@ async function mock(url: string) {
   }
 }
 
+export const isNumeric = (val: string) : boolean => {
+  return !isNaN(Number(val));
+};
 
 
 export { getPururinInfo, getPururinPageCount, getUrl, getId, getDate, timeAgo, mock };
