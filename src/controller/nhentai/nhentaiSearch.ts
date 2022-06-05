@@ -13,7 +13,7 @@ export async function searchNhentai(req: any, res: any) {
     if (!sorting.includes(sort)) throw Error("Invalid short: " + sorting.join(", "));
 
     let actualAPI;
-    if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP;
+    if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP_2;
 
     const url = `${actualAPI}/api/galleries/search?query=${key}&sort=${sort}&page=${page}`;
     const data = await scrapeContent(url);
