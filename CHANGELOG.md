@@ -1,3 +1,53 @@
+#### 1.0.5 (2022-06-07)
+
+##### Chores
+
+* **release:**
+  *  1.0.5-dev (38898fd7)
+  *  1.0.4-dev (0241caae)
+*  add minor files (f18cb5a0)
+
+##### Documentation Changes
+
+*  add changelogs (5003f845)
+
+##### New Features
+
+* **nhentai:**  staged changes (0d9215d4)
+*  add redirect to nhentai path (20775a34)
+*  add redirect to nhentai path (d6ae2acb)
+* **utils:**  add isNumeric method (093acc07)
+
+##### Bug Fixes
+
+* **modifier:**  removed outdated method (85f0df53)
+* **nhentai:**  staged changes (26e37509)
+
+##### Other Changes
+
+*  update dependency, move to cookie branch (b6a0ee11)
+* id` route looks clearly (2dfa7899)
+
+#### 1.0.4 (2022-06-05)
+
+##### Chores
+
+* **release:**  1.0.4-dev (0241caae)
+
+##### Documentation Changes
+
+*  add changelogs (5003f845)
+
+##### New Features
+
+*  add redirect to nhentai path (20775a34)
+*  add redirect to nhentai path (d6ae2acb)
+* **utils:**  add isNumeric method (093acc07)
+
+##### Other Changes
+
+* id` route looks clearly (2dfa7899)
+
 #### 1.0.3 (2022-06-04)
 
 ##### Build System / Dependencies
