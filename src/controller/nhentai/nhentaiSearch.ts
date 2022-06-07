@@ -14,6 +14,7 @@ export async function searchNhentai(req: any, res: any) {
 
     let actualAPI;
     if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP;
+    else actualAPI = c.NHENTAI;
 
     const url = `${actualAPI}/api/galleries/search?query=${key}&sort=${sort}&page=${page}`;
     const data = await scrapeContent(url);

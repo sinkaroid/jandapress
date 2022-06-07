@@ -11,8 +11,10 @@ export async function getNhentai(req: any, res: any) {
 
     let actualAPI;
     if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP;
+    else actualAPI = c.NHENTAI;
     
     const url = `${actualAPI}/api/gallery/${book}`;
+    console.log(url);
     const data = await scrapeContent(url);
     logger.info({
       path: req.path,
