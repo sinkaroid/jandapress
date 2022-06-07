@@ -22,11 +22,9 @@
     "express": "^4.18.1",
     "express-rate-limit": "^6.4.0",
     "express-slow-down": "^1.4.0",
-    "http-cookie-agent": "^4.0.1",
     "phin": "^3.6.1",
     "pino": "^7.11.0",
-    "pino-pretty": "^8.0.0",
-    "tough-cookie": "^4.0.0"
+    "pino-pretty": "^8.0.0"
   },
   "devDependencies": {
     "@types/express-rate-limit": "^6.0.0",
@@ -37,7 +35,6 @@
     "@typescript-eslint/parser": "^5.18.0",
     "dotenv": "^16.0.1",
     "eslint": "^7.32.0",
-    "nhentai-api": "^3.4.3",
     "nodemon": "^2.0.15",
     "npx": "^10.2.2",
     "ts-node": "^10.8.1",
