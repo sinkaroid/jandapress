@@ -2,12 +2,13 @@ import { load } from "cheerio";
 import p from "phin";
 import c from "../../utils/options";
 import { isText } from "domhandler";
-import { getPururinInfo, getPururinPageCount } from "../../utils/modifier";
+import { getPururinInfo, getPururinPageCount, getPururinLanguage } from "../../utils/modifier";
 
 interface ISearchPururin {
   title: string;
   cover: string;
   id: number;
+  language: string;
   info: string;
   link: string;
   total: number;
@@ -35,6 +36,7 @@ export async function scrapeContent(url: string) {
       }
     }
 
+
     const content = [];
     for (const abc of dataRaw) {
 
@@ -42,6 +44,7 @@ export async function scrapeContent(url: string) {
         title: abc.attribs["alt"],
         cover: abc.attribs["data-src"].replace(/^\/\//, "https://"),
         id: parseInt(abc.attribs["data-src"].split("data/")[1].split("/cover")[0]),
+        language: getPururinLanguage(infoBook[dataRaw.index(abc)]) || "Unknown",
         info: infoBook[dataRaw.index(abc)],
         link: `${c.PURURIN}/gallery/${abc.attribs["data-src"].split("data/")[1].split("/cover")[0]}/janda`,
         total: getPururinPageCount(infoBook[dataRaw.index(abc)])
