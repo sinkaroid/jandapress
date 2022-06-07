@@ -1,4 +1,6 @@
 import p from "phin";
+import { load } from "cheerio";
+import c from "./options";
 
 
 function getPururinInfo(value: string) {
@@ -20,6 +22,10 @@ function getUrl(url: string) {
 
 function getId(url: string) {
   return url.replace(/^https?:\/\/[^\\/]+/, "").replace(/\/$/, "");
+}
+
+function removeNonNumeric(input: string) {
+  return input.replace(/[^0-9]/g, "");
 }
 
 function getDate(date: Date) {
@@ -66,5 +72,16 @@ export const isNumeric = (val: string) : boolean => {
   return !isNaN(Number(val));
 };
 
+export async function getIdRandomPururin (): Promise<number> {
+  const randomNumber = Math.floor(Math.random() * 500) + 1;
+  const raw = await p(`${c.PURURIN}/browse/random?page=${randomNumber}`);
+  const $ = load(raw.body);
+  const gallery = $("img.card-img-top").map((i, el) => $(el).attr("data-src")).get();
+  const galleryNumber = gallery.map(el => removeNonNumeric(el));
+  const randomgallery = galleryNumber[Math.floor(Math.random() * galleryNumber.length)];
+  return parseInt(randomgallery);
+}
 
-export { getPururinInfo, getPururinPageCount, getUrl, getId, getDate, timeAgo, mock, getPururinLanguage };
+
+export { getPururinInfo, getPururinPageCount, getUrl, getId, getDate, timeAgo, 
+  mock, getPururinLanguage, removeNonNumeric };
