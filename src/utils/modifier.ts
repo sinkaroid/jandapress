@@ -1,4 +1,29 @@
 import p from "phin";
+import { CookieJar } from "tough-cookie";
+import { HttpsCookieAgent } from "http-cookie-agent/http";
+import { config } from "dotenv";
+import * as pkg from "../../package.json";
+config();
+
+const jar = new CookieJar();
+jar.setCookie(process.env.CF as string, "https://nhentai.net/");
+
+async function nhentaiStatus(): Promise<boolean> {
+  const res = await p({
+    url: "https://nhentai.net/api/galleries/search?query=futanari",
+    core: {
+      agent: new HttpsCookieAgent({ cookies: { jar, }, }),
+    },
+    "headers": {
+      "User-Agent": `jandapress/${pkg.version} Node.js/16.9.1`
+    },
+  });
+  if (res.statusCode === 200) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 function getPururinInfo(value: string) {
   return value.replace(/\n/g, " ").replace(/\s\s+/g, " ").trim();
@@ -62,4 +87,4 @@ export const isNumeric = (val: string) : boolean => {
 };
 
 
-export { getPururinInfo, getPururinPageCount, getUrl, getId, getDate, timeAgo, mock };
+export { getPururinInfo, getPururinPageCount, getUrl, getId, getDate, timeAgo, mock, nhentaiStatus };

@@ -10,7 +10,7 @@ export async function relatedNhentai(req: any, res: any) {
     if (isNaN(book)) throw Error("Value must be number");
 
     let actualAPI;
-    if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP_2;
+    if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP;
     
     const url = `${actualAPI}/api/gallery/${book}/related`;
     const data = await scrapeContent(url);
