@@ -10,6 +10,10 @@ function getPururinPageCount(value: string) {
   return Number(data?.split(" ")[0]);
 }
 
+function getPururinLanguage(value: string) {
+  return value.split(",").reverse()[1].trim();
+}
+
 function getUrl(url: string) {
   return url.replace(/^\/\//, "https://");
 }
@@ -63,4 +67,4 @@ export const isNumeric = (val: string) : boolean => {
 };
 
 
-export { getPururinInfo, getPururinPageCount, getUrl, getId, getDate, timeAgo, mock };
+export { getPururinInfo, getPururinPageCount, getUrl, getId, getDate, timeAgo, mock, getPururinLanguage };
