@@ -25,11 +25,21 @@ app.get("/", slow, limiter, (req, res) => {
 });
 
 app.use(scrapeRoutes());
+
 app.get("/g/:id", slow, limiter, (req, res) => {
   if (!isNumeric(req.params.id)) throw Error("This path need required number to work");
   res.redirect(301, `https://nhentai.net/g/${req.params.id}`);
 });
 
+app.get("/p/:id", slow, limiter, (req, res) => {
+  if (!isNumeric(req.params.id)) throw Error("This path need required number to work");
+  res.redirect(301, `https://pururin.to/gallery/${req.params.id}/re=janda`);
+});
+
+app.get("/h/:id", slow, limiter, (req, res) => {
+  if (!isNumeric(req.params.id)) throw Error("This path need required number to work");
+  res.redirect(301, `https://hentaifox.com/gallery/${req.params.id}`);
+});
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(404);
