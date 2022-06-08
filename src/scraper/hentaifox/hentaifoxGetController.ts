@@ -13,7 +13,7 @@ interface IHentaiFoxGet {
 
 export async function scrapeContent(url: string) {
   try {
-    const res = await p(url);
+    const res = await p({ url: url, followRedirects: true });
     const $ = load(res.body as Buffer);
     const id = parseInt($("a.g_button")?.attr("href")?.split("/")[2] || "");
   

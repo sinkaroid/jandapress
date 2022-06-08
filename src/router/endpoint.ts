@@ -2,6 +2,7 @@ import { Router } from "express";
 import { searchHentaifox } from "../controller/hentaifox/hentaifoxSearch";
 import { getHentaifox } from "../controller/hentaifox/hentaifoxGet";
 import { getPururin } from "../controller/pururin/pururinGet";
+import { randomHentaifox } from "../controller/hentaifox/hentaifoxRandom";
 import { searchPururin } from "../controller/pururin/pururinSearch";
 import { randomPururin } from "../controller/pururin/pururinRandom";
 import { searchHentai2read } from "../controller/hentai2read/hentai2readSearch";
@@ -16,6 +17,7 @@ function scrapeRoutes() {
   const router = Router();
   router.get("/hentaifox/search", slow, limiter, searchHentaifox);
   router.get("/hentaifox/get", slow, limiter, getHentaifox);
+  router.get("/hentaifox/random", slow, limiter, randomHentaifox);
   router.get("/pururin/get", slow, limiter, getPururin);
   router.get("/pururin/search", slow, limiter, searchPururin);
   router.get("/pururin/random", slow, limiter, randomPururin);
