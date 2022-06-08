@@ -13,7 +13,7 @@ interface IHentaiFoxSearch {
 
 export async function scrapeContent(url: string) {
   try {
-    const res = await p(url);
+    const res = await p({ url: url, followRedirects: true });
     const $ = load(res.body as Buffer);
 
     const title = $("h2.g_title").map((i, abc) => {
