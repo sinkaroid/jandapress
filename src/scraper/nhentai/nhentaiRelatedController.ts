@@ -5,6 +5,7 @@ import { getDate, timeAgo } from "../../utils/modifier";
 interface INhentaiRelated {
   title: string;
   id: number;
+  language: string;
   upload_date: string;
   total: number;
   tags: string[];
@@ -21,6 +22,7 @@ export async function scrapeContent(url: string) {
       const objectData: INhentaiRelated = {
         title: rawData.result[i].title,
         id: rawData.result[i].id,
+        language: rawData.result[i].tags.find((tag: any) => tag.type === "language") ? rawData.result[i].tags.find((tag: any) => tag.type === "language").name : null,
         upload_date: `${getDate(time)} (${timeAgo(time)})`,
         total: rawData.result[i].num_pages,
         tags: rawData.result[i].tags.map((tag: any) => tag.name),
