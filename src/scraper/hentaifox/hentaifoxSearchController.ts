@@ -6,6 +6,7 @@ interface IHentaiFoxSearch {
   title: string;
   cover: string;
   id: number;
+  language: string;
   category: string;
   link: string;
 }
@@ -37,6 +38,7 @@ export async function scrapeContent(url: string) {
         title: title[title.indexOf(abc)],
         cover: imgSrcClean[title.indexOf(abc)],
         id: parseInt(link[title.indexOf(abc)]),
+        language: "Translated",
         category: category[title.indexOf(abc)],
         link: `${c.HENTAIFOX}/gallery/${link[title.indexOf(abc)]}`,
       };
