@@ -11,6 +11,7 @@ import { getSimplyhentai } from "../controller/simply-hentai/simply-hentaiGet";
 import { getNhentai } from "../controller/nhentai/nhentaiGet";
 import { searchNhentai } from "../controller/nhentai/nhentaiSearch";
 import { relatedNhentai } from "../controller/nhentai/nhentaiRelated";
+import { randomNhentai } from "../controller/nhentai/nhentaiRandom";
 import { slow, limiter } from "../utils/limit-options";
 
 function scrapeRoutes() {
@@ -27,6 +28,7 @@ function scrapeRoutes() {
   router.get("/nhentai/get", slow, limiter, getNhentai);
   router.get("/nhentai/search", slow, limiter, searchNhentai);
   router.get("/nhentai/related", slow, limiter, relatedNhentai);
+  router.get("/nhentai/random", slow, limiter, randomNhentai);
 
   return router;
 }
