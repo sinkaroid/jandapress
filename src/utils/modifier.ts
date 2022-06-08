@@ -82,6 +82,16 @@ export async function getIdRandomPururin (): Promise<number> {
   return parseInt(randomgallery);
 }
 
+export async function getIdRandomNhentai (): Promise<number> {
+  const res: any = await p({
+    url: `${c.NHENTAI}/random`,
+    followRedirects: true,
+  });
+  
+  const getId = res.socket._httpMessage.path;
+  return parseInt(getId.replace(/^\/g\/([0-9]+)\/?$/, "$1"));
+}
+
 
 export { getPururinInfo, getPururinPageCount, getUrl, getId, getDate, timeAgo, 
   mock, getPururinLanguage, removeNonNumeric };
