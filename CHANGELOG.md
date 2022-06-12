@@ -1,3 +1,21 @@
+#### 1.0.6 (2022-06-12)
+
+##### Documentation Changes
+
+*  minor changes (2e88ce3c)
+
+##### Bug Fixes
+
+* **asmhentai:**
+  *  strict name (2c3892e1)
+  *  proper strict name (fcb56d03)
+
+#### 1.0.6 (2022-06-12)
+
+##### Documentation Changes
+
+*  minor changes (2e88ce3c)
+
 #### 1.0.5 (2022-06-07)
 
 ##### Chores
