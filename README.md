@@ -1,5 +1,5 @@
 <div align="center">
-<a href="https://janda.mod.land"><img width="400" src="https://cdn.discordapp.com/attachments/952117487166705747/984060462205399050/jandap.png" alt="jandapress"></a>
+<a href="https://janda.mod.land"><img width="450" src="https://cdn.discordapp.com/attachments/952117487166705747/984060462205399050/jandap.png" alt="jandapress"></a>
 
 <h4 align="center">Experimental doujinshi API with gather in mind</h4>
 <br>
