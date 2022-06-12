@@ -1,4 +1,4 @@
-import { scrapeContent } from "../../scraper/asmhentai/asmHentaiSearchController";
+import { scrapeContent } from "../../scraper/asmhentai/asmhentaiSearchController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
 
