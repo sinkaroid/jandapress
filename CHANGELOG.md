@@ -1,3 +1,9 @@
+#### 1.0.7 (2022-06-14)
+
+##### Documentation Changes
+
+*  fix minor text on readme (a956121c)
+
 #### 1.0.6 (2022-06-12)
 
 ##### Documentation Changes
