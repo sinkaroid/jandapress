@@ -5,6 +5,7 @@
 <p align="center">
 	<a href="https://github.com/sinkaroid/jandapress/actions/workflows/status.yml"><img src="https://github.com/sinkaroid/jandapress/actions/workflows/status.yml/badge.svg"></a>
 	<a href="https://codeclimate.com/github/sinkaroid/jandapress/maintainability"><img src="https://api.codeclimate.com/v1/badges/829b8fe63ab78a425f0b/maintainability" /></a>
+  <a href="https://discord.gg/8wj4vM5hHM"><img src="https://img.shields.io/discord/831142227676889088"></a>
 </p>
 
 Jandapresspress was named **JCE** (Janda Cheerio Express) and definitely depends on them.  
@@ -17,13 +18,17 @@ The motivation of this project is to bring you an actionable data related doujin
 
 ---
 
-<a href="http://sinkaroid.github.io/booru"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/986315079802814524/tomoe.png" width="250"></a>
+<a href="https://janda.mod.land"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/986315079802814524/tomoe.png" width="250"></a>
 
 - [Jandapress](#)
   - [The problem](#the-problem)
   - [The solution](#the-solution)
   - [Features](#features)
     - [Jandapress vs the doujinboards](#jandapress-vs-the-doujinboards)
+
+  - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Running tests](#running-tests)
   - [Routing](#routing)
     - [nhentai-api](#routing)
     - [pururin-api](#routing)
@@ -34,6 +39,8 @@ The motivation of this project is to bring you an actionable data related doujin
   - [Limitations](#limitations)
   - [Pronunciation](#Pronunciation)
   - [Legal](#legal)
+  - [Project showcase](#project-showcase)
+  - [Client libraries / Wrappers](#client-libraries-wrappers)
 
 
 ## The problem
@@ -41,7 +48,6 @@ You enjoy using some doujin sites to build web applications. There are a lot sit
 
 ## The solution
 Luckily there are solutions. Jandapress is here
-
 
 ## Features
 
@@ -51,7 +57,38 @@ Luckily there are solutions. Jandapress is here
 - All in one: get, search, and random methods
 - Free to use(currently): In the future we may implement JWT authentication
 - Pure scraping
-### Jandapress vs. the doujinboards
+
+## 🚀Installation
+If you want add or deploy your own Jandapress
+
+- Clone this repository
+  - `git clone https://github.com/sinkaroid/jandapress.git`
+- Install dependencies
+  - `npm install / yarn install`
+
+## Prerequisites
+<table>
+	<td><b>NOTE:</b> NodeJS 14.x or higher</td>
+</table>
+
+## Running tests
+
+### Start the production server
+`npm run start:prod`
+
+### Running development server
+`npm run start:dev`
+
+### Check the whole sites, It's available for scraping or not
+`npm run test`
+
+### Check nhentai It's under cloudflare protection or not
+`npm run test:cf`
+
+> To running other method, you can see object scripts in file `package.json`, Default port is `3000`
+
+
+## Jandapress vs. the doujinboards
 
 | Site            | Status                                                                                                                                                                            | Get | Search | Random |
 | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | ------ | ------ |
@@ -117,3 +154,12 @@ Check [`cookie branch`](https://github.com/sinkaroid/jandapress/tree/cookie) or 
 
 ## Pronunciation
 [`id_ID`](https://www.localeplanet.com/java/id-ID/index.html) • **/jan·da/** — dewasa dan mengikat; _(?)_
+
+## Project showcase
+- [tomoe](https://github.com/sinkaroid/tomoe) — A reliable doujinshi downloader with ease by [sinkaroid](https://github.com/sinkaroid)
+- [Scathach bot](https://scathach.dev) — A doujinshi aggregator Discord bot by [sinkaroid](https://github.com/sinkaroid)
+- Or [create your own](https://github.com/sinkaroid/jandapress/edit/master/README.md)
+
+## Client libraries / Wrappers
+- [janda](https://github.com/sinkaroid/janda) Python wrapper by [sinkaroid](https://github.com/sinkaroid)
+- Or [create your own](https://github.com/sinkaroid/jandapress/edit/master/README.md)
