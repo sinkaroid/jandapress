@@ -33,5 +33,5 @@ jobs:
       - name: Start server
         run: npm run start
 
-      - name: Test curl
-        run: curl localhost:3000
+      - name: Test
+        run: curl http://localhost:3000/
