@@ -5,7 +5,6 @@
 <p align="center">
 	<a href="https://github.com/sinkaroid/jandapress/actions/workflows/status.yml"><img src="https://github.com/sinkaroid/jandapress/actions/workflows/status.yml/badge.svg"></a>
 	<a href="https://codeclimate.com/github/sinkaroid/jandapress/maintainability"><img src="https://api.codeclimate.com/v1/badges/829b8fe63ab78a425f0b/maintainability" /></a>
-  <a href="https://discord.gg/8wj4vM5hHM"><img src="https://img.shields.io/discord/831142227676889088"></a>
 </p>
 
 Jandapresspress was named **JCE** (Janda Cheerio Express) and definitely depends on them.  
