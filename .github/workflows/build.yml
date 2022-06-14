@@ -30,9 +30,5 @@ jobs:
       - name: Build
         run: npm run build
 
-    after:
-      - name: Start server
-        run: npm run start
-
-      - name: Test curl
-        run: curl http://localhost:3000/
+      - name: Test
+        run: npm run ci
