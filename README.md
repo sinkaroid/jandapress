@@ -7,7 +7,7 @@
 	<a href="https://codeclimate.com/github/sinkaroid/jandapress/maintainability"><img src="https://api.codeclimate.com/v1/badges/829b8fe63ab78a425f0b/maintainability" /></a>
 </p>
 
-jandapresspress was named **JCE** (jandapress Cherrio Express) and definitely depends on them.  
+jandapresspress was named **JCE** (jandapress Cheerio Express) and definitely depends on them.  
 The motivation of this project is to bring you an actionable data related doujin with gather in mind.
 
 <a href="https://github.com/sinkaroid/jandapress/blob/master/CONTRIBUTING.md">Contributing</a> •
@@ -16,6 +16,12 @@ The motivation of this project is to bring you an actionable data related doujin
 </div>
 
 ---
+
+## The problem
+You enjoy using some doujin sites to build web applications. There are a lot doujinshi sites that have hq effort especially pururin, simply-hentai and so on, not official api available nor public resource that can be used for everyone. Instead make lots of abstraction or enumerating them manually, You can using jandapress to make less of pain.
+
+## The solution
+Luckily there are solutions. Jandapress is here.
 
 ## Routing
 
