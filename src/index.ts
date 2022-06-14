@@ -41,6 +41,11 @@ app.get("/h/:id", slow, limiter, (req, res) => {
   res.redirect(301, `https://hentaifox.com/gallery/${req.params.id}`);
 });
 
+app.get("/a/:id", slow, limiter, (req, res) => {
+  if (!isNumeric(req.params.id)) throw Error("This path need required number to work");
+  res.redirect(301, `https://asmhentai.com/g/${req.params.id}`);
+});
+
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(404);
   next(Error(`The page not found in path ${req.url} and method ${req.method}`));
