@@ -18,7 +18,7 @@ The motivation of this project is to bring you an actionable data related doujin
 
 ---
 
-<a href="https://janda.mod.land"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/986315079802814524/tomoe.png" width="250"></a>
+<a href="https://janda.mod.land"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/986315079802814524/tomoe.png" width="300"></a>
 
 - [Jandapress](#)
   - [The problem](#the-problem)
