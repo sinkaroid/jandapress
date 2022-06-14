@@ -12,7 +12,8 @@
     "start:dev": "nodemon src/index.ts",
     "lint": "npx eslint . --ext .ts",
     "lint:fix": "npx eslint . --fix",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "ci": "npx start-server-and-test http://localhost:3000"
   },
   "keywords": [],
   "author": "sinkaroid",
@@ -37,6 +38,7 @@
     "eslint": "^7.32.0",
     "nodemon": "^2.0.15",
     "npx": "^10.2.2",
+    "start-server-and-test": "^1.14.0",
     "ts-node": "^10.8.1",
     "typescript": "4.6.3"
   },
