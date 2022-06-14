@@ -100,7 +100,7 @@ If you want add or deploy your own Jandapress
 ## Routing
 the `parameter?`: means is optional.
 
-- `/` : Iindex page
+- `/` : index page
 - `/nhentai` : nhentai api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`, `?page`, `?sort`
