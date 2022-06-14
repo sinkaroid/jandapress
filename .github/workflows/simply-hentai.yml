@@ -1,4 +1,4 @@
-name: Nhentai test
+name: Simply-hentai test
 
 on:
   push:
@@ -24,5 +24,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Nhentai test
-        run: npm run test:nhentai
+      - name: Simply-hentai test
+        run: npm run test:simply-hentai
