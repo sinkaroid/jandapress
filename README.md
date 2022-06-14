@@ -39,7 +39,7 @@ The motivation of this project is to bring you an actionable data related doujin
   - [Pronunciation](#Pronunciation)
   - [Legal](#legal)
   - [Project showcase](#project-showcase)
-  - [Client libraries / Wrappers](#client-libraries-wrappers)
+  - [Client libraries / Wrappers](#client-libraries--wrappers)
 
 
 ## The problem
