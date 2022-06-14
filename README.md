@@ -25,7 +25,6 @@ The motivation of this project is to bring you an actionable data related doujin
   - [The solution](#the-solution)
   - [Features](#features)
     - [Jandapress vs the doujinboards](#jandapress-vs-the-doujinboards)
-
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
     - [Running tests](#running-tests)
