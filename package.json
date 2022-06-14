@@ -13,7 +13,7 @@
     "lint": "npx eslint . --ext .ts",
     "lint:fix": "npx eslint . --fix",
     "postinstall": "npm run build",
-    "ci": "npx start-server-and-test http://localhost:3000"
+    "test:nhentai": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/nhentai/get?book=177013 | jq '.'\""
   },
   "keywords": [],
   "author": "sinkaroid",

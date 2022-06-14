@@ -1,4 +1,4 @@
-name: Run build
+name: Nhentai test
 
 on:
   push:
@@ -24,8 +24,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Check lint
-        run: npm run lint
-        
-      - name: Build
-        run: npm run build
+      - name: Test
+        run: npm run test:nhentai
