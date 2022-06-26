@@ -21,6 +21,8 @@
     "strictPropertyInitialization": false,
     "declaration": true
   },
-  "include": ["**/*"],
+  "include": [
+    "src/**/*"
+  ],
   "exclude": ["node_modules", "build", "out", "tmp", "logs", "test"]
 }
