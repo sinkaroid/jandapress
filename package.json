@@ -1,6 +1,6 @@
 {
   "name": "jandapress",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "Experimental doujin API with gather in mind",
   "main": "build/src/index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "test": "ts-node test/test.ts",
     "test:cf": "ts-node test/nhentaiCookietest.ts",
     "start:prod": "npm run build && node build/src/index.js",
-    "start:dev": "nodemon src/index.ts",
+    "start:dev": "ts-node-dev src/index.ts",
     "lint": "npx eslint . --ext .ts",
     "lint:fix": "npx eslint . --fix",
     "postinstall": "npm run build",
@@ -43,10 +43,10 @@
     "@typescript-eslint/parser": "^5.18.0",
     "dotenv": "^16.0.1",
     "eslint": "^7.32.0",
-    "nodemon": "^2.0.15",
     "npx": "^10.2.2",
     "start-server-and-test": "^1.14.0",
     "ts-node": "^10.8.1",
+    "ts-node-dev": "^2.0.0",
     "typescript": "4.6.3"
   },
   "engines": {
