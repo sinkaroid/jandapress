@@ -23,7 +23,7 @@ The motivation of this project is to bring you an actionable data related doujin
   - [The problem](#the-problem)
   - [The solution](#the-solution)
   - [Features](#features)
-    - [Jandapress vs the whole doujin sites](#jandapress-vs-the-doujinboards)
+    - [Jandapress vs. the doujinboards](#jandapress-vs-the-whole-doujin-sites)
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
     - [Running tests](#running-tests)
@@ -149,10 +149,10 @@ Nhentai was cloudflare protection enabled, If IP and our thoughts against them? 
 
 ## Frequently asked questions 
 **Q: The website response is slow**  
-*That's unfortunate, This repository was opensource already, You can host and deploy Jandapress with your own instance. Any fixes and improvements will updating to this repo.*
+> That's unfortunate, This repository was opensource already, You can host and deploy Jandapress with your own instance. Any fixes and improvements will updating to this repo.
 
 **Q: I dont want to host my own instance**   
-*That's unfortunate, Feel free to hit the "Sponsor this project" button, any kind of donations will helps us to funding the development.*
+> That's unfortunate, Hit the "Sponsor this project" button, any kind of donations will helps me to funding the development.
 
 ## Pronunciation
 [`id_ID`](https://www.localeplanet.com/java/id-ID/index.html) • **/jan·da/** — dewasa dan mengikat; _(?)_
@@ -164,6 +164,5 @@ Nhentai was cloudflare protection enabled, If IP and our thoughts against them? 
 
 ## Legal
 This tool can be freely copied, modified, altered, distributed without any attribution whatsoever. However, if you feel
-like this tool deserves an attribution, mention it. It won't hurt anybody  
-
+like this tool deserves an attribution, mention it. It won't hurt anybody.
 > Licence: WTF.
