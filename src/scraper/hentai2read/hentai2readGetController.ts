@@ -27,7 +27,7 @@ export async function scrapeContent(url: string) {
     const gData = script.find(el => el.includes("var gData"));
     const gDataClean: string = gData?.replace(/[\s\S]*var gData = /, "").replace(/;/g, "").replace(/'/g, "\"") || "";
     const gDataJson = JSON.parse(gDataClean);
-    const images = gDataJson.images.map((el: any) => `https://cdn-ngocok-static.sinxdr.workers.dev/hentai${el}`);
+    const images = gDataJson.images.map((el: string) => `https://cdn-ngocok-static.sinxdr.workers.dev/hentai${el}`);
    
     const objectData: IHentai2readGet = {
       title: gDataJson.title,

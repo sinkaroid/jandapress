@@ -17,10 +17,10 @@ export async function scrapeContent(url: string) {
     const $ = load(res.body as Buffer);
     const script = $("script#__NEXT_DATA__");
     const json = JSON.parse(script.html() as string);
-    const dataScrape: any = json.props.pageProps.data.pages;
+    const dataScrape = json.props.pageProps.data.pages;
     const images: string[] = Object.keys(dataScrape)
       .map((key: string) => dataScrape[key].sizes.full);
-    const tagsRaw: any = json.props.pageProps.data.tags;
+    const tagsRaw = json.props.pageProps.data.tags;
     const tags: string[] = Object.keys(tagsRaw).map((key: string) => tagsRaw[key].slug);
     const language = json.props.pageProps.data.language;
     const metaRaw= json.props.pageProps.meta;

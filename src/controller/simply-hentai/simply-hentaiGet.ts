@@ -2,11 +2,12 @@ import { scrapeContent } from "../../scraper/simply-hentai/simply-hentaiGetContr
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
 import { mock } from "../../utils/modifier";
+import { Request, Response } from "express";
 
-export async function getSimplyhentai(req: any, res: any) {
+export async function getSimplyhentai(req: Request, res: Response) {
   try {
-    const book = req.query.book || "";
-    if (!book) throw Error("Parameter book is required");
+    const book = req.query.book as string;
+    if (!book) throw Error("Parameter book is required, Example: idolmaster/from-fumika-fc8496c/all-pages");
 
     let actualAPI;
     if (!await mock(c.SIMPLY_HENTAI)) actualAPI = c.SIMPLY_HENTAI_PROXIFIED;

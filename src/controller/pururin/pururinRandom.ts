@@ -2,8 +2,9 @@ import { scrapeContent } from "../../scraper/pururin/pururinGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
 import { getIdRandomPururin } from "../../utils/modifier";
+import { Request, Response, NextFunction } from "express";
 
-export async function randomPururin(req: any, res: any, next: any) {
+export async function randomPururin(req: Request, res: Response, next: NextFunction) {
   try {
     const id = await getIdRandomPururin();
     const url = `${c.PURURIN}/gallery/${id}/janda`;

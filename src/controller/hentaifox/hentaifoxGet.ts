@@ -1,12 +1,15 @@
 import { scrapeContent } from "../../scraper/hentaifox/hentaifoxGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
+import { isNumeric } from "../../utils/modifier";
+import { Request, Response, NextFunction } from "express";
 
-export async function getHentaifox(req: any, res: any, next: any) {
+export async function getHentaifox(req: Request, res: Response, next: NextFunction) {
   try {
-    const book = req.query.book || "";
+    const book = req.query.book as string;
     if (!book) throw Error("Parameter book is required");
-    if (isNaN(book)) throw Error("Value must be number");
+    if (!isNumeric(book)) throw Error("Parameter book must be number");
+
     const url = `${c.HENTAIFOX}/gallery/${book}/`;
     const data = await scrapeContent(url);
     logger.info({

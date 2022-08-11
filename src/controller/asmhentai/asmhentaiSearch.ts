@@ -1,9 +1,9 @@
 import { scrapeContent } from "../../scraper/asmhentai/asmhentaiSearchController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
+import { Request, Response, NextFunction } from "express";
 
-
-export async function searchAsmhentai(req: any, res: any, next: any) {
+export async function searchAsmhentai(req: Request, res: Response, next: NextFunction) {
   try {
     const key = req.query.key || "";
     const page = req.query.page || 1;

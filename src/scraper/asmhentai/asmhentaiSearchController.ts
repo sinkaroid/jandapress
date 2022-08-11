@@ -1,10 +1,10 @@
 import { load } from "cheerio";
 import p from "phin";
+import { removeNonNumeric } from "../../utils/modifier";
 
 interface IAsmHentaiSearch {
   title: string;
   id: number;
-  language: string;
 }
 
 export async function scrapeContent(url: string) {
@@ -22,13 +22,7 @@ export async function scrapeContent(url: string) {
     //get all href inside <div class="image">, get only number
     const id = $("div.image").map((i, el) => {
       const href = $(el).find("a");
-      return href.attr("href")?.split("/")[4];
-    }).get();
-
-    //get all href inside <div class="cl">
-    const lang = $("div.cl").map((i, el) => {
-      const a = $(el).find("a");
-      return a.attr("href")?.split("/")[4];
+      return href.attr("href");
     }).get();
 
 
@@ -37,8 +31,7 @@ export async function scrapeContent(url: string) {
 
       const objectData: IAsmHentaiSearch = {
         title: abc.split("\n")[0],
-        id: parseInt(id[title.indexOf(abc)]),
-        language: lang[title.indexOf(abc)],
+        id: parseInt(removeNonNumeric(id[title.indexOf(abc)])),
 
       };
       content.push(objectData);

@@ -1,10 +1,11 @@
 import { scrapeContent } from "../../scraper/asmhentai/asmhentaiGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
+import { Request, Response, NextFunction } from "express";
 
-export async function randomAsmhentai(req: any, res: any, next: any) {
+export async function randomAsmhentai(req: Request, res: Response, next: NextFunction) {
   try {
-    const url = `${c.ASMHENTAI}/random`;
+    const url = `${c.ASMHENTAI}/random/`;
     const data = await scrapeContent(url);
     logger.info({
       path: req.path,

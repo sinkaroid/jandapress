@@ -1,6 +1,13 @@
 import p from "phin";
 import c from "../../utils/options";
 import { getDate, timeAgo } from "../../utils/modifier";
+import { Nhentai } from "../../interfaces";
+
+const extension = {
+  j: "jpg",
+  p: "png",
+  g: "gif",
+};
 
 interface INhentaiGet {
   title: string;
@@ -24,60 +31,54 @@ export async function scrapeContent(url: string) {
     const res = await p({ url: url, parse: "json" });
     
     const GALLERY = "https://i.nhentai.net/galleries";
-    const TYPE: any = {
-      j: "jpg",
-      p: "png",
-      g: "gif",
-    };
+    const raw = res.body as Nhentai;
+    const imagesRaw = raw.images.pages;
 
-    const dataRaw: any = res.body;
-    const imagesRaw = dataRaw.images.pages;
-
-    const images: string[] = Object.keys(imagesRaw)
-      .map((key: string) => imagesRaw[key].t);
+    const images = Object.keys(imagesRaw)
+      .map((key) => imagesRaw[parseInt(key)].t);
 
     const imageList = [];
     for (let i = 0; i < images.length; i++) {
-      imageList.push(`${GALLERY}/${dataRaw.media_id}/${i + 1}.${TYPE[images[i]]}`);
+      imageList.push(`${GALLERY}/${raw.media_id}/${i + 1}.${(extension as any)[images[i]]}`);
     }
 
     //get all tags.name
-    const tagsRaw = dataRaw.tags;
-    const tags: string[] = Object.keys(tagsRaw).map((key: string) => tagsRaw[key].name);
+    const tagsRaw = raw.tags;
+    const tags = Object.keys(tagsRaw).map((key) => tagsRaw[parseInt(key)].name);
 
-    const artistRaw = tagsRaw.filter((tag: any) => tag.type === "artist");
-    const artist: string[] = artistRaw.map((tag: any) => tag.name) || [];
+    const artistRaw = tagsRaw.filter((tag) => tag.type === "artist");
+    const artist = artistRaw.map((tag) => tag.name) || [];
 
     //find "type": "language" in tagsRaw
-    const languageRaw = tagsRaw.find((tag: any) => tag.type === "language");
-    const language = languageRaw ? languageRaw.name : null;
+    const languageRaw = tagsRaw.find((tag) => tag.type === "language");
+    const language = languageRaw ? languageRaw.name : "";
 
-    const parodiesRaw = tagsRaw.find((tag: any) => tag.type === "parody");
-    const parodies = parodiesRaw ? parodiesRaw.name : null;
+    const parodiesRaw = tagsRaw.find((tag) => tag.type === "parody");
+    const parodies = parodiesRaw ? parodiesRaw.name : "";
 
-    const groupRaw = tagsRaw.find((tag: any) => tag.type === "group");
-    const group = groupRaw ? groupRaw.name : null;
+    const groupRaw = tagsRaw.find((tag) => tag.type === "group");
+    const group = groupRaw ? groupRaw.name : "";
 
     //get all "type": "character" in tagsRaw
-    const charactersRaw = tagsRaw.filter((tag: any) => tag.type === "character");
-    const characters: string[] = charactersRaw.map((tag: any) => tag.name) || [];
+    const charactersRaw = tagsRaw.filter((tag) => tag.type === "character");
+    const characters = charactersRaw.map((tag) => tag.name) || [];
 
-    const time = new Date(dataRaw.upload_date * 1000);
+    const time = new Date(raw.upload_date * 1000);
 
     const objectData: INhentaiGet = {
-      title: dataRaw.title.pretty,
+      title: raw.title.pretty,
       optional_title: {
-        english: dataRaw.title.english,
-        japanese: dataRaw.title.japanese,
-        pretty: dataRaw.title.pretty,
+        english: raw.title.english,
+        japanese: raw.title.japanese,
+        pretty: raw.title.pretty,
       },
-      id: dataRaw.id,
+      id: raw.id,
       language: language,
       tags: tags,
       total: imageList.length,
       image: imageList,
-      num_pages: dataRaw.num_pages,
-      num_favorites: dataRaw.num_favorites,
+      num_pages: raw.num_pages,
+      num_favorites: raw.num_favorites,
       artist: artist,
       group: group,
       parodies: parodies,
@@ -87,7 +88,7 @@ export async function scrapeContent(url: string) {
 
     const data = {
       data: objectData,
-      source: `${c.NHENTAI}/g/${dataRaw.id}`,
+      source: `${c.NHENTAI}/g/${raw.id}`,
     };
     return data;
   } catch (err: any) {

@@ -1,9 +1,20 @@
 import p from "phin";
 import c from "../../utils/options";
 import { getDate, timeAgo } from "../../utils/modifier";
+import { NhentaiSearch } from "../../interfaces";
+
+const extension = {
+  j: "jpg",
+  p: "png",
+  g: "gif",
+};
 
 interface INhentaiSearch {
-  title: string;
+  title: {
+    english: string;
+    japanese: string;
+    pretty: string
+  };
   id: number;
   language: string;
   upload_date: string;
@@ -15,25 +26,29 @@ interface INhentaiSearch {
 export async function scrapeContent(url: string) {
   try {
     const res = await p({ url: url, parse: "json" });
-    const rawData: any = res.body;
+    const rawData = res.body as NhentaiSearch;
   
     const content = [];
-    const GALLERY = "https://i.nhentai.net/galleries";
-    const TYPE: any = {
-      j: "jpg",
-      p: "png",
-      g: "gif",
-    };
+
     for (let i = 0; i < rawData.result.length; i++) {
+      const GALLERY = "https://i.nhentai.net/galleries";
+      const imagesRaw = rawData.result[i].images.pages;
+      const images = Object.keys(imagesRaw)
+        .map((key) => imagesRaw[parseInt(key)].t);
+
       const time = new Date(rawData.result[i].upload_date * 1000);
       const objectData: INhentaiSearch = {
-        title: rawData.result[i].title,
+        title: {
+          english: rawData.result[i].title.english,
+          japanese: rawData.result[i].title.japanese,
+          pretty: rawData.result[i].title.pretty,
+        },
         id: rawData.result[i].id,
-        language: rawData.result[i].tags.find((tag: any) => tag.type === "language") ? rawData.result[i].tags.find((tag: any) => tag.type === "language").name : null,
+        language: rawData.result[i].tags.find((tag) => tag.type === "language")?.name || "",
         upload_date: `${getDate(time)} (${timeAgo(time)})`,
         total: rawData.result[i].num_pages,
-        cover: `${GALLERY}/${rawData.result[i].media_id}/1.${TYPE[rawData.result[i].images.cover.t]}`,
-        tags: rawData.result[i].tags.map((tag: any) => tag.name),
+        cover: `${GALLERY}/${rawData.result[i].media_id}/1.${(extension as any)[images[i]]}`,
+        tags: rawData.result[i].tags.map((tag) => tag.name),
       };
       content.push(objectData);
     }

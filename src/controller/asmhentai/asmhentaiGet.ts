@@ -1,13 +1,16 @@
 import { scrapeContent } from "../../scraper/asmhentai/asmhentaiGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
+import { isNumeric } from "../../utils/modifier";
+import { Request, Response, NextFunction } from "express";
 
-export async function getAsmhentai(req: any, res: any, next: any) {
+export async function getAsmhentai(req: Request, res: Response, next: NextFunction) {
   try {
-    const book = req.query.book || "";
+    const book = req.query.book as string;
     if (!book) throw Error("Parameter book is required");
-    if (isNaN(book)) throw Error("Value must be number");
-    const url = `${c.ASMHENTAI}/g/${book}`;
+    if (!isNumeric(book)) throw Error("Value must be number");
+
+    const url = `${c.ASMHENTAI}/g/${book}/`;
     const data = await scrapeContent(url);
     logger.info({
       path: req.path,

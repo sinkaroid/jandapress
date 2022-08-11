@@ -1,13 +1,14 @@
 import { scrapeContent } from "../../scraper/nhentai/nhentaiRelatedController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
-import { mock } from "../../utils/modifier";
+import { mock, isNumeric } from "../../utils/modifier";
+import { Request, Response } from "express";
 
-export async function relatedNhentai(req: any, res: any) {
+export async function relatedNhentai(req: Request, res: Response) {
   try {
-    const book = req.query.book || "";
+    const book = req.query.book as string;
     if (!book) throw Error("Parameter book is required");
-    if (isNaN(book)) throw Error("Value must be number");
+    if (!isNumeric(book)) throw Error("Value must be number");
 
     let actualAPI;
     if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP;

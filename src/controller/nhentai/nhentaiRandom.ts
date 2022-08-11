@@ -3,8 +3,9 @@ import c from "../../utils/options";
 import { logger } from "../../utils/logger";
 import { mock } from "../../utils/modifier";
 import { getIdRandomNhentai } from "../../utils/modifier";
+import { Request, Response, NextFunction } from "express";
 
-export async function randomNhentai(req: any, res: any, next: any) {
+export async function randomNhentai(req: Request, res: Response, next: NextFunction) {
   try {
     let actualAPI;
     if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP;

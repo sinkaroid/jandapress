@@ -25,7 +25,7 @@ export async function scrapeContent(url: string) {
     
     const title: string = $("h1").text();
     const id: number = parseInt($("link[rel='canonical']")?.attr("href")?.split("/")[4] || "0");
-    const tags: string[] = $("span.badge.tag").map((i, el) => $(el).text()).get();
+    const tags: string[] = $("span.badge.tag")?.map((i, el) => $(el).text()).get();
     const tagsClean: string[] = tags.map((tag: string) => tag.replace(/[0-9]|[.,()]/g, "").trim());
     const total: number = parseInt($("input[id='t_pages']")?.attr("value") || "0");
     const img: string = $("img[data-src]")?.attr("data-src") || "";
