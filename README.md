@@ -73,8 +73,11 @@ Luckily there are solutions. You can rely on Jandapress.
   - `git clone https://github.com/sinkaroid/jandapress.git`
 - Install dependencies
   - `npm install / yarn install`
-- Run Jandapress
-  - `npm run start:prod` / `npm run start:dev`
+- Jandapress production
+  - `npm run build`
+  - `npm run start:prod`
+- Jandapress testings
+  - `npm run start:dev`
 
 ## Prerequisites
 <table>
