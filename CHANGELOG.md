@@ -1,3 +1,13 @@
+#### 1.0.8 (2022-06-30)
+
+##### Chores
+
+* **release:**  1.0.8-dev (98a6e4e0)
+
+##### Performance Improvements
+
+*  implement cors for browser usage (29cd7d54)
+
 #### 1.0.7 (2022-06-14)
 
 ##### Documentation Changes
