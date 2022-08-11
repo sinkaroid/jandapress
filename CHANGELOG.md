@@ -1,3 +1,23 @@
+#### 1.0.10 (2022-08-11)
+
+##### Chores
+
+* **release:**  1.0.10-dev (3bcb0eca)
+
+##### Documentation Changes
+
+*  clearly documentation (2e5bb5b3)
+*  update link documentation (0251bc59)
+
+##### New Features
+
+*  fix outdated data & types improvements (d527da45)
+*  add interfaces (118aa4b1)
+
+##### Bug Fixes
+
+* **modifier:**  apply fixes for nhentai random (6a850e70)
+
 #### 1.0.8 (2022-06-30)
 
 ##### Chores

@@ -1,5 +1,5 @@
 <div align="center">
-<a href="https://janda.sinkaroid.org"><img width="500" src="https://cdn.discordapp.com/attachments/952117487166705747/986185787894812672/tomoe-janda.png" alt="jandapress"></a>
+<a href="https://janda.mod.land"><img width="500" src="https://cdn.discordapp.com/attachments/952117487166705747/986185787894812672/tomoe-janda.png" alt="jandapress"></a>
 
 <h4 align="center">RESTful and experimental API for the doujinboards</h4>
 <p align="center">
@@ -17,7 +17,7 @@ The motivation of this project is to bring you an actionable data related doujin
 
 ---
 
-<a href="https://janda.sinkaroid.org"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/986315079802814524/tomoe.png" width="300"></a>
+<a href="https://janda.mod.land"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/986315079802814524/tomoe.png" width="300"></a>
 
 - [Jandapress](#)
   - [The problem](#the-problem)
@@ -110,39 +110,39 @@ the `parameter?`: means is optional.
   - **related**, takes parameters : `book`
   - **random**
   - Example
-    - https://janda.sinkaroid.org/nhentai/get?book=177013
+    - https://janda.mod.land/nhentai/get?book=177013
 
 - `/pururin` : pururin api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`, `?page`, `?sort`
   - **random**
   - Example
-    - https://janda.sinkaroid.org/pururin/get?book=63373
+    - https://janda.mod.land/pururin/get?book=63373
 
 - `/hentaifox`: hentaifox api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`, `?page`, `?sort`
   - **random**
   - Example
-    - https://janda.sinkaroid.org/hentaifox/get?book=97527
+    - https://janda.mod.land/hentaifox/get?book=97527
 
 - `/asmhentai`: asmhentai api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`, `?page`
   - **random**
   - Example
-    - https://janda.sinkaroid.org/hentaifox/get?book=308830
+    - https://janda.mod.land/hentaifox/get?book=308830
 
 - `/hentai2read`: hentai2read api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`
   - Example
-    - https://janda.sinkaroid.org/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1
+    - https://janda.mod.land/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1
 
 - `/simply-hentai`: simply-hentai api
   - **get**, takes parameters : `book`
   - Example
-    - https://janda.sinkaroid.org/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages
+    - https://janda.mod.land/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages
 
 ## Limitations
 Nhentai was cloudflare protection enabled, If IP and our thoughts against them? You should implement a proxy. Check [`cookie branch`](https://github.com/sinkaroid/jandapress/tree/cookie), take a look this workaround [Zekfad/nhentai-api/issues/25#issuecomment-1141360074](https://github.com/Zekfad/nhentai-api/issues/25#issuecomment-1141360074)
