@@ -83,13 +83,19 @@ export async function getIdRandomPururin (): Promise<number> {
 }
 
 export async function getIdRandomNhentai (): Promise<number> {
-  const res: any = await p({
-    url: `${c.NHENTAI}/random`,
-    followRedirects: true,
-  });
-  
-  const getId = res.socket._httpMessage.path;
-  return parseInt(getId.replace(/^\/g\/([0-9]+)\/?$/, "$1"));
+  if (await mock(c.NHENTAI)) {
+    const res: any = await p({
+      url: `${c.NHENTAI}/random`,
+      followRedirects: true,
+    });
+    
+    const getId = res.socket._httpMessage.path;
+    return parseInt(getId.replace(/^\/g\/([0-9]+)\/?$/, "$1"));
+  } else {
+    const end = 1234;
+    const start = 567890;
+    return Math.floor(Math.random() * (end - start + 1)) + start;
+  }
 }
 
 
