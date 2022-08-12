@@ -14,7 +14,7 @@ export async function searchNhentai(req: Request, res: Response) {
     if (!sorting.includes(sort)) throw Error("Invalid sort: " + sorting.join(", "));
 
     let actualAPI;
-    if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP;
+    if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP_3;
     else actualAPI = c.NHENTAI;
 
     const url = `${actualAPI}/api/galleries/search?query=${key}&sort=${sort}&page=${page}`;

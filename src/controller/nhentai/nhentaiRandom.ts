@@ -8,7 +8,7 @@ import { Request, Response, NextFunction } from "express";
 export async function randomNhentai(req: Request, res: Response, next: NextFunction) {
   try {
     let actualAPI;
-    if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP;
+    if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP_3;
     else actualAPI = c.NHENTAI;
 
     const id = await getIdRandomNhentai();

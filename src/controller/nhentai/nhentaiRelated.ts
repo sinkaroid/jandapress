@@ -11,7 +11,7 @@ export async function relatedNhentai(req: Request, res: Response) {
     if (!isNumeric(book)) throw Error("Value must be number");
 
     let actualAPI;
-    if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP;
+    if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP_3;
     else actualAPI = c.NHENTAI;
     
     const url = `${actualAPI}/api/gallery/${book}/related`;
