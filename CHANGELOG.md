@@ -1,3 +1,21 @@
+#### 1.0.11 (2022-08-12)
+
+##### Chores
+
+* **release:**  1.0.11-dev (8cfa11be)
+
+##### New Features
+
+* **options:**  staged changes for nhentai (6f67d989)
+
+##### Bug Fixes
+
+* **nhentai:**  staged changes, update statements (1c4aa308)
+
+##### Tests
+
+* **nhentaiCookietest:**  cloudflare testing (63b69795)
+
 #### 1.0.10 (2022-08-11)
 
 ##### Chores
