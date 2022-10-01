@@ -10,7 +10,6 @@ interface IGetAsmhentai {
   total: number;
   image: string[];
   upload_date: string;
-  
 }
 
 interface IData{
@@ -21,16 +20,19 @@ interface IData{
 export async function scrapeContent(url: string) {
   try {
     const res = await p({ url: url, followRedirects: true });
-    const $ = load(res.body);
+    const $ = load(res.body as Buffer);
     
-    const title: string = $("h1").text();
-    const id: number = parseInt(url.replace(/[^\d]/g, ""));
-    const tags: string[] = $("span.badge.tag")?.map((i, el) => $(el).text()).get();
-    const tagsClean: string[] = tags.map((tag: string) => tag.replace(/[0-9]|[.,()]/g, "").trim());
-    const total: number = parseInt($("input[id='t_pages']")?.attr("value") || "0");
-    const img: string = $("img[data-src]")?.attr("data-src") || "";
-    const imageUrl: string = img.replace("//", "https://");
-    const date: string[] = $("div.pages h3").map((i, el) => $(el).text()).get();
+    const title = $("h1").text();
+    const id = parseInt(url.replace(/[^\d]/g, ""));
+    const tags = $("span.badge.tag")?.map((i, el) => $(el).text()).get();
+    const tagsClean = tags.map((tag: string) => tag.replace(/[0-9]|[.,()]/g, "").trim());
+    const totalIfBroken = $("div.pages").children().first().text();
+    const actualTotal = totalIfBroken.replace(/[^\d]/g, "");
+    const total = parseInt($("input[id='t_pages']")?.attr("value") || actualTotal);
+    const img = $("img[data-src]")?.attr("data-src") || "";
+    const imageUrl = img.replace("//", "https://");
+    const date = $("div.pages h3").map((i, el) => $(el).text()).get();
+
 
     const image = [];
     for (let i = 0; i < total; i++) {
@@ -51,7 +53,8 @@ export async function scrapeContent(url: string) {
       source: `${c.ASMHENTAI}/g/${id}/`
     };
     return data;
-  } catch (err: any) {
-    throw Error(err.message);
+  } catch (err) {
+    const error = err as string;
+    throw new Error(error);
   }
 }
