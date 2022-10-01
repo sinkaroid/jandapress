@@ -1,6 +1,6 @@
 {
   "name": "jandapress",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Experimental doujin API with gather in mind",
   "main": "build/src/index.js",
   "scripts": {
@@ -18,7 +18,8 @@
     "test:hentaifox": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/hentaifox/get?book=59026 | jq '.'\"",
     "test:asmhentai": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/asmhentai/get?book=308830 | jq '.'\"",
     "test:hentai2read": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1 | jq '.'\"",
-    "test:simply-hentai": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages | jq '.'\""
+    "test:simply-hentai": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages | jq '.'\"",
+    "test:3hentai": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/3hentai/get?book=608979 | jq '.'\""
   },
   "keywords": [],
   "author": "sinkaroid",
