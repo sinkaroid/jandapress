@@ -25,7 +25,6 @@ export async function scrapeContent(url: string) {
     const parameterImg = imgSrc[0].split("/").slice(5).join("/");
     const parameterImg2 = parameterImg.split("/").slice(0, -1).join("/");
     const extensionImg = `.${imgSrc[0].split(".").slice(-1)[0]}`;
-  
     const info = $("span.i_text.pages").map((i, abc) => {
       return $(abc).text();
     }).get();
