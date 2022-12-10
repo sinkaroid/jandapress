@@ -4,7 +4,7 @@
   "description": "Experimental doujin API with gather in mind",
   "main": "build/src/index.js",
   "scripts": {
-    "build": "rm -rf build && tsc",
+    "build": "tsc",
     "start": "node build/src/index.js",
     "test": "ts-node test/test.ts",
     "test:cf": "ts-node test/nhentaiCookietest.ts",
