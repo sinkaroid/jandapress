@@ -1,6 +1,6 @@
 {
   "name": "jandapress",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "Experimental doujin API with gather in mind",
   "main": "build/src/index.js",
   "scripts": {
