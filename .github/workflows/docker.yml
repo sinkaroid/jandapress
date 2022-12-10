@@ -10,19 +10,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: Log into GitHub Container Registry
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        
       - name: Get the package.json version
         id: package-version
         run: echo ::set-output name=version::$(jq -r .version package.json)
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag ghcr.io/sinkaroid/jandapress:${{ steps.package-version.outputs.version }}
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+        run: docker build . --file Dockerfile --tag ghcr.io/sinkaroid/jandapress:${{ steps.package-version.outputs.version }} ghcr.io/sinkaroid/jandapress:latest
       - name: Push the Docker image
-        run: docker push ghcr.io/sinkaroid/jandapress:${{ steps.package-version.outputs.version }}
+        run: docker push ghcr.io/sinkaroid/jandapress:${{ steps.package-version.outputs.version }} ghcr.io/sinkaroid/jandapress:latest
         
 

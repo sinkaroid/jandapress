@@ -70,9 +70,13 @@ You enjoy consume doujin sites to build web applications. There are a lot sites 
 | `3hentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/3hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/3hentai.yml)            | ✅  | ✅     | ✅     |
 
 ## 🚀Installation
+### Docker images
+Check the version of [jandapress](https://github.com/sinkaroid/jandapress/pkgs/container/jandapress)  
+`docker pull ghcr.io/sinkaroid/jandapress:the_version_available`
+`docker run -p 3000:3000 -d ghcr.io/sinkaroid/jandapress:the_version_available` 
 
-- Clone this repository
-  - `git clone https://github.com/sinkaroid/jandapress.git`
+### Manual installation
+`git clone https://github.com/sinkaroid/jandapress.git`
 - Install dependencies
   - `npm install / yarn install`
 - Jandapress production
@@ -162,7 +166,7 @@ The missing piece of asmhentai.com
   - <u>sort parameters on search</u>
     - None
   - Example
-    - https://janda.mod.land/hentaifox/get?book=308830
+    - https://janda.mod.land/asmhentai/get?book=416773
     - https://janda.mod.land/asmhentai/search?key=futanari&page=2
 
 ### Hentai2read
