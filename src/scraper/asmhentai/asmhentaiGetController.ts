@@ -45,7 +45,7 @@ export async function scrapeContent(url: string) {
       tags: tagsClean,
       total: total,
       image: image,
-      upload_date: date[1].replace("Added: ", "")
+      upload_date: date[1] ? date[1] : "Unknown"
     };
 
     const data: IData = {
