@@ -176,6 +176,7 @@ The missing piece of hentai2read.com
     - TBA
   - Example
     - https://janda.mod.land/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1
+    - https://janda.mod.land/hentai2read/search?key=futanari
 
 ### Simply-hentai
 The missing piece of simply-hentai.com
