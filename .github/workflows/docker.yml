@@ -18,10 +18,11 @@ jobs:
         id: package-version
         run: echo ::set-output name=version::$(jq -r .version package.json)
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag ghcr.io/sinkaroid/jandapress:latest
+        run: docker build . --file Dockerfile --tag ghcr.io/${{ github.repository }}:${{ steps.package-version.outputs.version }}
       - name: Tag the Docker image
-        run: docker tag ghcr.io/sinkaroid/jandapress:latest ghcr.io/sinkaroid/jandapress:${{ steps.package-version.outputs.version }}
+        run: docker tag ghcr.io/${{ github.repository }}:${{ steps.package-version.outputs.version }} ghcr.io/${{ github.repository }}:latest
       - name: Push the Docker image
-        run: docker push ghcr.io/sinkaroid/jandapress:${{ steps.package-version.outputs.version }}
+        run: docker push ghcr.io/${{ github.repository }}:${{ steps.package-version.outputs.version }}
+        run: docker push ghcr.io/${{ github.repository }}:latest
         
 
