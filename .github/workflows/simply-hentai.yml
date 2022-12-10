@@ -23,6 +23,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
         run: npm install
+      - name: Build
+        run: npm run build
 
       - name: Simply-hentai test
         run: npm run test:simply-hentai
