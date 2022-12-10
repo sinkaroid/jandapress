@@ -69,13 +69,11 @@ You enjoy consume doujin sites to build web applications. There are a lot sites 
 | `asmhentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/Asmhentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/asmhentai.yml)            | ✅  | ✅     | ✅     |
 | `3hentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/3hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/3hentai.yml)            | ✅  | ✅     | ✅     |
 
-## 🚀Installation
-### Docker images
-Check the version of [jandapress](https://github.com/sinkaroid/jandapress/pkgs/container/jandapress)  
-`docker pull ghcr.io/sinkaroid/jandapress:the_version_available`
-`docker run -p 3000:3000 -d ghcr.io/sinkaroid/jandapress:the_version_available` 
+## Installation
+### Docker
+[`docker pull ghcr.io/sinkaroid/jandapress:latest`](https://github.com/sinkaroid/jandapress/pkgs/container/jandapress)
 
-### Manual installation
+### Manual
 `git clone https://github.com/sinkaroid/jandapress.git`
 - Install dependencies
   - `npm install / yarn install`

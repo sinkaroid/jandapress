@@ -22,7 +22,6 @@ jobs:
       - name: Tag the Docker image
         run: docker tag ghcr.io/${{ github.repository }}:${{ steps.package-version.outputs.version }} ghcr.io/${{ github.repository }}:latest
       - name: Push the Docker image
-        run: |
-          docker push ghcr.io/${{ github.repository }} --all-tags
+        run: docker push ghcr.io/${{ github.repository }} --all-tags
         
 
