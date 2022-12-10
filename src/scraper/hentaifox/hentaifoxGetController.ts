@@ -22,7 +22,8 @@ export async function scrapeContent(url: string) {
     }).get();
 
     const imgSrc = $("img").map((i, el) => $(el).attr("data-src")).get();
-    const parameterImg = imgSrc[0].split("/").slice(0, imgSrc[0].split("/").length - 1).join("/");
+    const parameterImg = imgSrc[0].split("/").slice(5).join("/");
+    const parameterImg2 = parameterImg.split("/").slice(0, -1).join("/");
     const extensionImg = `.${imgSrc[0].split(".").slice(-1)[0]}`;
   
     const info = $("span.i_text.pages").map((i, abc) => {
@@ -32,7 +33,7 @@ export async function scrapeContent(url: string) {
     const pageCount = parseInt(info[0].replace(/[^0-9]/g, ""));
     const image = [];
     for (let i = 0; i < Number(pageCount); i++) {
-      image.push(`${parameterImg}/${i + 1}${extensionImg}`);
+      image.push(`${parameterImg2}/${i + 1}${extensionImg}`);
     }
     const titleInfo = $("div.info").children("h1").text();
    
