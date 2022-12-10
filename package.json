@@ -12,6 +12,7 @@
     "start:dev": "ts-node-dev src/index.ts",
     "lint": "npx eslint . --ext .ts",
     "lint:fix": "npx eslint . --fix",
+    "postinstall": "npm run build",
     "test:nhentai": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/nhentai/get?book=177013 | jq '.'\"",
     "test:pururin": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/pururin/get?book=47226 | jq '.'\"",
     "test:hentaifox": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/hentaifox/get?book=59026 | jq '.'\"",

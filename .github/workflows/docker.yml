@@ -70,12 +70,12 @@ jobs:
             context: ./
             file: ./Dockerfile
             push: true
-            tags: ${{ secrets.DOCKERHUB_USERNAME }}/nodejs-demo:latest
+            tags: ${{ secrets.DOCKERHUB_USERNAME }}/jandapress:latest
           
         - name: Run the image in a container
           uses: addnab/docker-run-action@v3
           with:
-            image: ${{ secrets.DOCKERHUB_USERNAME }}/nodejs-demo:latest
+            image: ${{ secrets.DOCKERHUB_USERNAME }}/jandapress:latest
             run: |
               echo "runing the docker image"
               echo ${{ steps.docker_build.outputs.digest }}
