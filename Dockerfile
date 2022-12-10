@@ -3,6 +3,6 @@ WORKDIR /srv/app
 COPY package*.json ./
 RUN npm install
 COPY . .
-RUN npm run build
+RUN tsc
 EXPOSE 3000
 CMD ["node", "build/src/index.js"]
