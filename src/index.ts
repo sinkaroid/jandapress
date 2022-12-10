@@ -64,4 +64,4 @@ app.use((error: any, res: Response) => {
   });
 });
 
-app.listen(process.env.PORT || 3000, () => console.log(`${pkg.name} running in port 3000`));
+app.listen(process.env.PORT || 3000, () => console.log(`${pkg.name} is running on port ${process.env.PORT || 3000}`));
