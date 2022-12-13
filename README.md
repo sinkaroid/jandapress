@@ -71,7 +71,9 @@ You enjoy consume doujin sites to build web applications. There are a lot sites 
 
 ## Installation
 ### Docker
-[`docker pull ghcr.io/sinkaroid/jandapress:latest`](https://github.com/sinkaroid/jandapress/pkgs/container/jandapress)
+
+    docker pull ghcr.io/sinkaroid/jandapress:latest
+    docker run -p 3000:3000 -d ghcr.io/sinkaroid/jandapress:latest
 
 ### Manual
 `git clone https://github.com/sinkaroid/jandapress.git`
@@ -176,6 +178,7 @@ The missing piece of hentai2read.com
     - TBA
   - Example
     - https://janda.mod.land/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1
+    - https://janda.mod.land/hentai2read/search?key=futanari
 
 ### Simply-hentai
 The missing piece of simply-hentai.com
