@@ -1,5 +1,5 @@
 import { load } from "cheerio";
-import p from "phin";
+import JandaPress from "../../JandaPress";
 import c from "../../utils/options";
 import { isText } from "domhandler";
 import { getPururinInfo, getPururinPageCount, getPururinLanguage } from "../../utils/modifier";
@@ -21,10 +21,12 @@ interface IData {
   source: string;
 }
 
+const janda = new JandaPress();
+
 export async function scrapeContent(url: string) {
   try {
-    const res = await p(url);
-    const $ = load(res.body);
+    const res = await janda.fetchBody(url);
+    const $ = load(res);
     const dataRaw = $("img.card-img-top");
     const info = $("div.info");
 

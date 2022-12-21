@@ -1,5 +1,5 @@
 import { load } from "cheerio";
-import p from "phin";
+import JandaPress from "../../JandaPress";
 import c from "../../utils/options";
 
 
@@ -17,13 +17,18 @@ interface IData{
   source: string;
 }
 
+const janda = new JandaPress();
+
 export async function scrapeContent(url: string) {
   try {
-    const res = await p({ url: url, followRedirects: true });
-    const $ = load(res.body as Buffer);
-    
+    const res = await janda.fetchBody(url);
+    const $ = load(res);
+
+    const actualId = $(".cover").find("a").attr("href")
+    const book = actualId?.replace("/gallery/", "");
+    const actualBook = parseInt(book as string);
+
     const title = $("h1").text();
-    const id = parseInt(url.replace(/[^\d]/g, ""));
     const tags = $("span.badge.tag")?.map((i, el) => $(el).text()).get();
     const tagsClean = tags.map((tag: string) => tag.replace(/[0-9]|[.,()]/g, "").trim());
     const totalIfBroken = $("div.pages").children().first().text();
@@ -33,7 +38,6 @@ export async function scrapeContent(url: string) {
     const imageUrl = img.replace("//", "https://");
     const date = $("div.pages h3").map((i, el) => $(el).text()).get();
 
-
     const image = [];
     for (let i = 0; i < total; i++) {
       image.push(`${imageUrl.replace("cover", `${i + 1}`)}`);
@@ -41,7 +45,7 @@ export async function scrapeContent(url: string) {
 
     const objectData: IGetAsmhentai = {
       title: title,
-      id: id,
+      id: actualBook,
       tags: tagsClean,
       total: total,
       image: image,
@@ -50,7 +54,7 @@ export async function scrapeContent(url: string) {
 
     const data: IData = {
       data: objectData,
-      source: `${c.ASMHENTAI}/g/${id}/`
+      source: `${c.ASMHENTAI}/g/${actualBook}/`
     };
     return data;
   } catch (err) {

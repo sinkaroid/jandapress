@@ -1,7 +1,6 @@
 import { load } from "cheerio";
-import p from "phin";
+import JandaPress from "../../JandaPress";
 import c from "../../utils/options";
-
 
 interface IGet3hentai {
   title: string;
@@ -18,10 +17,12 @@ interface IData{
   source: string;
 }
 
+const janda = new JandaPress();
+
 export async function scrapeContent(url: string) {
   try {
-    const res = await p({ url: url, followRedirects: true });
-    const $ = load(res.body);
+    const res = await janda.fetchBody(url);
+    const $ = load(res);
     
     //get href in <div id="main-cover"> first
     const actualId = $("#main-cover").find("a").attr("href");

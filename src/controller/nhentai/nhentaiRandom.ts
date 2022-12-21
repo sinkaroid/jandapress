@@ -14,7 +14,7 @@ export async function randomNhentai(req: Request, res: Response, next: NextFunct
     const id = await getIdRandomNhentai();
 
     const url = `${actualAPI}/api/gallery/${id}`;
-    const data = await scrapeContent(url);
+    const data = await scrapeContent(url, true);
     logger.info({
       path: req.path,
       query: req.query,

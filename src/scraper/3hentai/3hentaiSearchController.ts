@@ -1,5 +1,5 @@
 import { load } from "cheerio";
-import p from "phin";
+import JandaPress from "../../JandaPress";
 import { removeNonNumeric } from "../../utils/modifier";
 
 interface I3HentaiSearch {
@@ -7,10 +7,12 @@ interface I3HentaiSearch {
   id: number;
 }
 
+const janda = new JandaPress();
+
 export async function scrapeContent(url: string) {
   try {
-    const res = await p({ url: url, followRedirects: true });
-    const $ = load(res.body as Buffer);
+    const res = await janda.fetchBody(url);
+    const $ = load(res);
 
     //in <div class="listing-container bg-container container-xl"> there are <div class="doujin-col">
     const doujinCol = $("div.listing-container.bg-container.container-xl");

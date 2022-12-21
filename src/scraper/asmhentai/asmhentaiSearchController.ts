@@ -1,5 +1,5 @@
 import { load } from "cheerio";
-import p from "phin";
+import JandaPress from "../../JandaPress";
 import { removeNonNumeric } from "../../utils/modifier";
 
 interface IAsmHentaiSearch {
@@ -7,10 +7,12 @@ interface IAsmHentaiSearch {
   id: number;
 }
 
+const janda = new JandaPress();
+
 export async function scrapeContent(url: string) {
   try {
-    const res = await p(url);
-    const $ = load(res.body as Buffer);
+    const res = await janda.fetchBody(url);
+    const $ = load(res);
 
     //get all <img alt= inside <div class="image">
     const title = $("div.image").map((i, el) => {

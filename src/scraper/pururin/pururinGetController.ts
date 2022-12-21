@@ -1,5 +1,6 @@
 import { load } from "cheerio";
 import p from "phin";
+import JandaPress from "../../JandaPress";
 import c from "../../utils/options";
 import { getPururinInfo, getUrl } from "../../utils/modifier";
 
@@ -17,10 +18,15 @@ interface IData{
   source: string;
 }
 
-export async function scrapeContent(url: string) {
+const janda = new JandaPress();
+
+export async function scrapeContent(url: string, random: boolean = false) {
   try {
-    const res = await p(url);
-    const $ = load(res.body);
+    let res, raw
+    if (random) res = await p({ url: url }), raw = res.body;
+    else res = await janda.fetchBody(url), raw = res;
+
+    const $ = load(raw);
     const title: string = $("div.content-wrapper h1").html() || "";
     
     const tags: string[] = $("div.content-wrapper ul.list-inline li").map((i, abc) => {
