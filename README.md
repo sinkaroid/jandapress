@@ -24,8 +24,8 @@ The motivation of this project is to bring you an actionable data related doujin
   - [The solution](#the-solution)
   - [Features](#features)
     - [Jandapress vs. the doujinboards](#jandapress-vs-the-whole-doujin-sites)
-  - [Installation](#installation)
-    - [Prerequisites](#prerequisites)
+  - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
     - [Running tests](#running-tests)
   - [Routing](#routing)
     - [nhentai-api](#routing)
@@ -38,7 +38,6 @@ The motivation of this project is to bring you an actionable data related doujin
   - [Limitations](#limitations)
   - [Pronunciation](#Pronunciation)
   - [Legal](#legal)
-  - [FAQ](#Frequently-asked-questions)
   - [Client libraries / Wrappers](#client-libraries--wrappers)
 
 
@@ -70,6 +69,8 @@ You enjoy consume doujin sites to build web applications. There are a lot sites 
 | `3hentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/3hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/3hentai.yml)            | ✅  | ✅     | ✅     |
 
 ## Installation
+Rename `.env.schema` to `.env` and fill the value with your own.
+
 ### Docker
 
     docker pull ghcr.io/sinkaroid/jandapress:latest
@@ -90,16 +91,14 @@ You enjoy consume doujin sites to build web applications. There are a lot sites 
 	<td><b>NOTE:</b> NodeJS 14.x or higher</td>
 </table>
 
+You will also need [Redis](https://redis.io/) for persistent caching, free tier is available on [Redis Labs](https://redislabs.com/)
+
 ## Running tests
 Jandapress depends on
 - [express](https://github.com/expressjs/express) web api framework
 - [cheerio](https://cheerio.js.org/) for parsing html
 - [cors](https://github.com/expressjs/cors) middleware for enabling CORS
 - [rate-limit](https://github.com/nfriedly/express-rate-limit) rate-limiting middleware for express
-
-Optional but already has
-- [pino](https://getpino.io/) for logging
-- [start-server-and-test](https://www.npmjs.com/package/start-server-and-test) for starting the server and running tests
 
 ### Start the production server
 `npm run start:prod`
@@ -113,7 +112,7 @@ Optional but already has
 ### Check nhentai It's under cloudflare protection or not
 `npm run test:cf`
 
-> To running other method, you can see object scripts in file `package.json`, Default port is `3000`
+> To running other tests, you can see object scripts in file `package.json`
 
 ## Routing
 the `parameter?`: means is optional
