@@ -24,7 +24,7 @@ export async function scrapeContent(url: string) {
     const res = await janda.fetchBody(url);
     const $ = load(res);
 
-    const actualId = $(".cover").find("a").attr("href")
+    const actualId = $(".cover").find("a").attr("href");
     const book = actualId?.replace("/gallery/", "");
     const actualBook = parseInt(book as string);
 

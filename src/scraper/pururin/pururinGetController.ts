@@ -20,9 +20,9 @@ interface IData{
 
 const janda = new JandaPress();
 
-export async function scrapeContent(url: string, random: boolean = false) {
+export async function scrapeContent(url: string, random = false) {
   try {
-    let res, raw
+    let res, raw;
     if (random) res = await p({ url: url }), raw = res.body;
     else res = await janda.fetchBody(url), raw = res;
 

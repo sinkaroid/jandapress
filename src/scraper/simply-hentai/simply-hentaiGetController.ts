@@ -11,11 +11,11 @@ interface ISimplyHentaiGet {
   language: string;
 }
 
-const janda = new JandaPress()
+const janda = new JandaPress();
 
 export async function scrapeContent(url: string) {
   try {
-    const res = await janda.fetchBody(url)
+    const res = await janda.fetchBody(url);
     const $ = load(res as Buffer);
     const script = $("script#__NEXT_DATA__");
     const json = JSON.parse(script.html() as string);

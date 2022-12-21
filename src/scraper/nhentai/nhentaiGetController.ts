@@ -29,13 +29,13 @@ interface INhentaiGet {
 
 const janda = new JandaPress();
 
-export async function scrapeContent(url: string, random: boolean = false) {
+export async function scrapeContent(url: string, random = false) {
   try {
-    let res, raw
+    let res, raw;
     if (random) res = await p({ url: url, parse: "json" }),
-      raw = res.body as Nhentai;
+    raw = res.body as Nhentai;
     else res = await janda.fetchJson(url),
-      raw = res as Nhentai;
+    raw = res as Nhentai;
 
     const GALLERY = "https://i.nhentai.net/galleries";
     const imagesRaw = raw.images.pages;
