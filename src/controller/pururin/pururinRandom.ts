@@ -8,7 +8,7 @@ export async function randomPururin(req: Request, res: Response, next: NextFunct
   try {
     const id = await getIdRandomPururin();
     const url = `${c.PURURIN}/gallery/${id}/janda`;
-    const data = await scrapeContent(url);
+    const data = await scrapeContent(url, true);
     logger.info({
       path: req.path,
       query: req.query,

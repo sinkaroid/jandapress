@@ -1,5 +1,5 @@
 import { load } from "cheerio";
-import p from "phin";
+import JandaPress from "../../JandaPress";
 import c from "../../utils/options";
 
 interface IHentaiFoxGet {
@@ -11,10 +11,12 @@ interface IHentaiFoxGet {
   image: string[];
 }
 
+const janda = new JandaPress();
+
 export async function scrapeContent(url: string) {
   try {
-    const res = await p({ url: url, followRedirects: true });
-    const $ = load(res.body as Buffer);
+    const res = await janda.fetchBody(url);
+    const $ = load(res);
     const id = parseInt($("a.g_button")?.attr("href")?.split("/")[2] || "");
   
     const category = $("a.tag_btn").map((i, abc) => {

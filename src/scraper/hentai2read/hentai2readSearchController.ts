@@ -1,5 +1,5 @@
 import { load } from "cheerio";
-import p from "phin";
+import JandaPress from "../../JandaPress";
 import c from "../../utils/options";
 import { getId } from "../../utils/modifier";
 
@@ -11,10 +11,12 @@ interface IHentai2readSearch {
   message: string;
 }
 
+const janda = new JandaPress();
+
 export async function scrapeContent(url: string) {
   try {
-    const res = await p(url);
-    const $ = load(res.body as Buffer);
+    const res = await janda.fetchBody(url);
+    const $ = load(res);
     const title = $(".title-text").map((i, el) => $(el).text()).get();
     const imgSrc = $("img").map((i, el) => $(el).attr("data-src")).get();
     const id = $(".overlay-title").map((i, el) => $(el).children("a").attr("href")).get();
