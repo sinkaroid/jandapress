@@ -10,6 +10,35 @@ export async function getPururin(req: Request, res: Response, next: NextFunction
     if (!book) throw Error("Parameter book is required");
     if (!isNumeric(book)) throw Error("Parameter book must be number");
 
+    /**
+     * @api {get} /pururin/get?book=:book Get pururin
+     * @apiName Get pururin
+     * @apiGroup pururin
+     * @apiDescription Get a doujinshi on pururin based on id
+     * 
+     * @apiParam {Number} book Book ID
+     * 
+     * @apiSuccessExample {json} Success-Response:
+     *   HTTP/1.1 200 OK
+     *   HTTP/1.1 200 (cached)
+     * 
+     * @apiExample {curl} curl
+     * curl -i https://janda.mod.land/pururin/get?book=123
+     * 
+     * @apiExample {js} JS/TS
+     * import axios from "axios"
+     * 
+     * axios.get("https://janda.mod.land/pururin/get?book=123")
+     * .then(res => console.log(res.data))
+     * .catch(err => console.error(err))
+     * 
+     * @apiExample {python} Python
+     * import aiohttp
+     * async with aiohttp.ClientSession() as session:
+     *  async with session.get("https://janda.mod.land/pururin/get?book=123") as resp:
+     *    print(await resp.json())
+     */
+
     const url = `${c.PURURIN}/gallery/${book}/janda`;
     const data = await scrapeContent(url);
     logger.info({
