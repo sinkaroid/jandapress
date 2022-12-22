@@ -2,7 +2,10 @@
 yarn.lock
 /build
 /playground
+/template
+/docs
 p.ts
 .env
 .idea
 CHANGELOG.md
+theme.zip
