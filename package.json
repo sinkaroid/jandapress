@@ -1,7 +1,7 @@
 {
   "name": "jandapress",
-  "version": "2.0.2-dev",
-  "description": "Experimental doujin API with gather in mind",
+  "version": "2.0.3-dev",
+  "description": "RESTful and experimental API for the Doujinshi, Pressing the whole nhentai, pururin, hentaifox, and more.. where the official one is lack.",
   "main": "build/src/index.js",
   "scripts": {
     "build": "rimraf build && tsc",
@@ -12,6 +12,9 @@
     "start:dev": "ts-node-dev src/index.ts",
     "lint": "npx eslint . --ext .ts",
     "lint:fix": "npx eslint . --fix",
+    "build:freshdoc": "rimraf docs && rimraf template && rimraf theme.zip",
+    "build:template": " npm run build:freshdoc && curl https://codeload.github.com/ScathachGrip/apidocjs-theme/zip/refs/tags/v8 -o theme.zip && unzip theme.zip && mv apidocjs-theme-8 template",
+    "build:apidoc": "npm run build:template && npx apidoc -i src -o ./docs -t ./template/template-marine",
     "test:nhentai": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/nhentai/get?book=177013 | jq '.'\"",
     "test:pururin": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/pururin/get?book=47226 | jq '.'\"",
     "test:hentaifox": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/hentaifox/get?book=59026 | jq '.'\"",
@@ -19,6 +22,12 @@
     "test:hentai2read": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1 | jq '.'\"",
     "test:simply-hentai": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages | jq '.'\"",
     "test:3hentai": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/3hentai/get?book=608979 | jq '.'\""
+  },
+  "apidoc": {
+    "title": "Jandapress API Documentation",
+    "url" : "https://janda.mod.land",
+    "sampleUrl": "https://janda.mod.land",
+    "name": "Jandapress"
   },
   "keywords": [],
   "author": "sinkaroid",
@@ -31,12 +40,14 @@
     "@keyv/redis": "^2.5.4",
     "cheerio": "^1.0.0-rc.11",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "express-rate-limit": "^6.4.0",
     "express-slow-down": "^1.4.0",
     "keyv": "^4.5.2",
     "phin": "^3.6.1",
-    "pino": "^8.7.0"
+    "pino": "^8.7.0",
+    "pino-pretty": "^9.1.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
@@ -46,10 +57,9 @@
     "@types/tough-cookie": "^4.0.2",
     "@typescript-eslint/eslint-plugin": "^5.18.0",
     "@typescript-eslint/parser": "^5.18.0",
-    "dotenv": "^16.0.1",
+    "apidoc": "^0.29.0",
     "eslint": "^8.29.0",
     "npx": "^10.2.2",
-    "pino-pretty": "^9.1.1",
     "rimraf": "^3.0.2",
     "start-server-and-test": "^1.14.0",
     "ts-node": "^10.8.1",
