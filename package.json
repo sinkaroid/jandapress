@@ -13,7 +13,7 @@
     "lint": "npx eslint . --ext .ts",
     "lint:fix": "npx eslint . --fix",
     "build:freshdoc": "rimraf docs && rimraf template && rimraf theme.zip",
-    "build:template": " npm run build:freshdoc && curl https://codeload.github.com/ScathachGrip/apidocjs-theme/zip/refs/tags/v8 -o theme.zip && unzip theme.zip && mv apidocjs-theme-8 template",
+    "build:template": " npm run build:freshdoc && curl https://codeload.github.com/ScathachGrip/apidocjs-theme/zip/refs/tags/v9 -o theme.zip && unzip theme.zip && mv apidocjs-theme-9 template",
     "build:apidoc": "npm run build:template && npx apidoc -i src -o ./docs -t ./template/template-marine",
     "test:nhentai": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/nhentai/get?book=177013 | jq '.'\"",
     "test:pururin": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/pururin/get?book=47226 | jq '.'\"",
