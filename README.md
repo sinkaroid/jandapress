@@ -1,5 +1,5 @@
 <div align="center">
-<a href="https://janda.mod.land"><img width="500" src="https://cdn.discordapp.com/attachments/1046495201176334467/1055678255866318898/tomoe-janda.png" alt="jandapress"></a>
+<a href="https://janda.mod.land"><img width="500" src="https://cdn.discordapp.com/attachments/1046495201176334467/1055678255866318898/tomoe-janda.png" alt="musashi"></a>
 
 <h4 align="center">RESTful and experimental API for the doujinboards</h4>
 <p align="center">
