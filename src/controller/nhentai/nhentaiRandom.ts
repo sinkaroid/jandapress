@@ -13,6 +13,34 @@ export async function randomNhentai(req: Request, res: Response, next: NextFunct
 
     const id = await getIdRandomNhentai();
 
+    /**
+     * @api {get} /nhentai/random Random nhentai
+     * @apiName Random nhentai
+     * @apiGroup nhentai
+     * @apiDescription Gets random doujinshi on nhentai
+     * 
+     * @apiSuccessExample {json} Success-Response:
+     *   HTTP/1.1 200 OK
+     *   HTTP/1.1 200 (cached)
+     * 
+     * @apiExample {curl} curl
+     * curl -i https://janda.mod.land/nhentai/random
+     * 
+     * @apiExample {js} JS/TS
+     * import axios from "axios"
+     * 
+     * axios.get("https://janda.mod.land/nhentai/random")
+     * .then(res => console.log(res.data))
+     * .catch(err => console.error(err))
+     * 
+     * @apiExample {python} Python
+     * import aiohttp
+     * async with aiohttp.ClientSession() as session:
+     *  async with session.get("https://janda.mod.land/nhentai/random") as resp:
+     *    print(await resp.json())
+     * 
+     */
+
     const url = `${actualAPI}/api/gallery/${id}`;
     const data = await scrapeContent(url, true);
     logger.info({

@@ -6,6 +6,37 @@ import { Request, Response, NextFunction } from "express";
 
 export async function searchHentaifox(req: Request, res: Response, next: NextFunction) {
   try {
+    /**
+     * @api {get} /hentaifox/search Search hentaifox
+     * @apiName Search hentaifox
+     * @apiGroup hentaifox
+     * @apiDescription Search doujinshi on hentaifox
+     * @apiParam {String} key Keyword to search
+     * @apiParam {Number} [page=1] Page number
+     * @apiParam {String} [sort=latest] 
+     * 
+     * @apiSuccessExample {json} Success-Response:
+     *    HTTP/1.1 200 OK
+     *    HTTP/1.1 200 (cached)
+     * 
+     * @apiExample {curl} curl
+     * curl -i https://janda.mod.land/hentaifox/search?key=yuri
+     * curl -i https://janda.mod.land/hentaifox/search?key=yuri&page=2&sort=latest
+     * 
+     * @apiExample {js} JS/TS
+     * import axios from "axios"
+     * 
+     * axios.get("https://janda.mod.land/hentaifox/search?key=yuri")
+     * .then(res => console.log(res.data))
+     * .catch(err => console.error(err))
+     * 
+     * @apiExample {python} Python
+     * import aiohttp
+     * async with aiohttp.ClientSession() as session:
+     *  async with session.get("https://janda.mod.land/hentaifox/search?key=yuri") as resp:
+     *    print(await resp.json())
+     */
+
     const key = req.query.key as string;
     const page = req.query.page || 1;
     const sort = req.query.sort as string || sorting[0] as string;

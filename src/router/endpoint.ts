@@ -1,5 +1,7 @@
 import { Router } from "express";
 import cors from "cors";
+import { slow, limiter } from "../utils/limit-options";
+
 import { searchHentaifox } from "../controller/hentaifox/hentaifoxSearch";
 import { getHentaifox } from "../controller/hentaifox/hentaifoxGet";
 import { getPururin } from "../controller/pururin/pururinGet";
@@ -20,7 +22,6 @@ import { get3hentai } from "../controller/3hentai/3hentaiGet";
 import { search3hentai } from "../controller/3hentai/3hentaiSearch";
 import { random3hentai } from "../controller/3hentai/3hentaiRandom";
 
-import { slow, limiter } from "../utils/limit-options";
 
 function scrapeRoutes() {
   const router = Router();

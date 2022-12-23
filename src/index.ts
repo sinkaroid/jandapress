@@ -12,7 +12,6 @@ const janda = new JandaPress();
 const app = express();
 dotenv.config();
 
-
 app.get("/", slow, limiter, (req, res) => {
   res.send({
     success: true,

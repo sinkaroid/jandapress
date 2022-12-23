@@ -10,6 +10,35 @@ export async function getAsmhentai(req: Request, res: Response, next: NextFuncti
     if (!book) throw Error("Parameter book is required");
     if (!isNumeric(book)) throw Error("Value must be number");
 
+    /**
+     * @api {get} /asmhentai/get?book=:book Get asmhentai
+     * @apiName Get asmhentai
+     * @apiGroup asmhentai
+     * @apiDescription Get a doujinshi on asmhentai based on id
+     * 
+     * @apiParam {Number} book Book ID
+     * 
+     * @apiSuccessExample {json} Success-Response:
+     *   HTTP/1.1 200 OK
+     *   HTTP/1.1 200 (cached)
+     * 
+     * @apiExample {curl} curl
+     * curl -i https://janda.mod.land/asmhentai/get?book=123
+     * 
+     * @apiExample {js} JS/TS
+     * import axios from "axios"
+     * 
+     * axios.get("https://janda.mod.land/asmhentai/get?book=123")
+     * .then(res => console.log(res.data))
+     * .catch(err => console.error(err))
+     * 
+     * @apiExample {python} Python
+     * import aiohttp
+     * async with aiohttp.ClientSession() as session:
+     *  async with session.get("https://janda.mod.land/asmhentai/get?book=123") as resp:
+     *    print(await resp.json())
+     */
+
     const url = `${c.ASMHENTAI}/g/${book}/`;
     const data = await scrapeContent(url);
     logger.info({
