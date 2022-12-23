@@ -1,17 +1,17 @@
 <div align="center">
-<a href="https://janda.mod.land"><img width="500" src="https://cdn.discordapp.com/attachments/952117487166705747/986185787894812672/tomoe-janda.png" alt="jandapress"></a>
+<a href="https://janda.mod.land"><img width="500" src="https://cdn.discordapp.com/attachments/1046495201176334467/1055678255866318898/tomoe-janda.png" alt="jandapress"></a>
 
 <h4 align="center">RESTful and experimental API for the doujinboards</h4>
 <p align="center">
-	<a href="https://github.com/sinkaroid/jandapress/actions/workflows/status.yml"><img src="https://github.com/sinkaroid/jandapress/actions/workflows/status.yml/badge.svg"></a>
+	<a href="https://github.com/sinkaroid/jandapress/actions/workflows/playground.yml"><img src="https://github.com/sinkaroid/jandapress/workflows/Playground/badge.svg"></a>
 	<a href="https://codeclimate.com/github/sinkaroid/jandapress/maintainability"><img src="https://api.codeclimate.com/v1/badges/829b8fe63ab78a425f0b/maintainability" /></a>
 </p>
 
 Jandapress was named **JCE** (Janda Cheerio Express) and definitely depends on them.  
 The motivation of this project is to bring you an actionable data related doujin with gather in mind.
 
+<a href="https://sinkaroid.github.io/jandapress">Playground</a> •
 <a href="https://github.com/sinkaroid/jandapress/blob/master/CONTRIBUTING.md">Contributing</a> •
-<a href="https://github.com/sinkaroid/jandapress/wiki/Routing">Documentation</a> •
 <a href="https://github.com/sinkaroid/jandapress/issues/new/choose">Report Issues</a>
 </div>
 
@@ -26,19 +26,18 @@ The motivation of this project is to bring you an actionable data related doujin
     - [Jandapress vs. the doujinboards](#jandapress-vs-the-whole-doujin-sites)
   - [Prerequisites](#prerequisites)
     - [Installation](#installation)
+      - [Docker](#docker)
+      - [Manual](#manual)
     - [Running tests](#running-tests)
-  - [Routing](#routing)
-    - [nhentai-api](#routing)
-    - [pururin-api](#routing)
-    - [hentaifox-api](#routing)
-    - [asmhentai-api](#routing)
-    - [hentai2read-api](#routing)
-    - [simply-hentai-api](#routing)
-    - [3hentai-api](#routing)
+  - [Playground](https://sinkaroid.github.io/jandapress)
+    - [Routing](#playground)
+    - [Status response](#status-response)
   - [Limitations](#limitations)
+  - [CLosing remarks](https://github.com/sinkaroid/jandapress/blob/master/CLOSING_REMARKS.md)
+    - [Alternative links](https://github.com/sinkaroid/jandapress/blob/master/CLOSING_REMARKS.md#alternative-links)
   - [Pronunciation](#Pronunciation)
-  - [Legal](#legal)
   - [Client libraries / Wrappers](#client-libraries--wrappers)
+  - [Legal](#legal)
 
 
 ## The problem
@@ -51,10 +50,10 @@ You enjoy consume doujin sites to build web applications. There are a lot sites 
 
 - Gather the most doujin sites
 - Objects taken that are consistent structure, almost
-- Objects taken is re-appended to make it more actionable
+- Objects taken is re-appended to make extendable
 - All in one: get, search, and random methods
 - In the future we may implement JWT authentication
-- Pure scraping
+- Pure scraping, except nh sigh..
 
 ## Jandapress vs. the whole doujin sites
 **Features availability** that Jandapress has
@@ -68,8 +67,21 @@ You enjoy consume doujin sites to build web applications. There are a lot sites 
 | `asmhentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/Asmhentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/asmhentai.yml)            | ✅  | ✅     | ✅     |
 | `3hentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/3hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/3hentai.yml)            | ✅  | ✅     | ✅     |
 
+## Prerequisites
+<table>
+	<td><b>NOTE:</b> NodeJS 14.x or higher</td>
+</table>
+
+To handle several requests from each web, You will also need [Redis](https://redis.io/) for persistent caching, free tier is available on [Redis Labs](https://redislabs.com/), You can also choose another provider as we using [keyv](https://github.com/jaredwray/keyv) Key-value storage with support for multiple backends. All data must be stored in `<Buffer>` here.
+
 ## Installation
 Rename `.env.schema` to `.env` and fill the value with your own.
+
+```bash
+PORT=3000 ## default port
+REDIS_URL=redis://default:somenicepassword@someredishost:1337 ## the database url
+EXPIRE_CACHE=1 ## should expired in a day
+```
 
 ### Docker
 
@@ -77,6 +89,7 @@ Rename `.env.schema` to `.env` and fill the value with your own.
     docker run -p 3000:3000 -d ghcr.io/sinkaroid/jandapress:latest
 
 ### Manual
+
 `git clone https://github.com/sinkaroid/jandapress.git`
 - Install dependencies
   - `npm install / yarn install`
@@ -86,16 +99,11 @@ Rename `.env.schema` to `.env` and fill the value with your own.
 - Jandapress testings
   - `npm run start:dev`
 
-## Prerequisites
-<table>
-	<td><b>NOTE:</b> NodeJS 14.x or higher</td>
-</table>
-
-You will also need [Redis](https://redis.io/) for persistent caching, free tier is available on [Redis Labs](https://redislabs.com/)
 
 ## Running tests
 Jandapress depends on
 - [express](https://github.com/expressjs/express) web api framework
+- [keyv](https://github.com/jaredwray/keyv) key-value storage with support for multiple backends
 - [cheerio](https://cheerio.js.org/) for parsing html
 - [cors](https://github.com/expressjs/cors) middleware for enabling CORS
 - [rate-limit](https://github.com/nfriedly/express-rate-limit) rate-limiting middleware for express
@@ -112,15 +120,20 @@ Jandapress depends on
 ### Check nhentai It's under cloudflare protection or not
 `npm run test:cf`
 
+### Generating playground like swagger from apidoc definition
+`npm run build:apidoc`
+
 > To running other tests, you can see object scripts in file `package.json`
 
-## Routing
-the `parameter?`: means is optional
+## Playground
+https://sinkaroid.github.io/jandapress
+
+- These `parameter?`: means is optional
 
 - `/` : index page
 
 ### Nhentai
-The missing piece of nhentai.net
+The missing piece of nhentai.net - https://sinkaroid.github.io/jandapress/#api-nhentai
 - `/nhentai` : nhentai api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`, `?page`, `?sort`
@@ -133,7 +146,7 @@ The missing piece of nhentai.net
     - https://janda.mod.land/nhentai/search?key=futanari&page=2&sort=popular-today
 
 ### Pururin
-The missing piece of pururin.to
+The missing piece of pururin.to - https://sinkaroid.github.io/jandapress/#api-pururin
 - `/pururin` : pururin api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`, `?page`, `?sort`
@@ -145,7 +158,7 @@ The missing piece of pururin.to
     - https://janda.mod.land/pururin/search?key=futanari&page=2&sort=most-viewed
 
 ### Hentaifox
-The missing piece of hentaifox.com
+The missing piece of hentaifox.com - https://sinkaroid.github.io/jandapress/#api-hentaifox
 - `/hentaifox`: hentaifox api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`, `?page`, `?sort`
@@ -157,7 +170,7 @@ The missing piece of hentaifox.com
     - https://janda.mod.land/hentaifox/search?key=milf&page=2&sort=latest
 
 ### Asmhentai
-The missing piece of asmhentai.com
+The missing piece of asmhentai.com - https://sinkaroid.github.io/jandapress/#api-asmhentai
 - `/asmhentai`: asmhentai api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`, `?page`
@@ -169,7 +182,7 @@ The missing piece of asmhentai.com
     - https://janda.mod.land/asmhentai/search?key=futanari&page=2
 
 ### Hentai2read
-The missing piece of hentai2read.com
+The missing piece of hentai2read.com - https://sinkaroid.github.io/jandapress/#api-hentai2read
 - `/hentai2read`: hentai2read api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`
@@ -180,7 +193,7 @@ The missing piece of hentai2read.com
     - https://janda.mod.land/hentai2read/search?key=futanari
 
 ### Simply-hentai
-The missing piece of simply-hentai.com
+The missing piece of simply-hentai.com - https://sinkaroid.github.io/jandapress/#api-simply-hentai
 - `/simply-hentai`: simply-hentai api
   - **get**, takes parameters : `book`
   - <u>sort parameters on search</u>
@@ -189,7 +202,7 @@ The missing piece of simply-hentai.com
     - https://janda.mod.land/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages
 
 ### 3hentai
-The missing piece of 3hentai.net
+The missing piece of 3hentai.net - https://sinkaroid.github.io/jandapress/#api-3hentai
 - `/3hentai`: 3hentai api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`, `?page`, `?sort`
@@ -199,6 +212,12 @@ The missing piece of 3hentai.net
   - Example
     - https://janda.mod.land/3hentai/get?book=608979
     - https://janda.mod.land/3hentai/search?key=futanari&page=2&sort=popular-7d
+
+## Status response
+
+    HTTP/1.1 200 OK
+    HTTP/1.1 200 (cached)
+    HTTP/1.1 500 (bad parameters)
 
 ## Limitations
 Nhentai was cloudflare protection enabled, If IP and our thoughts against them? You should implement a proxy. Check [`cookie branch`](https://github.com/sinkaroid/jandapress/tree/cookie), take a look this workaround [Zekfad/nhentai-api/issues/25#issuecomment-1141360074](https://github.com/Zekfad/nhentai-api/issues/25#issuecomment-1141360074)
@@ -211,10 +230,12 @@ Nhentai was cloudflare protection enabled, If IP and our thoughts against them? 
 > That's unfortunate, Hit the "Sponsor this project" button, any kind of donations will helps me to funding the development.
 
 ## Pronunciation
-[`id_ID`](https://www.localeplanet.com/java/id-ID/index.html) • **/jan·da/** — dewasa dan mengikat; _(?)_
+[`id_ID`](https://www.localeplanet.com/java/id-ID/index.html) • **/jan·da/** — Dewasa dan mengikat; _(?)_
 
 
 ## Client libraries / Wrappers
+Seamlessly integrate with the languages you love, simplified the usage, and intelisense definitions on your IDEs
+
 - [janda](https://github.com/sinkaroid/janda) Python wrapper by [sinkaroid](https://github.com/sinkaroid)
 - Or [create your own](https://github.com/sinkaroid/jandapress/edit/master/README.md)
 
