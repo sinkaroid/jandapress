@@ -1,4 +1,4 @@
-name: Create api documentation
+name: Playground
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Installing dependencies
         run: npm install
@@ -20,7 +20,7 @@ jobs:
         run: npm run build:apidoc
 
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4.2.5
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
         with:
           branch: gh-pages
           folder: docs
