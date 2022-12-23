@@ -1,6 +1,6 @@
 {
   "name": "jandapress",
-  "version": "2.0.3-dev",
+  "version": "2.0.4-dev",
   "description": "RESTful and experimental API for the Doujinshi, Pressing the whole nhentai, pururin, hentaifox, and more.. where the official one is lack.",
   "main": "build/src/index.js",
   "scripts": {
