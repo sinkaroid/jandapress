@@ -80,7 +80,7 @@ Rename `.env.schema` to `.env` and fill the value with your own.
 ```bash
 PORT=3000 ## default port
 REDIS_URL=redis://default:somenicepassword@someredishost:1337 ## the database url
-EXPIRE_CACHE=1 ## should expired in a day
+EXPIRE_CACHE=1 ## a hour
 ```
 
 ### Docker
