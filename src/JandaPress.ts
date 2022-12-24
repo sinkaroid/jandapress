@@ -6,7 +6,7 @@ dotenv.config();
 const keyv = new Keyv(process.env.REDIS_URL);
 
 keyv.on("error", err => console.log("Connection Error", err));
-const ttl = 1000 * 60 * 60 * 24 * Number(process.env.EXPIRE_CACHE);
+const ttl = 1000 * 60 * 60 * Number(process.env.EXPIRE_CACHE);
 
 class JandaPress {
   url: string;
