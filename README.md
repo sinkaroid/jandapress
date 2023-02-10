@@ -28,8 +28,8 @@ The motivation of this project is to bring you an actionable data related doujin
     - [Installation](#installation)
       - [Docker](#docker)
       - [Manual](#manual)
-      - [Nhentai guide](#nhentai-guide)
     - [Running tests](#running-tests)
+    - [Nhentai Guide](#nhentai-guide)
   - [Playground](https://sinkaroid.github.io/jandapress)
     - [Routing](#playground)
     - [Status response](#status-response)
@@ -107,9 +107,23 @@ USER_AGENT = "jandapress/1.0.5 Node.js/16.9.1"
     docker pull ghcr.io/sinkaroid/jandapress:latest
     docker run -p 3000:3000 -d ghcr.io/sinkaroid/jandapress:latest
 
+### Docker (your own)
+```bash
+docker run -d \
+  --name=jandapress \
+  -p 3000:3000 \
+  -e REDIS_URL='redis://default:somenicepassword@redis-666.c10.us-east-6-6.ec666.cloud.redislabs.com:1337' \
+  -e EXPIRE_CACHE='1' \
+  -e NHENTAI_IP_ORIGIN='false' \
+  -e COOKIE='cf_clearance=AbcDefGhijY7RYSKv3YeJUjrI5xQ2Uc-666-0-250' \
+  -e USER_AGENT='jandapress/1.0.5 Node.js/16.9.1' \
+  ghcr.io/sinkaroid/jandapress:latest
+```
+
 ### Manual
 
-`git clone https://github.com/sinkaroid/jandapress.git`
+    git clone https://github.com/sinkaroid/jandapress.git
+
 - Install dependencies
   - `npm install / yarn install`
 - Jandapress production
@@ -135,6 +149,8 @@ You will need instance such as VPS and install `chorme` or `chromium` or `firefo
 - open devtools and go to network tab and request
 - get the `cf_clearance` value and set it to `COOKIE` in `.env` file 
 - set the user agent to `USER_AGENT` in `.env` file
+- test that your cookie is working `npm run test:cf`
+  - it should return 200 status code otherwise watch your step
 
 [The documentation](https://developers.cloudflare.com/fundamentals/get-started/reference/cloudflare-cookies/#:~:text=This%20cookie%20expires%20after%2030,Bot%20Management%2C%20a%20session%20identifier.) said and correct me if I'm wrong:
 > This cookie expires after 30 minutes of continuous inactivity by the end user. The cookie contains information related to the calculation of Cloudflare’s proprietary bot score and, when Anomaly Detection is enabled on Bot Management, a session identifier. 
