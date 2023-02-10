@@ -1,33 +1,70 @@
+import JandaPress from "../JandaPress";
 import p from "phin";
 import { load } from "cheerio";
 import c from "./options";
 
+const janda = new JandaPress();
 
+/**
+ * Get Pururin info and replace
+ * @param value 
+ * @returns string
+ */
 function getPururinInfo(value: string) {
   return value.replace(/\n/g, " ").replace(/\s\s+/g, " ").trim();
 }
 
+/**
+ * Get Pururin page count
+ * @param value
+ * @returns number
+ */
 function getPururinPageCount(value: string) {
   const data = value.replace(/\n/g, " ").replace(/\s\s+/g, " ").trim().split(", ").pop();
   return Number(data?.split(" ")[0]);
 }
 
+/**
+ * Get Pururin language
+ * @param value
+ * @returns string
+ */
 function getPururinLanguage(value: string) {
   return value.split(",").reverse()[1].trim();
 }
 
+/**
+ * Parse url
+ * @param url
+ * @returns string
+ */
 function getUrl(url: string) {
   return url.replace(/^\/\//, "https://");
 }
 
+/**
+ * Parse id
+ * @param url
+ * @returns string
+ */
 function getId(url: string) {
   return url.replace(/^https?:\/\/[^\\/]+/, "").replace(/\/$/, "");
 }
 
+/**
+ * Parse alphabet only
+ * @param input
+ * @returns string
+ */
 function removeNonNumeric(input: string) {
   return input.replace(/[^0-9]/g, "");
 }
 
+/**
+ * Parse date format on nhentai
+ * @param date
+ * @returns string
+ */
 function getDate(date: Date) {
   return date.toLocaleDateString("en-US", {
     year: "numeric",
@@ -36,6 +73,11 @@ function getDate(date: Date) {
   });
 }
 
+/**
+ * Fancy time ago format
+ * @param input 
+ * @returns string
+ */
 function timeAgo(input: Date) {
   const date = new Date(input);
   const formatter: any = new Intl.RelativeTimeFormat("en");
@@ -57,6 +99,11 @@ function timeAgo(input: Date) {
   }
 }
 
+/**
+ * Check nhentai status
+ * @param url
+ * @returns boolean
+ */
 async function mock(url: string) {
   const site = await p({ url: url });
   if (site.statusCode === 200) {
@@ -68,11 +115,20 @@ async function mock(url: string) {
   }
 }
 
-export const isNumeric = (val: string) : boolean => {
+/** 
+ * Check if string is numeric
+ * @param val
+ * @returns boolean
+ */
+export const isNumeric = (val: string): boolean => {
   return !isNaN(Number(val));
 };
 
-export async function getIdRandomPururin (): Promise<number> {
+/** 
+ * Simulate random on pururin
+ * @returns Promise<number>
+ */
+export async function getIdRandomPururin(): Promise<number> {
   const randomNumber = Math.floor(Math.random() * 500) + 1;
   const raw = await p(`${c.PURURIN}/browse/random?page=${randomNumber}`);
   const $ = load(raw.body);
@@ -82,13 +138,14 @@ export async function getIdRandomPururin (): Promise<number> {
   return parseInt(randomgallery);
 }
 
-export async function getIdRandomNhentai (): Promise<number> {
-  if (await mock(c.NHENTAI)) {
-    const res: any = await p({
-      url: `${c.NHENTAI}/random`,
-      followRedirects: true,
-    });
-    
+/**
+ * Simulate random on nhentai
+ * @returns Promise<number>
+ */
+export async function getIdRandomNhentai(): Promise<number> {
+  if (process.env.NHENTAI_IP_ORIGIN === "false") {
+    const res: any = await janda.simulateCookie(`${c.NHENTAI}/random`);
+
     const getId = res.socket._httpMessage.path;
     return parseInt(getId.replace(/^\/g\/([0-9]+)\/?$/, "$1"));
   } else {
@@ -98,6 +155,28 @@ export async function getIdRandomNhentai (): Promise<number> {
   }
 }
 
+/**
+ * Error handler
+ * @param success
+ * @param message
+ * @returns object
+ */
+export function maybeError(success: boolean, message: string) {
+  return { success, message };
+}
 
-export { getPururinInfo, getPururinPageCount, getUrl, getId, getDate, timeAgo, 
-  mock, getPururinLanguage, removeNonNumeric };
+/**
+ * Get nhentai strategy from origin api or simulating the request cookie
+ * @returns string
+ */
+export function nhentaiStrategy() {
+  let strategy: string;
+  if (process.env.NHENTAI_IP_ORIGIN === "true" || process.env.NHENTAI_IP_ORIGIN === undefined) strategy = c.NHENTAI_IP_3;
+  else strategy = c.NHENTAI;
+  return strategy;
+}
+
+export {
+  getPururinInfo, getPururinPageCount, getUrl, getId, getDate, timeAgo,
+  mock, getPururinLanguage, removeNonNumeric
+};

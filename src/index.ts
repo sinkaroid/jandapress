@@ -1,3 +1,4 @@
+import "dotenv/config";
 import JandaPress from "./JandaPress";
 import express from "express";
 import { Request, Response, NextFunction } from "express";
@@ -6,11 +7,10 @@ import { slow, limiter } from "./utils/limit-options";
 import { logger } from "./utils/logger";
 import { isNumeric } from "./utils/modifier";
 import * as pkg from "../package.json";
-import dotenv from "dotenv";
 
 const janda = new JandaPress();
 const app = express();
-dotenv.config();
+
 
 app.get("/", slow, limiter, (req, res) => {
   res.send({
