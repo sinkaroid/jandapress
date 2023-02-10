@@ -9,8 +9,6 @@ const strategy = process.env.NHENTAI_IP_ORIGIN || "true";
 keyv.on("error", err => console.log("Connection Error", err));
 const ttl = 1000 * 60 * 60 * Number(process.env.EXPIRE_CACHE);
 
-const jar = new CookieJar();
-jar.setCookie(process.env.COOKIE || "", "https://nhentai.net/");
 
 class JandaPress {
   url: string;
@@ -21,6 +19,9 @@ class JandaPress {
   }
 
   async simulateCookie(target: string, parseJson = false): Promise<p.IResponse | unknown> {
+    const jar = new CookieJar();
+    jar.setCookie(process.env.COOKIE || "", "https://nhentai.net/").catch(err => console.log(err.message));
+
     if (!parseJson) {
       const res = await p({
         url: target,
@@ -133,4 +134,3 @@ class JandaPress {
 }
 
 export default JandaPress;
-
