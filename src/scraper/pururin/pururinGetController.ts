@@ -13,7 +13,8 @@ interface IGetPururin {
   image: string[];
 }
 
-interface IData{
+interface IData {
+  success: boolean;
   data: object;
   source: string;
 }
@@ -28,6 +29,7 @@ export async function scrapeContent(url: string, random = false) {
 
     const $ = load(raw);
     const title: string = $("div.content-wrapper h1").html() || "";
+    if (!title) throw Error("Not found");
     
     const tags: string[] = $("div.content-wrapper ul.list-inline li").map((i, abc) => {
       return getPururinInfo($(abc).text());
@@ -53,11 +55,13 @@ export async function scrapeContent(url: string, random = false) {
     };
 
     const data: IData = {
+      success: true,
       data: objectData,
       source: `${c.PURURIN}/gallery/${id}/janda`
     };
     return data;
-  } catch (err: any) {
-    throw Error(err.message);
+  } catch (err) {
+    const e = err as Error;
+    throw Error(e.message);
   }
 }

@@ -1,6 +1,7 @@
 import { scrapeContent } from "../../scraper/hentai2read/hentai2readGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
+import { maybeError } from "../../utils/modifier";
 import { Request, Response } from "express";
 
 export async function getHentai2read(req: Request, res: Response) {
@@ -48,11 +49,8 @@ export async function getHentai2read(req: Request, res: Response) {
       useragent: req.get("User-Agent")
     });
     return res.json(data);
-  } catch (err: any) {
-    const example = {
-      "success": false,
-      "message": err.message
-    };
-    res.json(example);
+  } catch (err) {
+    const e = err as Error;
+    res.status(400).json(maybeError(false, e.message));
   }
 }

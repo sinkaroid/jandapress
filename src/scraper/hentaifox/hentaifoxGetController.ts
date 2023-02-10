@@ -48,11 +48,13 @@ export async function scrapeContent(url: string) {
     };
 
     const data = {
+      success: true,
       data: objectData,
       source: `${c.HENTAIFOX}/gallery/${id}/`,
     };
     return data;
-  } catch (err: any) {
-    throw Error(err.message);
+  } catch (err) {
+    const e = err as Error;
+    throw Error(e.message);
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "jandapress",
-  "version": "2.1.1-alpha",
+  "version": "2.1.2-alpha",
   "description": "RESTful and experimental API for the Doujinshi, Pressing the whole nhentai, pururin, hentaifox, and more.. where the official one is lack.",
   "main": "build/src/index.js",
   "scripts": {
@@ -48,7 +48,7 @@
     "keyv": "^4.5.2",
     "phin": "^3.6.1",
     "pino": "^8.7.0",
-    "pino-pretty": "^9.1.1",
+    "pino-pretty": "^9.2.0",
     "tough-cookie": "^4.1.2"
   },
   "devDependencies": {
@@ -62,7 +62,7 @@
     "apidoc": "^0.29.0",
     "eslint": "^8.29.0",
     "npx": "^10.2.2",
-    "rimraf": "^3.0.2",
+    "rimraf": "^4.1.2",
     "start-server-and-test": "^1.14.0",
     "ts-node": "^10.8.1",
     "ts-node-dev": "^2.0.0",

@@ -12,7 +12,8 @@ interface IGet3hentai {
   
 }
 
-interface IData{
+interface IData {
+  success?: boolean;
   data: object;
   source: string;
 }
@@ -34,6 +35,8 @@ export async function scrapeContent(url: string) {
     const tags = $("span.filter-elem")?.map((i, el) => $(el).text()).get();
     const tagsClean = tags.map((tag: string) => tag.replace(/<[^>]*>/g, "").replace(/\n/g, "").trim());
     const image = $("div.single-thumb-col")?.map((i, el) => $(el).find("img").attr("data-src")).get();
+    if (image.length === 0) throw Error("No result found");
+
     const imageClean = image.map((img: string) => img.replace("t.", "."));
     const upload_date = $("time").text();
 
@@ -47,12 +50,13 @@ export async function scrapeContent(url: string) {
     };
 
     const data: IData = {
+      success: true,
       data: objectData,
       source: `${c.THREEHENTAI}/d/${id ? id : book}`,
     };
     return data;
   } catch (err) {
-    const error = err as string;
-    throw new Error(error);
+    const e = err as Error;
+    throw Error(e.message);
   }
 }

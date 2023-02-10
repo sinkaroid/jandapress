@@ -1,7 +1,7 @@
 import { scrapeContent } from "../../scraper/simply-hentai/simply-hentaiGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
-import { mock } from "../../utils/modifier";
+import { mock, maybeError } from "../../utils/modifier";
 import { Request, Response } from "express";
 
 export async function getSimplyhentai(req: Request, res: Response) {
@@ -51,11 +51,8 @@ export async function getSimplyhentai(req: Request, res: Response) {
       useragent: req.get("User-Agent")
     });
     return res.json(data);
-  } catch (err: any) {
-    const example = {
-      "success": false,
-      "message": err.message
-    };
-    res.json(example);
+  } catch (err) {
+    const e = err as Error;
+    res.status(400).json(maybeError(false, e.message));
   }
 }

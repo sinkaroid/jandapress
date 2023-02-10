@@ -1,10 +1,10 @@
 import { scrapeContent } from "../../scraper/hentaifox/hentaifoxGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
-import { isNumeric } from "../../utils/modifier";
-import { Request, Response, NextFunction } from "express";
+import { isNumeric, maybeError } from "../../utils/modifier";
+import { Request, Response } from "express";
 
-export async function getHentaifox(req: Request, res: Response, next: NextFunction) {
+export async function getHentaifox(req: Request, res: Response) {
   try {
     const book = req.query.book as string;
     if (!book) throw Error("Parameter book is required");
@@ -49,7 +49,8 @@ export async function getHentaifox(req: Request, res: Response, next: NextFuncti
       useragent: req.get("User-Agent")
     });
     return res.json(data);
-  } catch (err: any) {
-    next(Error(err.message));
+  } catch (err) {
+    const e = err as Error;
+    res.status(400).json(maybeError(false, e.message));
   }
 }

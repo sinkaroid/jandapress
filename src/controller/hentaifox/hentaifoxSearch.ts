@@ -1,10 +1,11 @@
 import { scrapeContent } from "../../scraper/hentaifox/hentaifoxSearchController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
+import { maybeError } from "../../utils/modifier";
 const sorting = ["latest", "popular"];
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 
-export async function searchHentaifox(req: Request, res: Response, next: NextFunction) {
+export async function searchHentaifox(req: Request, res: Response) {
   try {
     /**
      * @api {get} /hentaifox/search Search hentaifox
@@ -52,7 +53,8 @@ export async function searchHentaifox(req: Request, res: Response, next: NextFun
       useragent: req.get("User-Agent")
     });
     return res.json(data);
-  } catch (err: any) {
-    next(Error(err.message));
+  } catch (err) {
+    const e = err as Error;
+    res.status(400).json(maybeError(false, e.message));
   }
 }
