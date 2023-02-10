@@ -3,13 +3,13 @@
   "url": "https://janda.mod.land",
   "sampleUrl": "https://janda.mod.land",
   "name": "Jandapress",
-  "version": "2.1.3-alpha",
+  "version": "2.1.4-alpha",
   "description": "RESTful and experimental API for the Doujinshi, Pressing the whole nhentai, pururin, hentaifox, and more.. where the official one is lack.",
   "defaultVersion": "0.0.0",
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2023-02-10T22:07:29.289Z",
+    "time": "2023-02-10T22:53:19.339Z",
     "url": "https://apidocjs.com",
     "version": "0.29.0"
   }
