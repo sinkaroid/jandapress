@@ -34,3 +34,7 @@ interface T {
     count: number;
 }
 
+export interface MaybeError {
+    message: string;
+}
+
