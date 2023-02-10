@@ -28,7 +28,7 @@ The motivation of this project is to bring you an actionable data related doujin
     - [Installation](#installation)
       - [Docker](#docker)
       - [Manual](#manual)
-      - [Nhentai guide](#limitations)
+      - [Nhentai guide](#nhentai-guide)
     - [Running tests](#running-tests)
   - [Playground](https://sinkaroid.github.io/jandapress)
     - [Routing](#playground)
@@ -75,16 +75,32 @@ You enjoy consume doujin sites to build web applications. There are a lot sites 
 To handle several requests from each web, You will also need [Redis](https://redis.io/) for persistent caching, free tier is available on [Redis Labs](https://redislabs.com/), You can also choose another provider as we using [keyv](https://github.com/jaredwray/keyv) Key-value storage with support for multiple backends. All data must be stored in `<Buffer>` here.
 
 ## Installation
-Rename `.env.schema` to `.env` and fill the value with your own.
+Rename `.env.schema` to `.env` and fill the value with your own
 
 ```bash
-PORT=3000 ## default port
-REDIS_URL=redis://default:somenicepassword@someredishost:1337 ## the database url
-EXPIRE_CACHE=1 ## a hour
-```
+# railway, fly.dev, heroku, vercel or any free service, NHENTAI_IP_ORIGIN should be true
+RAILWAY = sinkaroid
 
-## Nhentai guide
-Nhentai was cloudflare protection enabled, If IP and our thoughts against them? You should implement a proxy. Check [`cookie branch`](https://github.com/sinkaroid/jandapress/tree/cookie), take a look this workaround [Zekfad/nhentai-api/issues/25#issuecomment-1141360074](https://github.com/Zekfad/nhentai-api/issues/25#issuecomment-1141360074)
+# default port
+PORT = 3000
+
+# backend storage, default is redis, if not set it will consume memory storage
+REDIS_URL = redis://default:somenicepassword@redis-666.c10.us-east-6-6.ec666.cloud.redislabs.com:1337
+
+# ttl expire cache (in X hour)
+EXPIRE_CACHE = 1
+
+# nhentai strategy
+# default is true which is assign to request on IP instead of nhentai.net with cloudflare
+# if you have instance like vps you need chromium or firefox installed and set it to false
+NHENTAI_IP_ORIGIN = true
+
+# you must set COOKIE if NHENTAI_IP_ORIGIN is false, read the jandapress docs 
+COOKIE = "cf_clearance=l7RsUjiZ3LHAZZKcM7BcCylwD2agwPDU7l9zkg8MzPo-1676044652-0-250"
+
+# you must set USER_AGENT if NHENTAI_IP_ORIGIN is false, read the jandapress docs
+USER_AGENT = "jandapress/1.0.5 Node.js/16.9.1"
+```
 
 ### Docker
 
@@ -97,13 +113,38 @@ Nhentai was cloudflare protection enabled, If IP and our thoughts against them? 
 - Install dependencies
   - `npm install / yarn install`
 - Jandapress production
-  - `npm run build`
   - `npm run start:prod`
-- Jandapress testings
+- Jandapress testing and hot reload
   - `npm run start:dev`
 
+## Nhentai Guide
+### The problem
+https://nhentai.net was Clouflare protection enabled, for default jandapress use [real IP address to bypass the protection](https://github.com/sinkaroid/jandapress/blob/master/src/utils/options.ts#L7..L10), but **sometimes** even it's from IP address the `/api` path return error that means admins or their maintainer don't allow us to request from the IP address.
+![image](https://cdn.discordapp.com/attachments/952117487166705747/1073694957111627906/Screenshot_265.png)
+
+### The solution
+You will need instance such as VPS and install `chorme` or `chromium` or `firefox`, You have to set `NHENTAI_IP_ORIGIN` to `false`, set `COOKIE` and `USER_AGENT`. We'll simulate the request with [tough-cookie](https://github.com/salesforce/tough-cookie) and [http-cookie-agent](https://www.npmjs.com/package/http-cookie-agent) 
+
+![image](https://cdn.discordapp.com/attachments/952117487166705747/1073699069643468902/Screenshot_267_copy.jpg)
+
+- set `NHENTAI_IP_ORIGIN` to `false` in `.env` file
+- open browser and go to https://nhentai.net
+- verify you are human
+- open devtools and set custom user agent
+- reload the page and wait cloudflare again
+- open devtools and go to network tab and request
+- get the `cf_clearance` value and set it to `COOKIE` in `.env` file 
+- set the user agent to `USER_AGENT` in `.env` file
+
+[The documentation](https://developers.cloudflare.com/fundamentals/get-started/reference/cloudflare-cookies/#:~:text=This%20cookie%20expires%20after%2030,Bot%20Management%2C%20a%20session%20identifier.) said and correct me if I'm wrong:
+> This cookie expires after 30 minutes of continuous inactivity by the end user. The cookie contains information related to the calculation of Cloudflare’s proprietary bot score and, when Anomaly Detection is enabled on Bot Management, a session identifier. 
+
+└── https://developers.cloudflare.com/fundamentals
+
+You will need to make your cookie is not expired otherwise manual update is required, it can be with set interval or cron job to automate your request.
 
 ## Running tests
+Jandapress testing
 
 ### Start the production server
 `npm run start:prod`
@@ -211,6 +252,7 @@ The missing piece of 3hentai.net - https://sinkaroid.github.io/jandapress/#api-3
     - https://janda.mod.land/3hentai/search?key=futanari&page=2&sort=popular-7d
 
 ## Status response
+`"success": true,` or `"success": false,`
 
     HTTP/1.1 200 OK
     HTTP/1.1 400 Bad Request
