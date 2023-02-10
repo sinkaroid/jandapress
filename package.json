@@ -1,6 +1,6 @@
 {
   "name": "jandapress",
-  "version": "2.0.4-dev",
+  "version": "2.1.1-alpha",
   "description": "RESTful and experimental API for the Doujinshi, Pressing the whole nhentai, pururin, hentaifox, and more.. where the official one is lack.",
   "main": "build/src/index.js",
   "scripts": {
@@ -25,7 +25,7 @@
   },
   "apidoc": {
     "title": "Jandapress API Documentation",
-    "url" : "https://janda.mod.land",
+    "url": "https://janda.mod.land",
     "sampleUrl": "https://janda.mod.land",
     "name": "Jandapress"
   },
@@ -44,10 +44,12 @@
     "express": "^4.18.1",
     "express-rate-limit": "^6.4.0",
     "express-slow-down": "^1.4.0",
+    "http-cookie-agent": "^5.0.2",
     "keyv": "^4.5.2",
     "phin": "^3.6.1",
     "pino": "^8.7.0",
-    "pino-pretty": "^9.1.1"
+    "pino-pretty": "^9.1.1",
+    "tough-cookie": "^4.1.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
