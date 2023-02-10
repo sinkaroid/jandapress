@@ -28,11 +28,11 @@ The motivation of this project is to bring you an actionable data related doujin
     - [Installation](#installation)
       - [Docker](#docker)
       - [Manual](#manual)
+      - [Nhentai guide](#limitations)
     - [Running tests](#running-tests)
   - [Playground](https://sinkaroid.github.io/jandapress)
     - [Routing](#playground)
     - [Status response](#status-response)
-  - [Limitations](#limitations)
   - [CLosing remarks](https://github.com/sinkaroid/jandapress/blob/master/CLOSING_REMARKS.md)
     - [Alternative links](https://github.com/sinkaroid/jandapress/blob/master/CLOSING_REMARKS.md#alternative-links)
   - [Pronunciation](#Pronunciation)
@@ -83,6 +83,9 @@ REDIS_URL=redis://default:somenicepassword@someredishost:1337 ## the database ur
 EXPIRE_CACHE=1 ## a hour
 ```
 
+## Nhentai guide
+Nhentai was cloudflare protection enabled, If IP and our thoughts against them? You should implement a proxy. Check [`cookie branch`](https://github.com/sinkaroid/jandapress/tree/cookie), take a look this workaround [Zekfad/nhentai-api/issues/25#issuecomment-1141360074](https://github.com/Zekfad/nhentai-api/issues/25#issuecomment-1141360074)
+
 ### Docker
 
     docker pull ghcr.io/sinkaroid/jandapress:latest
@@ -101,12 +104,6 @@ EXPIRE_CACHE=1 ## a hour
 
 
 ## Running tests
-Jandapress depends on
-- [express](https://github.com/expressjs/express) web api framework
-- [keyv](https://github.com/jaredwray/keyv) key-value storage with support for multiple backends
-- [cheerio](https://cheerio.js.org/) for parsing html
-- [cors](https://github.com/expressjs/cors) middleware for enabling CORS
-- [rate-limit](https://github.com/nfriedly/express-rate-limit) rate-limiting middleware for express
 
 ### Start the production server
 `npm run start:prod`
@@ -216,11 +213,8 @@ The missing piece of 3hentai.net - https://sinkaroid.github.io/jandapress/#api-3
 ## Status response
 
     HTTP/1.1 200 OK
-    HTTP/1.1 200 (cached)
-    HTTP/1.1 500 (bad parameters)
-
-## Limitations
-Nhentai was cloudflare protection enabled, If IP and our thoughts against them? You should implement a proxy. Check [`cookie branch`](https://github.com/sinkaroid/jandapress/tree/cookie), take a look this workaround [Zekfad/nhentai-api/issues/25#issuecomment-1141360074](https://github.com/Zekfad/nhentai-api/issues/25#issuecomment-1141360074)
+    HTTP/1.1 400 Bad Request
+    HTTP/1.1 500 Fail to get data
 
 ## Frequently asked questions 
 **Q: The website response is slow**  
