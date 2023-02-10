@@ -1,7 +1,6 @@
 import { scrapeContent } from "../../scraper/nhentai/nhentaiRelatedController";
-import c from "../../utils/options";
 import { logger } from "../../utils/logger";
-import { mock, isNumeric } from "../../utils/modifier";
+import { nhentaiStrategy, isNumeric, maybeError } from "../../utils/modifier";
 import { Request, Response } from "express";
 
 export async function relatedNhentai(req: Request, res: Response) {
@@ -9,10 +8,6 @@ export async function relatedNhentai(req: Request, res: Response) {
     const book = req.query.book as string;
     if (!book) throw Error("Parameter book is required");
     if (!isNumeric(book)) throw Error("Value must be number");
-
-    let actualAPI;
-    if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP_3;
-    else actualAPI = c.NHENTAI;
 
     /**
      * @api {get} /nhentai/related?book=:book Get related nhentai
@@ -24,7 +19,7 @@ export async function relatedNhentai(req: Request, res: Response) {
      * 
      * @apiSuccessExample {json} Success-Response:
      *   HTTP/1.1 200 OK
-     *   HTTP/1.1 200 (cached)
+     *   HTTP/1.1 400 Bad Request
      * 
      * @apiExample {curl} curl
      * curl -i https://janda.mod.land/nhentai/related?book=123
@@ -43,7 +38,7 @@ export async function relatedNhentai(req: Request, res: Response) {
      *    print(await resp.json())
      */
     
-    const url = `${actualAPI}/api/gallery/${book}/related`;
+    const url = `${nhentaiStrategy()}/api/gallery/${book}/related`;
     const data = await scrapeContent(url);
     logger.info({
       path: req.path,
@@ -53,11 +48,8 @@ export async function relatedNhentai(req: Request, res: Response) {
       useragent: req.get("User-Agent")
     });
     return res.json(data);
-  } catch (err: any) {
-    const e = {
-      "success": false,
-      "message": err.message
-    };
-    res.json(e);
+  } catch (err) {
+    const e = err as Error;
+    res.status(400).json(maybeError(false, e.message));
   }
 }

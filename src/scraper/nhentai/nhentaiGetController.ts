@@ -1,4 +1,3 @@
-import p from "phin";
 import JandaPress from "../../JandaPress";
 import c from "../../utils/options";
 import { getDate, timeAgo } from "../../utils/modifier";
@@ -32,10 +31,8 @@ const janda = new JandaPress();
 export async function scrapeContent(url: string, random = false) {
   try {
     let res, raw;
-    if (random) res = await p({ url: url, parse: "json" }),
-    raw = res.body as Nhentai;
-    else res = await janda.fetchJson(url),
-    raw = res as Nhentai;
+    if (random) res = await janda.simulateNhentaiRequest(url), raw = res as Nhentai;
+    else res = await janda.fetchJson(url), raw = res as Nhentai;
 
     const GALLERY = "https://i.nhentai.net/galleries";
     const imagesRaw = raw.images.pages;
@@ -93,11 +90,13 @@ export async function scrapeContent(url: string, random = false) {
     };
 
     const data = {
+      success: true,
       data: objectData,
       source: `${c.NHENTAI}/g/${raw.id}`,
     };
     return data;
-  } catch (err: any) {
-    throw Error(err.message);
+  } catch (err) {
+    const e = err as Error;
+    throw Error(e.message);
   }
 }

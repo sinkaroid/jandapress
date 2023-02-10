@@ -56,6 +56,7 @@ export async function scrapeContent(url: string) {
     }
     
     const data = {
+      success: true,
       data: content,
       page: Number(url.split("&page=")[1]),
       sort: url.split("&sort=")[1].split("&")[0],
@@ -63,7 +64,8 @@ export async function scrapeContent(url: string) {
     };
     return data;
     
-  } catch (err: any) {
-    throw Error(err.message);
+  } catch (err) {
+    const e = err as Error;
+    throw Error(e.message);
   }
 }

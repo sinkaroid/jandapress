@@ -23,7 +23,7 @@ export async function search3hentai(req: Request, res: Response, next: NextFunct
      * 
      * @apiSuccessExample {json} Success-Response:
      *    HTTP/1.1 200 OK
-     *    HTTP/1.1 200 (cached)
+     *    HTTP/1.1 400 Bad Request
      * 
      * @apiExample {curl} curl
      * curl -i https://janda.mod.land/3hentai/search?key=yuri

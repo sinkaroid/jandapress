@@ -22,7 +22,7 @@ export async function getSimplyhentai(req: Request, res: Response) {
      * 
      * @apiSuccessExample {json} Success-Response:
      *   HTTP/1.1 200 OK
-     *   HTTP/1.1 200 (cached)
+     *   HTTP/1.1 400 Bad Request
      * 
      * @apiExample {curl} curl
      * curl -i https://janda.mod.land/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages

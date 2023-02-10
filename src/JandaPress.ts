@@ -1,17 +1,80 @@
 import p from "phin";
 import Keyv from "keyv";
-import dotenv from "dotenv";
-dotenv.config();
+import { CookieJar } from "tough-cookie";
+import { HttpsCookieAgent } from "http-cookie-agent/http";
 
 const keyv = new Keyv(process.env.REDIS_URL);
+const strategy = process.env.NHENTAI_IP_ORIGIN || "true";
 
 keyv.on("error", err => console.log("Connection Error", err));
 const ttl = 1000 * 60 * 60 * Number(process.env.EXPIRE_CACHE);
 
+const jar = new CookieJar();
+jar.setCookie(process.env.COOKIE || "", "https://nhentai.net/");
+
 class JandaPress {
   url: string;
+  useragent: string;
   constructor() {
     this.url = "";
+    this.useragent = "jandapress/1.0.5 Node.js/16.9.1";
+  }
+
+  async simulateCookie(target: string, parseJson = false): Promise<p.IResponse | unknown> {
+    if (!parseJson) {
+      const res = await p({
+        url: target,
+        followRedirects: true,
+        core: {
+          agent: new HttpsCookieAgent({ cookies: { jar, }, }),
+        },
+        headers: {
+          "User-Agent": process.env.USER_AGENT || "",
+        },
+      });
+
+      return res;
+    } else {
+      const res = await p({
+        url: target,
+        parse: "json",
+        core: {
+          agent: new HttpsCookieAgent({ cookies: { jar, }, }),
+        },
+        headers: {
+          "User-Agent": process.env.USER_AGENT || "",
+        },
+      });
+
+      return res.body;
+    }
+
+
+  }
+
+  /**
+   * Simulating nhentai request if origin api is not available
+   * You'll need [tough-cookie](https://www.npmjs.com/package/tough-cookie) and [http-cookie-agent](https://www.npmjs.com/package/http-cookie-agent) to make this work
+   * @param target url to fetch
+   * @returns Promise<unknown>
+   * @throws Error
+   */
+  async simulateNhentaiRequest(target: string): Promise<unknown> {
+    if (strategy === "true") {
+      const res = await p({
+        url: target,
+        parse: "json"
+      });
+      return res.body;
+    } else {
+      try {
+        const res = await this.simulateCookie(target, true);
+        return res;
+      } catch (err) {
+        const e = err as Error;
+        throw new Error(e.message);
+      }
+    }
   }
 
   /**
@@ -42,7 +105,7 @@ class JandaPress {
      * @param url url to fetch
      * @returns Buffer
      */
-  async fetchJson(url: string) {
+  async fetchJson(url: string): Promise<unknown> {
     const cached = await keyv.get(url);
 
     if (cached) {
@@ -50,9 +113,9 @@ class JandaPress {
       return cached;
     } else {
       console.log("Fetching from source");
-      const res = await p({ url: url, parse: "json" });
-      await keyv.set(url, res.body, ttl);
-      return res.body;
+      const res = await this.simulateNhentaiRequest(url);
+      await keyv.set(url, res, ttl);
+      return res;
     }
   }
 
@@ -66,9 +129,7 @@ class JandaPress {
       rss: `${Math.round(rss * 100) / 100} MB`,
       heap: `${Math.round(heap * 100) / 100}/${Math.round(heaptotal * 100) / 100} MB`
     };
-
   }
-
 }
 
 export default JandaPress;
