@@ -12,7 +12,8 @@ interface IGetAsmhentai {
   upload_date: string;
 }
 
-interface IData{
+interface IData {
+  success?: boolean;
   data: object;
   source: string;
 }
@@ -43,6 +44,8 @@ export async function scrapeContent(url: string) {
       image.push(`${imageUrl.replace("cover", `${i + 1}`)}`);
     } 
 
+    if (image.length === 0) throw Error("Not found");
+
     const objectData: IGetAsmhentai = {
       title: title,
       id: actualBook,
@@ -53,12 +56,13 @@ export async function scrapeContent(url: string) {
     };
 
     const data: IData = {
+      success: true,
       data: objectData,
       source: `${c.ASMHENTAI}/g/${actualBook}/`
     };
     return data;
   } catch (err) {
-    const error = err as string;
-    throw new Error(error);
+    const e = err as Error;
+    throw Error(e.message);
   }
 }

@@ -1,9 +1,10 @@
 import { scrapeContent } from "../../scraper/3hentai/3hentaiGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
+import { maybeError } from "../../utils/modifier";
 
-export async function random3hentai(req: Request, res: Response, next: NextFunction) {
+export async function random3hentai(req: Request, res: Response) {
   try {
     /**
      * @api {get} /3hentai/random Random 3hentai
@@ -43,7 +44,8 @@ export async function random3hentai(req: Request, res: Response, next: NextFunct
       useragent: req.get("User-Agent")
     });
     return res.json(data);
-  } catch (err: any) {
-    next(Error(err.message));
+  } catch (err) {
+    const e = err as Error;
+    res.status(400).json(maybeError(false, e.message));
   }
 }

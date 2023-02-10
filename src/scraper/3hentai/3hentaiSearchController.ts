@@ -38,7 +38,10 @@ export async function scrapeContent(url: string) {
       content.push(objectData);
     }
 
+    if (content.length === 0) throw Error("No result found");
+
     const data = {
+      success: true,
       data: content,
       page: parseInt(url.split("&page=")[1]),
       sort: url.split("sort=")[1],
@@ -47,7 +50,7 @@ export async function scrapeContent(url: string) {
     return data;
     
   } catch (err) {
-    const error = err as string;
-    throw new Error(error);
+    const e = err as Error;
+    throw Error(e.message);
   }
 }

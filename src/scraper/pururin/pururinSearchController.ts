@@ -15,6 +15,7 @@ interface ISearchPururin {
 }
 
 interface IData {
+  success: boolean;
   data: object;
   page: number;
   sort: string;
@@ -55,14 +56,18 @@ export async function scrapeContent(url: string) {
 
     }
 
+    if (content.length === 0) throw Error("No result found");
+
     const data: IData = {
+      success: true,
       data: content,
       page: parseInt(url.split("&page=")[1]),
       sort: url.split("/search/")[1].split("?")[0],
       source: c.PURURIN
     };
     return data;
-  } catch (err: any) {
-    throw Error(err.message);
+  } catch (err) {
+    const e = err as Error;
+    throw Error(e.message);
   }
 }

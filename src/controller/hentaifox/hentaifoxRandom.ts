@@ -1,9 +1,10 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import { scrapeContent } from "../../scraper/hentaifox/hentaifoxGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
+import { maybeError } from "../../utils/modifier";
 
-export async function randomHentaifox(req: Request, res: Response, next: NextFunction) {
+export async function randomHentaifox(req: Request, res: Response) {
   try {
     /**
      * @api {get} /hentaifox/random Random hentaifox
@@ -42,7 +43,8 @@ export async function randomHentaifox(req: Request, res: Response, next: NextFun
       useragent: req.get("User-Agent")
     });
     return res.json(data);
-  } catch (err: any) {
-    next(Error(err.message));
+  } catch (err) {
+    const e = err as Error;
+    res.status(400).json(maybeError(false, e.message));
   }
 }

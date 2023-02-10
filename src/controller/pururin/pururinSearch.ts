@@ -1,10 +1,11 @@
 import { scrapeContent } from "../../scraper/pururin/pururinSearchController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
+import { maybeError } from "../../utils/modifier";
 const sorting = ["newest", "most-popular", "highest-rated", "most-viewed", "title", "random"];
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 
-export async function searchPururin(req: Request, res: Response, next: NextFunction) {
+export async function searchPururin(req: Request, res: Response) {
   try {
     const key = req.query.key as string;
     const page = req.query.page || 1;
@@ -53,7 +54,8 @@ export async function searchPururin(req: Request, res: Response, next: NextFunct
       useragent: req.get("User-Agent")
     });
     return res.json(data);
-  } catch (err: any) {
-    next(Error(err.message));
+  } catch (err) {
+    const e = err as Error;
+    res.status(400).json(maybeError(false, e.message));
   }
 }

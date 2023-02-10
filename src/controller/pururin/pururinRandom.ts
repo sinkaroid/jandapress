@@ -1,10 +1,10 @@
 import { scrapeContent } from "../../scraper/pururin/pururinGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
-import { getIdRandomPururin } from "../../utils/modifier";
-import { Request, Response, NextFunction } from "express";
+import { getIdRandomPururin, maybeError } from "../../utils/modifier";
+import { Request, Response } from "express";
 
-export async function randomPururin(req: Request, res: Response, next: NextFunction) {
+export async function randomPururin(req: Request, res: Response) {
   try {
     const id = await getIdRandomPururin();
     
@@ -46,7 +46,8 @@ export async function randomPururin(req: Request, res: Response, next: NextFunct
       useragent: req.get("User-Agent")
     });
     return res.json(data);
-  } catch (err: any) {
-    next(Error(err.message));
+  } catch (err) {
+    const e = err as Error;
+    res.status(400).json(maybeError(false, e.message));
   }
 }

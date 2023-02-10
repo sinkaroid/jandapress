@@ -35,12 +35,15 @@ export async function scrapeContent(url: string) {
 
     }
 
+    if (content.length === 0) throw Error("No result found");
+
     const data = {
       data: content,
       source: url,
     };
     return data;
-  } catch (err: any) {
-    throw Error(err.message);
+  } catch (err) {
+    const e = err as Error;
+    throw Error(e.message);
   }
 }

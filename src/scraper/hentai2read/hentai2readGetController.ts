@@ -45,7 +45,8 @@ export async function scrapeContent(url: string) {
       previus_url: gDataJson.previousURL
     };
     return data;
-  } catch (err: any) {
-    throw Error(err.message);
+  } catch (err) {
+    const e = err as Error;
+    throw Error(e.message);
   }
 }

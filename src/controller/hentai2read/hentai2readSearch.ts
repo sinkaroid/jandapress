@@ -1,9 +1,10 @@
 import { scrapeContent } from "../../scraper/hentai2read/hentai2readSearchController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
-import { Request, Response, NextFunction } from "express";
+import { maybeError } from "../../utils/modifier";
+import { Request, Response } from "express";
 
-export async function searchHentai2read(req: Request, res: Response, next: NextFunction) {
+export async function searchHentai2read(req: Request, res: Response) {
   try {
     const key = req.query.key || "";
     if (!key) throw Error("Parameter book is required");
@@ -46,7 +47,8 @@ export async function searchHentai2read(req: Request, res: Response, next: NextF
       useragent: req.get("User-Agent")
     });
     return res.json(data);
-  } catch (err: any) {
-    next(Error(err.message));
+  } catch (err) {
+    const e = err as Error;
+    res.status(400).json(maybeError(false, e.message));
   }
 }
