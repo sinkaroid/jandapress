@@ -1,16 +1,10 @@
 import { scrapeContent } from "../../scraper/nhentai/nhentaiGetController";
-import c from "../../utils/options";
 import { logger } from "../../utils/logger";
-import { mock } from "../../utils/modifier";
-import { getIdRandomNhentai } from "../../utils/modifier";
-import { Request, Response, NextFunction } from "express";
+import { nhentaiStrategy, getIdRandomNhentai, maybeError } from "../../utils/modifier";
+import { Request, Response } from "express";
 
-export async function randomNhentai(req: Request, res: Response, next: NextFunction) {
+export async function randomNhentai(req: Request, res: Response) {
   try {
-    let actualAPI;
-    if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP_3;
-    else actualAPI = c.NHENTAI;
-
     const id = await getIdRandomNhentai();
 
     /**
@@ -21,7 +15,7 @@ export async function randomNhentai(req: Request, res: Response, next: NextFunct
      * 
      * @apiSuccessExample {json} Success-Response:
      *   HTTP/1.1 200 OK
-     *   HTTP/1.1 200 (cached)
+     *   HTTP/1.1 400 Bad Request
      * 
      * @apiExample {curl} curl
      * curl -i https://janda.mod.land/nhentai/random
@@ -41,7 +35,7 @@ export async function randomNhentai(req: Request, res: Response, next: NextFunct
      * 
      */
 
-    const url = `${actualAPI}/api/gallery/${id}`;
+    const url = `${nhentaiStrategy()}/api/gallery/${id}`;
     const data = await scrapeContent(url, true);
     logger.info({
       path: req.path,
@@ -51,7 +45,8 @@ export async function randomNhentai(req: Request, res: Response, next: NextFunct
       useragent: req.get("User-Agent")
     });
     return res.json(data);
-  } catch (err: any) {
-    next(Error(err.message));
+  } catch (err) {
+    const e = err as Error;
+    res.status(400).json(maybeError(false, `Error Try again: ${e.message}`));
   }
 }

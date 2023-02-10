@@ -42,6 +42,7 @@ export async function scrapeContent(url: string) {
     }
 
     const data = {
+      success: true,
       data: content,
       source: url.replace(c.NHENTAI_IP, c.NHENTAI),
     };

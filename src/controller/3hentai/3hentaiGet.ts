@@ -20,7 +20,7 @@ export async function get3hentai(req: Request, res: Response, next: NextFunction
      * 
      * @apiSuccessExample {json} Success-Response:
      *   HTTP/1.1 200 OK
-     *   HTTP/1.1 200 (cached)
+     *   HTTP/1.1 400 Bad Request
      * 
      * @apiExample {curl} curl
      * curl -i https://janda.mod.land/3hentai/get?book=123

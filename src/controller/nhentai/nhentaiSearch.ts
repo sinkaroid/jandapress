@@ -1,7 +1,6 @@
 import { scrapeContent } from "../../scraper/nhentai/nhentaiSearchController";
-import c from "../../utils/options";
 import { logger } from "../../utils/logger";
-import { mock } from "../../utils/modifier";
+import { nhentaiStrategy, maybeError } from "../../utils/modifier";
 const sorting = ["popular-today", "popular-week", "popular"];
 import { Request, Response } from "express";
 
@@ -12,10 +11,6 @@ export async function searchNhentai(req: Request, res: Response) {
     const sort = req.query.sort as string || sorting[0] as string;
     if (!key) throw Error("Parameter key is required");
     if (!sorting.includes(sort)) throw Error("Invalid sort: " + sorting.join(", "));
-
-    let actualAPI;
-    if (!await mock(c.NHENTAI)) actualAPI = c.NHENTAI_IP_3;
-    else actualAPI = c.NHENTAI;
 
     /**
      * @api {get} /nhentai/search Search nhentai
@@ -28,7 +23,7 @@ export async function searchNhentai(req: Request, res: Response) {
      * 
      * @apiSuccessExample {json} Success-Response:
      *    HTTP/1.1 200 OK
-     *    HTTP/1.1 200 (cached)
+     *    HTTP/1.1 400 Bad Request
      * 
      * @apiExample {curl} curl
      * curl -i https://janda.mod.land/nhentai/search?key=yuri
@@ -48,7 +43,7 @@ export async function searchNhentai(req: Request, res: Response) {
      *    print(await resp.json())
      */
 
-    const url = `${actualAPI}/api/galleries/search?query=${key}&sort=${sort}&page=${page}`;
+    const url = `${nhentaiStrategy()}/api/galleries/search?query=${key}&sort=${sort}&page=${page}`;
     const data = await scrapeContent(url);
     logger.info({
       path: req.path,
@@ -58,11 +53,8 @@ export async function searchNhentai(req: Request, res: Response) {
       useragent: req.get("User-Agent")
     });
     return res.json(data);
-  } catch (err: any) {
-    const e = {
-      "success": false,
-      "message": err.message
-    };
-    res.json(e);
+  } catch (err) {
+    const e = err as Error;
+    res.status(400).json(maybeError(false, e.message));
   }
 }
