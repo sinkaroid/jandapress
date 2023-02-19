@@ -137,7 +137,7 @@ https://nhentai.net was Clouflare protection enabled, for default jandapress use
 ![image](https://cdn.discordapp.com/attachments/952117487166705747/1073694957111627906/Screenshot_265.png)
 
 ### The solution
-You will need instance such as VPS and install `chorme` or `chromium` or `firefox`, You have to set `NHENTAI_IP_ORIGIN` to `false`, set `COOKIE` and `USER_AGENT`. We'll simulate the request with [tough-cookie](https://github.com/salesforce/tough-cookie) and [http-cookie-agent](https://www.npmjs.com/package/http-cookie-agent) 
+You will need instance such as VPS and install Chrome or Chromium or Firefox, You have to set `NHENTAI_IP_ORIGIN` to `false`, set `COOKIE` and `USER_AGENT`. We'll simulate the request with [tough-cookie](https://github.com/salesforce/tough-cookie) and [http-cookie-agent](https://www.npmjs.com/package/http-cookie-agent) 
 
 ![image](https://cdn.discordapp.com/attachments/952117487166705747/1073699069643468902/Screenshot_267_copy.jpg)
 

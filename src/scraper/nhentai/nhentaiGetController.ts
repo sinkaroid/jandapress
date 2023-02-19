@@ -21,7 +21,7 @@ interface INhentaiGet {
   num_favorites: number;
   artist: string[];
   group: string;
-  parodies: string;
+  parodies: string[];
   characters: string[];
   upload_date: string;
 }
@@ -47,7 +47,11 @@ export async function scrapeContent(url: string, random = false) {
 
     //get all tags.name
     const tagsRaw = raw.tags;
-    const tags = Object.keys(tagsRaw).map((key) => tagsRaw[parseInt(key)].name);
+    // all tags without filter
+    // const tags = Object.keys(tagsRaw).map((key) => tagsRaw[parseInt(key)].name);
+
+    const tagsFilter = tagsRaw.filter((tag) => tag.type === "tag");
+    const tags = tagsFilter.map((tag) => tag.name).sort() || [];
 
     const artistRaw = tagsRaw.filter((tag) => tag.type === "artist");
     const artist = artistRaw.map((tag) => tag.name) || [];
@@ -56,11 +60,11 @@ export async function scrapeContent(url: string, random = false) {
     const languageRaw = tagsRaw.find((tag) => tag.type === "language");
     const language = languageRaw ? languageRaw.name : "";
 
-    const parodiesRaw = tagsRaw.find((tag) => tag.type === "parody");
-    const parodies = parodiesRaw ? parodiesRaw.name : "";
+    const parodiesRaw = tagsRaw.filter((tag) => tag.type === "parody");
+    const parodies = parodiesRaw.map((tag) => tag.name) || [];
 
     const groupRaw = tagsRaw.find((tag) => tag.type === "group");
-    const group = groupRaw ? groupRaw.name : "";
+    const group = groupRaw ? groupRaw.name : "None";
 
     //get all "type": "character" in tagsRaw
     const charactersRaw = tagsRaw.filter((tag) => tag.type === "character");
