@@ -1,5 +1,5 @@
 <div align="center">
-<a href="https://janda.mod.land"><img width="500" src="https://cdn.discordapp.com/attachments/1046495201176334467/1055678255866318898/tomoe-janda.png" alt="jandapress"></a>
+<a href="https://janda.mod.land"><img width="500" src="https://cdn.discordapp.com/attachments/1046495201176334467/1055678255866318898/tomoe-janda.png" alt="musashi"></a>
 
 <h4 align="center">RESTful and experimental API for the doujinboards</h4>
 <p align="center">
@@ -17,7 +17,7 @@ The motivation of this project is to bring you an actionable data related doujin
 
 ---
 
-<a href="https://janda.mod.land"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/986315079802814524/tomoe.png" width="300"></a>
+<a href="https://janda.mod.land"><img align="right" src="https://cdn.discordapp.com/attachments/937006009212350496/1055928998888222861/musashi-ts-color.png" width="400"></a>
 
 - [Jandapress](#)
   - [The problem](#the-problem)
