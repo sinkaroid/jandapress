@@ -31,17 +31,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/3hentai/get?book=123",
+        "content": "curl -i https://janda.sinkaroid.org/3hentai/get?book=123",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/3hentai/get?book=123\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/3hentai/get?book=123\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/3hentai/get?book=123\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/3hentai/get?book=123\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -50,7 +50,7 @@ define({ "api": [
     "groupTitle": "3hentai",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/3hentai/get?book=:book"
+        "url": "https://janda.sinkaroid.org/3hentai/get?book=:book"
       }
     ]
   },
@@ -73,17 +73,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/3hentai/random",
+        "content": "curl -i https://janda.sinkaroid.org/3hentai/random",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/3hentai/random\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/3hentai/random\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/3hentai/random\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/3hentai/random\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -92,7 +92,7 @@ define({ "api": [
     "groupTitle": "3hentai",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/3hentai/random"
+        "url": "https://janda.sinkaroid.org/3hentai/random"
       }
     ]
   },
@@ -144,17 +144,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/3hentai/search?key=yuri\ncurl -i https://janda.mod.land/3hentai/search?key=yuri&page=2&sort=recent",
+        "content": "curl -i https://janda.sinkaroid.org/3hentai/search?key=yuri\ncurl -i https://janda.sinkaroid.org/3hentai/search?key=yuri&page=2&sort=recent",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/3hentai/search?key=yuri\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/3hentai/search?key=yuri\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/3hentai/search?key=yuri\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/3hentai/search?key=yuri\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -163,7 +163,7 @@ define({ "api": [
     "groupTitle": "3hentai",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/3hentai/search"
+        "url": "https://janda.sinkaroid.org/3hentai/search"
       }
     ]
   },
@@ -199,17 +199,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/asmhentai/get?book=123",
+        "content": "curl -i https://janda.sinkaroid.org/asmhentai/get?book=123",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/asmhentai/get?book=123\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/asmhentai/get?book=123\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/asmhentai/get?book=123\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/asmhentai/get?book=123\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -218,7 +218,7 @@ define({ "api": [
     "groupTitle": "asmhentai",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/asmhentai/get?book=:book"
+        "url": "https://janda.sinkaroid.org/asmhentai/get?book=:book"
       }
     ]
   },
@@ -241,17 +241,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/asmhentai/random",
+        "content": "curl -i https://janda.sinkaroid.org/asmhentai/random",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/asmhentai/random\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/asmhentai/random\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/asmhentai/random\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/asmhentai/random\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -260,7 +260,7 @@ define({ "api": [
     "groupTitle": "asmhentai",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/asmhentai/random"
+        "url": "https://janda.sinkaroid.org/asmhentai/random"
       }
     ]
   },
@@ -304,17 +304,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/asmhentai/search?key=yuri",
+        "content": "curl -i https://janda.sinkaroid.org/asmhentai/search?key=yuri",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/asmhentai/search?key=yuri\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/asmhentai/search?key=yuri\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/asmhentai/search?key=yuri\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/asmhentai/search?key=yuri\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -323,7 +323,7 @@ define({ "api": [
     "groupTitle": "asmhentai",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/asmhentai/search"
+        "url": "https://janda.sinkaroid.org/asmhentai/search"
       }
     ]
   },
@@ -359,17 +359,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1",
+        "content": "curl -i https://janda.sinkaroid.org/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -378,7 +378,7 @@ define({ "api": [
     "groupTitle": "hentai2read",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/hentai2read/get?book=:book"
+        "url": "https://janda.sinkaroid.org/hentai2read/get?book=:book"
       }
     ]
   },
@@ -414,17 +414,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/hentai2read/search?key=yuri",
+        "content": "curl -i https://janda.sinkaroid.org/hentai2read/search?key=yuri",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/hentai2read/search?key=yuri\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/hentai2read/search?key=yuri\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/hentai2read/search?key=yuri\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/hentai2read/search?key=yuri\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -433,7 +433,7 @@ define({ "api": [
     "groupTitle": "hentai2read",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/hentai2read/search"
+        "url": "https://janda.sinkaroid.org/hentai2read/search"
       }
     ]
   },
@@ -469,17 +469,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/hentaifox/get?book=123",
+        "content": "curl -i https://janda.sinkaroid.org/hentaifox/get?book=123",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/hentaifox/get?book=123\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/hentaifox/get?book=123\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/hentaifox/get?book=123\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/hentaifox/get?book=123\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -488,7 +488,7 @@ define({ "api": [
     "groupTitle": "hentaifox",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/hentaifox/get?book=:book"
+        "url": "https://janda.sinkaroid.org/hentaifox/get?book=:book"
       }
     ]
   },
@@ -511,17 +511,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/hentaifox/random",
+        "content": "curl -i https://janda.sinkaroid.org/hentaifox/random",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/hentaifox/random\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/hentaifox/random\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/hentaifox/random\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/hentaifox/random\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -530,7 +530,7 @@ define({ "api": [
     "groupTitle": "hentaifox",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/hentaifox/random"
+        "url": "https://janda.sinkaroid.org/hentaifox/random"
       }
     ]
   },
@@ -582,17 +582,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/hentaifox/search?key=yuri\ncurl -i https://janda.mod.land/hentaifox/search?key=yuri&page=2&sort=latest",
+        "content": "curl -i https://janda.sinkaroid.org/hentaifox/search?key=yuri\ncurl -i https://janda.sinkaroid.org/hentaifox/search?key=yuri&page=2&sort=latest",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/hentaifox/search?key=yuri\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/hentaifox/search?key=yuri\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/hentaifox/search?key=yuri\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/hentaifox/search?key=yuri\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -601,7 +601,7 @@ define({ "api": [
     "groupTitle": "hentaifox",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/hentaifox/search"
+        "url": "https://janda.sinkaroid.org/hentaifox/search"
       }
     ]
   },
@@ -637,17 +637,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/nhentai/get?book=123",
+        "content": "curl -i https://janda.sinkaroid.org/nhentai/get?book=123",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/nhentai/get?book=123\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/nhentai/get?book=123\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/nhentai/get?book=123\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/nhentai/get?book=123\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -656,7 +656,7 @@ define({ "api": [
     "groupTitle": "nhentai",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/nhentai/get?book=:book"
+        "url": "https://janda.sinkaroid.org/nhentai/get?book=:book"
       }
     ]
   },
@@ -692,17 +692,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/nhentai/related?book=123",
+        "content": "curl -i https://janda.sinkaroid.org/nhentai/related?book=123",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/nhentai/related?book=123\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/nhentai/related?book=123\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/nhentai/related?book=123\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/nhentai/related?book=123\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -711,7 +711,7 @@ define({ "api": [
     "groupTitle": "nhentai",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/nhentai/related?book=:book"
+        "url": "https://janda.sinkaroid.org/nhentai/related?book=:book"
       }
     ]
   },
@@ -734,17 +734,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/nhentai/random",
+        "content": "curl -i https://janda.sinkaroid.org/nhentai/random",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/nhentai/random\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/nhentai/random\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/nhentai/random\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/nhentai/random\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -753,7 +753,7 @@ define({ "api": [
     "groupTitle": "nhentai",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/nhentai/random"
+        "url": "https://janda.sinkaroid.org/nhentai/random"
       }
     ]
   },
@@ -805,17 +805,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/nhentai/search?key=yuri\ncurl -i https://janda.mod.land/nhentai/search?key=yuri&page=2&sort=popular-today",
+        "content": "curl -i https://janda.sinkaroid.org/nhentai/search?key=yuri\ncurl -i https://janda.sinkaroid.org/nhentai/search?key=yuri&page=2&sort=popular-today",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/nhentai/search?key=yuri\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/nhentai/search?key=yuri\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/nhentai/search?key=yuri\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/nhentai/search?key=yuri\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -824,7 +824,7 @@ define({ "api": [
     "groupTitle": "nhentai",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/nhentai/search"
+        "url": "https://janda.sinkaroid.org/nhentai/search"
       }
     ]
   },
@@ -860,17 +860,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/pururin/get?book=123",
+        "content": "curl -i https://janda.sinkaroid.org/pururin/get?book=123",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/pururin/get?book=123\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/pururin/get?book=123\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/pururin/get?book=123\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/pururin/get?book=123\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -879,7 +879,7 @@ define({ "api": [
     "groupTitle": "pururin",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/pururin/get?book=:book"
+        "url": "https://janda.sinkaroid.org/pururin/get?book=:book"
       }
     ]
   },
@@ -902,17 +902,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/pururin/random",
+        "content": "curl -i https://janda.sinkaroid.org/pururin/random",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/pururin/random\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/pururin/random\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/pururin/random\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/pururin/random\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -921,7 +921,7 @@ define({ "api": [
     "groupTitle": "pururin",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/pururin/random"
+        "url": "https://janda.sinkaroid.org/pururin/random"
       }
     ]
   },
@@ -973,17 +973,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/pururin/search?key=yuri\ncurl -i https://janda.mod.land/pururin/search?key=yuri&page=2&sort=newest",
+        "content": "curl -i https://janda.sinkaroid.org/pururin/search?key=yuri\ncurl -i https://janda.sinkaroid.org/pururin/search?key=yuri&page=2&sort=newest",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/pururin/search?key=yuri\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/pururin/search?key=yuri\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/pururin/search?key=yuri\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/pururin/search?key=yuri\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -992,7 +992,7 @@ define({ "api": [
     "groupTitle": "pururin",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/pururin/search"
+        "url": "https://janda.sinkaroid.org/pururin/search"
       }
     ]
   },
@@ -1028,17 +1028,17 @@ define({ "api": [
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.mod.land/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages",
+        "content": "curl -i https://janda.sinkaroid.org/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages",
         "type": "curl"
       },
       {
         "title": "JS/TS",
-        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.mod.land/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
         "type": "js"
       },
       {
         "title": "Python",
-        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.mod.land/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages\") as resp:\n   print(await resp.json())",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages\") as resp:\n   print(await resp.json())",
         "type": "python"
       }
     ],
@@ -1047,7 +1047,7 @@ define({ "api": [
     "groupTitle": "simply-hentai",
     "sampleRequest": [
       {
-        "url": "https://janda.mod.land/simply-hentai/get?book=:book"
+        "url": "https://janda.sinkaroid.org/simply-hentai/get?book=:book"
       }
     ]
   }
