@@ -1,5 +1,5 @@
 <div align="center">
-<a href="https://janda.mod.land"><img width="500" src="https://cdn.discordapp.com/attachments/1046495201176334467/1055678255866318898/tomoe-janda.png" alt="jandapress"></a>
+<a href="https://janda.sinkaroid.org"><img width="500" src="https://cdn.discordapp.com/attachments/1046495201176334467/1055678255866318898/tomoe-janda.png" alt="jandapress"></a>
 
 <h4 align="center">RESTful and experimental API for the doujinboards</h4>
 <p align="center">
@@ -17,7 +17,7 @@ The motivation of this project is to bring you an actionable data related doujin
 
 ---
 
-<a href="https://janda.mod.land"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/986315079802814524/tomoe.png" width="300"></a>
+<a href="https://janda.sinkaroid.org"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/986315079802814524/tomoe.png" width="300"></a>
 
 - [Jandapress](#)
   - [The problem](#the-problem)
@@ -196,8 +196,8 @@ The missing piece of nhentai.net - https://sinkaroid.github.io/jandapress/#api-n
   - <u>sort parameters on search</u>
     - "popular-today", "popular-week", "popular"
   - Example
-    - https://janda.mod.land/nhentai/get?book=177013
-    - https://janda.mod.land/nhentai/search?key=futanari&page=2&sort=popular-today
+    - https://janda.sinkaroid.org/nhentai/get?book=177013
+    - https://janda.sinkaroid.org/nhentai/search?key=futanari&page=2&sort=popular-today
 
 ### Pururin
 The missing piece of pururin.to - https://sinkaroid.github.io/jandapress/#api-pururin
@@ -208,8 +208,8 @@ The missing piece of pururin.to - https://sinkaroid.github.io/jandapress/#api-pu
   - <u>sort parameters on search</u>
     - "newest", "most-popular", "highest-rated", "most-viewed", "title", "random" 
   - Example
-    - https://janda.mod.land/pururin/get?book=63373
-    - https://janda.mod.land/pururin/search?key=futanari&page=2&sort=most-viewed
+    - https://janda.sinkaroid.org/pururin/get?book=63373
+    - https://janda.sinkaroid.org/pururin/search?key=futanari&page=2&sort=most-viewed
 
 ### Hentaifox
 The missing piece of hentaifox.com - https://sinkaroid.github.io/jandapress/#api-hentaifox
@@ -220,8 +220,8 @@ The missing piece of hentaifox.com - https://sinkaroid.github.io/jandapress/#api
   - <u>sort parameters on search</u>
     - "latest", "popular"
   - Example
-    - https://janda.mod.land/hentaifox/get?book=97527
-    - https://janda.mod.land/hentaifox/search?key=milf&page=2&sort=latest
+    - https://janda.sinkaroid.org/hentaifox/get?book=97527
+    - https://janda.sinkaroid.org/hentaifox/search?key=milf&page=2&sort=latest
 
 ### Asmhentai
 The missing piece of asmhentai.com - https://sinkaroid.github.io/jandapress/#api-asmhentai
@@ -232,8 +232,8 @@ The missing piece of asmhentai.com - https://sinkaroid.github.io/jandapress/#api
   - <u>sort parameters on search</u>
     - None
   - Example
-    - https://janda.mod.land/asmhentai/get?book=416773
-    - https://janda.mod.land/asmhentai/search?key=futanari&page=2
+    - https://janda.sinkaroid.org/asmhentai/get?book=416773
+    - https://janda.sinkaroid.org/asmhentai/search?key=futanari&page=2
 
 ### Hentai2read
 The missing piece of hentai2read.com - https://sinkaroid.github.io/jandapress/#api-hentai2read
@@ -243,8 +243,8 @@ The missing piece of hentai2read.com - https://sinkaroid.github.io/jandapress/#a
   - <u>sort parameters on search</u>
     - TBA
   - Example
-    - https://janda.mod.land/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1
-    - https://janda.mod.land/hentai2read/search?key=futanari
+    - https://janda.sinkaroid.org/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1
+    - https://janda.sinkaroid.org/hentai2read/search?key=futanari
 
 ### Simply-hentai
 The missing piece of simply-hentai.com - https://sinkaroid.github.io/jandapress/#api-simply-hentai
@@ -253,7 +253,7 @@ The missing piece of simply-hentai.com - https://sinkaroid.github.io/jandapress/
   - <u>sort parameters on search</u>
     - TBA
   - Example
-    - https://janda.mod.land/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages
+    - https://janda.sinkaroid.org/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages
 
 ### 3hentai
 The missing piece of 3hentai.net - https://sinkaroid.github.io/jandapress/#api-3hentai
@@ -264,8 +264,8 @@ The missing piece of 3hentai.net - https://sinkaroid.github.io/jandapress/#api-3
   - <u>sort parameters on search</u>
     - "recent", "popular-24h", "popular-7d", "popular"
   - Example
-    - https://janda.mod.land/3hentai/get?book=608979
-    - https://janda.mod.land/3hentai/search?key=futanari&page=2&sort=popular-7d
+    - https://janda.sinkaroid.org/3hentai/get?book=608979
+    - https://janda.sinkaroid.org/3hentai/search?key=futanari&page=2&sort=popular-7d
 
 ## Status response
 `"success": true,` or `"success": false,`
