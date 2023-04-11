@@ -12,7 +12,7 @@ const janda = new JandaPress();
 const app = express();
 
 
-app.get("/", slow, limiter, (req, res) => {
+app.get("/", slow, limiter, async (req, res) => {
   res.send({
     success: true,
     message: "Hi, I'm alive!",
@@ -20,6 +20,7 @@ app.get("/", slow, limiter, (req, res) => {
     date: new Date().toLocaleString(),
     rss: janda.currentProccess().rss,
     heap: janda.currentProccess().heap,
+    server: await janda.getServer(),
     version: `${pkg.version}`,
   });
   logger.info({

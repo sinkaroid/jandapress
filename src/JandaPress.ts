@@ -1,4 +1,4 @@
-import p from "phin";
+import p, { IResponse } from "phin";
 import Keyv from "keyv";
 import { CookieJar } from "tough-cookie";
 import { HttpsCookieAgent } from "http-cookie-agent/http";
@@ -130,6 +130,16 @@ class JandaPress {
       rss: `${Math.round(rss * 100) / 100} MB`,
       heap: `${Math.round(heap * 100) / 100}/${Math.round(heaptotal * 100) / 100} MB`
     };
+  }
+
+  async getServer(): Promise<string> {
+    const raw = await p({ 
+      "url": "http://ip-api.com/json", 
+      "parse": "json" 
+    }) as IResponse;
+    const data = raw.body as unknown as { country: string, regionName: string };
+    return `${data.country}, ${data.regionName}`;
+    
   }
 }
 
