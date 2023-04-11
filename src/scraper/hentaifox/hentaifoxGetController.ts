@@ -24,8 +24,7 @@ export async function scrapeContent(url: string) {
     }).get();
 
     const imgSrc = $("img").map((i, el) => $(el).attr("data-src")).get();
-    const parameterImg = imgSrc[0].split("/").slice(5).join("/");
-    const parameterImg2 = parameterImg.split("/").slice(0, -1).join("/");
+    const parameterImg2 = imgSrc[0].split("/").slice(0, 5).join("/");
     const extensionImg = `.${imgSrc[0].split(".").slice(-1)[0]}`;
     const info = $("span.i_text.pages").map((i, abc) => {
       return $(abc).text();
