@@ -25,19 +25,19 @@ export async function getSimplyhentai(req: Request, res: Response) {
      *   HTTP/1.1 400 Bad Request
      * 
      * @apiExample {curl} curl
-     * curl -i https://janda.mod.land/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages
+     * curl -i https://janda.sinkaroid.org/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages
      * 
      * @apiExample {js} JS/TS
      * import axios from "axios"
      * 
-     * axios.get("https://janda.mod.land/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages")
+     * axios.get("https://janda.sinkaroid.org/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages")
      * .then(res => console.log(res.data))
      * .catch(err => console.error(err))
      * 
      * @apiExample {python} Python
      * import aiohttp
      * async with aiohttp.ClientSession() as session:
-     *  async with session.get("https://janda.mod.land/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages") as resp:
+     *  async with session.get("https://janda.sinkaroid.org/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages") as resp:
      *    print(await resp.json())
      */
     

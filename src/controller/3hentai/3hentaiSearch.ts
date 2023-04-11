@@ -27,20 +27,20 @@ export async function search3hentai(req: Request, res: Response) {
      *    HTTP/1.1 400 Bad Request
      * 
      * @apiExample {curl} curl
-     * curl -i https://janda.mod.land/3hentai/search?key=yuri
-     * curl -i https://janda.mod.land/3hentai/search?key=yuri&page=2&sort=recent
+     * curl -i https://janda.sinkaroid.org/3hentai/search?key=yuri
+     * curl -i https://janda.sinkaroid.org/3hentai/search?key=yuri&page=2&sort=recent
      * 
      * @apiExample {js} JS/TS
      * import axios from "axios"
      * 
-     * axios.get("https://janda.mod.land/3hentai/search?key=yuri")
+     * axios.get("https://janda.sinkaroid.org/3hentai/search?key=yuri")
      * .then(res => console.log(res.data))
      * .catch(err => console.error(err))
      * 
      * @apiExample {python} Python
      * import aiohttp
      * async with aiohttp.ClientSession() as session:
-     *  async with session.get("https://janda.mod.land/3hentai/search?key=yuri") as resp:
+     *  async with session.get("https://janda.sinkaroid.org/3hentai/search?key=yuri") as resp:
      *    print(await resp.json())
      */
 
