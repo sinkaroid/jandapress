@@ -171,7 +171,7 @@ export function maybeError(success: boolean, message: string) {
  */
 export function nhentaiStrategy() {
   let strategy: string;
-  if (process.env.NHENTAI_IP_ORIGIN === "true" || process.env.NHENTAI_IP_ORIGIN === undefined) strategy = c.NHENTAI_IP_3;
+  if (process.env.NHENTAI_IP_ORIGIN === "true" || process.env.NHENTAI_IP_ORIGIN === undefined) strategy = c.NHENTAI_IP_4;
   else strategy = c.NHENTAI;
   return strategy;
 }
