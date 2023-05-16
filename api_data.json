@@ -607,6 +607,221 @@
   },
   {
     "type": "get",
+    "url": "/nhentaito/get?book=:book",
+    "title": "Get nhentai.to",
+    "name": "Get_nhentai.to",
+    "group": "nhentai.to",
+    "description": "<p>Get a doujinshi on nhentai.to based on id</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "book",
+            "description": "<p>Book ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\nHTTP/1.1 400 Bad Request",
+          "type": "json"
+        }
+      ]
+    },
+    "examples": [
+      {
+        "title": "curl",
+        "content": "curl -i https://janda.sinkaroid.org/nhentaito/get?book=272",
+        "type": "curl"
+      },
+      {
+        "title": "JS/TS",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/nhentaito/get?book=272\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "type": "js"
+      },
+      {
+        "title": "Python",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/nhentaito/get?book=272\") as resp:\n   print(await resp.json())",
+        "type": "python"
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "src/controller/nhentaito/nhentaiToGet.ts",
+    "groupTitle": "nhentai.to",
+    "sampleRequest": [
+      {
+        "url": "https://janda.sinkaroid.org/nhentaito/get?book=:book"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/nhentaito/related?book=:book",
+    "title": "Get related nhentai.to",
+    "name": "Get_related_nhentai.to",
+    "group": "nhentai.to",
+    "description": "<p>Get a related doujinshi on nhentai.to based on id</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "book",
+            "description": "<p>Book ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\nHTTP/1.1 400 Bad Request",
+          "type": "json"
+        }
+      ]
+    },
+    "examples": [
+      {
+        "title": "curl",
+        "content": "curl -i https://janda.sinkaroid.org/nhentaito/related?book=272",
+        "type": "curl"
+      },
+      {
+        "title": "JS/TS",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/nhentaito/related?book=272\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "type": "js"
+      },
+      {
+        "title": "Python",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/nhentaito/related?book=272\") as resp:\n   print(await resp.json())",
+        "type": "python"
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "src/controller/nhentaito/nhentaiToRelated.ts",
+    "groupTitle": "nhentai.to",
+    "sampleRequest": [
+      {
+        "url": "https://janda.sinkaroid.org/nhentaito/related?book=:book"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/nhentaito/random",
+    "title": "Random nhentai.to",
+    "name": "Random_nhentai.to",
+    "group": "nhentai.to",
+    "description": "<p>Gets random doujinshi on nhentai.to</p>",
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\nHTTP/1.1 400 Bad Request",
+          "type": "json"
+        }
+      ]
+    },
+    "examples": [
+      {
+        "title": "curl",
+        "content": "curl -i https://janda.sinkaroid.org/nhentaito/random",
+        "type": "curl"
+      },
+      {
+        "title": "JS/TS",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/nhentaito/random\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "type": "js"
+      },
+      {
+        "title": "Python",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/nhentaito/random\") as resp:\n   print(await resp.json())",
+        "type": "python"
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "src/controller/nhentaito/nhentaiToRandom.ts",
+    "groupTitle": "nhentai.to",
+    "sampleRequest": [
+      {
+        "url": "https://janda.sinkaroid.org/nhentaito/random"
+      }
+    ]
+  },
+  {
+    "type": "get",
+    "url": "/nhentaito/search",
+    "title": "Search nhentai.to",
+    "name": "Search_nhentai.to",
+    "group": "nhentai.to",
+    "description": "<p>Search doujinshi on nhentai.to</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "key",
+            "description": "<p>Keyword to search</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "page",
+            "defaultValue": "1",
+            "description": "<p>Page number</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\nHTTP/1.1 400 Bad Request",
+          "type": "json"
+        }
+      ]
+    },
+    "examples": [
+      {
+        "title": "curl",
+        "content": "curl -i https://janda.sinkaroid.org/nhentaito/search?key=yuri\ncurl -i https://janda.sinkaroid.org/nhentaito/search?key=yuri&page=2",
+        "type": "curl"
+      },
+      {
+        "title": "JS/TS",
+        "content": "import axios from \"axios\"\n\naxios.get(\"https://janda.sinkaroid.org/nhentaito/search?key=yuri\")\n.then(res => console.log(res.data))\n.catch(err => console.error(err))",
+        "type": "js"
+      },
+      {
+        "title": "Python",
+        "content": "import aiohttp\nasync with aiohttp.ClientSession() as session:\n async with session.get(\"https://janda.sinkaroid.org/nhentaito/search?key=yuri\") as resp:\n   print(await resp.json())",
+        "type": "python"
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "src/controller/nhentaito/nhentaiToSearch.ts",
+    "groupTitle": "nhentai.to",
+    "sampleRequest": [
+      {
+        "url": "https://janda.sinkaroid.org/nhentaito/search"
+      }
+    ]
+  },
+  {
+    "type": "get",
     "url": "/nhentai/get?book=:book",
     "title": "Get nhentai",
     "name": "Get_nhentai",
