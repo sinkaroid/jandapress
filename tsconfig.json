@@ -13,7 +13,6 @@
     "paths": {},
     "typeRoots": ["./node_modules/@types"],
     "inlineSourceMap": true,
-    "charset": "UTF-8",
     "downlevelIteration": true,
     "newLine": "lf",
     "strict": true,
