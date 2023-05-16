@@ -70,7 +70,7 @@ You enjoy consume doujin sites to build web applications. There are a lot sites 
 
 ## Prerequisites
 <table>
-	<td><b>NOTE:</b> NodeJS 14.x or higher</td>
+	<td><b>NOTE:</b> NodeJS 16.x or higher</td>
 </table>
 
 To handle several requests from each web, You will also need [Redis](https://redis.io/) for persistent caching, free tier is available on [Redis Labs](https://redislabs.com/), You can also choose another provider as we using [keyv](https://github.com/jaredwray/keyv) Key-value storage with support for multiple backends. All data must be stored in `<Buffer>` here.
