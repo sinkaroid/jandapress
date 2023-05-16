@@ -198,7 +198,10 @@ The missing piece of nhentai.net - https://sinkaroid.github.io/jandapress/#api-n
     - "popular-today", "popular-week", "popular"
   - Example
     - https://janda.sinkaroid.org/nhentai/get?book=177013
+    - https://janda.sinkaroid.org/nhentai/search?key=futanari
     - https://janda.sinkaroid.org/nhentai/search?key=futanari&page=2&sort=popular-today
+    - https://janda.sinkaroid.org/nhentai/related?book=177013
+    - https://janda.sinkaroid.org/nhentai/random
 
 ### Pururin
 The missing piece of pururin.to - https://sinkaroid.github.io/jandapress/#api-pururin
@@ -210,7 +213,9 @@ The missing piece of pururin.to - https://sinkaroid.github.io/jandapress/#api-pu
     - "newest", "most-popular", "highest-rated", "most-viewed", "title", "random" 
   - Example
     - https://janda.sinkaroid.org/pururin/get?book=63373
+    - https://janda.sinkaroid.org/pururin/search?key=futanari
     - https://janda.sinkaroid.org/pururin/search?key=futanari&page=2&sort=most-viewed
+    - https://janda.sinkaroid.org/pururin/random
 
 ### Hentaifox
 The missing piece of hentaifox.com - https://sinkaroid.github.io/jandapress/#api-hentaifox
@@ -222,7 +227,9 @@ The missing piece of hentaifox.com - https://sinkaroid.github.io/jandapress/#api
     - "latest", "popular"
   - Example
     - https://janda.sinkaroid.org/hentaifox/get?book=97527
+    - https://janda.sinkaroid.org/hentaifox/search?key=milf
     - https://janda.sinkaroid.org/hentaifox/search?key=milf&page=2&sort=latest
+    - https://janda.sinkaroid.org/hentaifox/randon
 
 ### Asmhentai
 The missing piece of asmhentai.com - https://sinkaroid.github.io/jandapress/#api-asmhentai
@@ -234,7 +241,9 @@ The missing piece of asmhentai.com - https://sinkaroid.github.io/jandapress/#api
     - None
   - Example
     - https://janda.sinkaroid.org/asmhentai/get?book=416773
+    - https://janda.sinkaroid.org/asmhentai/search?key=futanari
     - https://janda.sinkaroid.org/asmhentai/search?key=futanari&page=2
+    - https://janda.sinkaroid.org/asmhentai/random
 
 ### Hentai2read
 The missing piece of hentai2read.com - https://sinkaroid.github.io/jandapress/#api-hentai2read
@@ -266,7 +275,9 @@ The missing piece of 3hentai.net - https://sinkaroid.github.io/jandapress/#api-3
     - "recent", "popular-24h", "popular-7d", "popular"
   - Example
     - https://janda.sinkaroid.org/3hentai/get?book=608979
+    - https://janda.sinkaroid.org/3hentai/search?key=futanari
     - https://janda.sinkaroid.org/3hentai/search?key=futanari&page=2&sort=popular-7d
+    - https://janda.sinkaroid.org/3hentai/random
 
 ### Nhentai.to
 The missing piece of nhentai.to - https://sinkaroid.github.io/jandapress/#api-nhentaito
@@ -282,6 +293,7 @@ The missing piece of nhentai.to - https://sinkaroid.github.io/jandapress/#api-nh
     - https://janda.sinkaroid.org/nhentaito/search?key=futanari
     - https://janda.sinkaroid.org/nhentaito/search?key=futanari&page=2
     - https://janda.sinkaroid.org/nhentaito/related?book=272
+    - https://janda.sinkaroid.org/nhentaito/random
 
 
 ## Status response
