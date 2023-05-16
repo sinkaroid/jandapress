@@ -10,6 +10,7 @@ allows this services to operate.
 - [asmhentai](https://asmhentai.com)
 - [simply-hentai](https://simply-hentai.com)
 - [3hentai](http://3hentai.net)
+- [nhentai.to](https://nhentai.to)
 
 Major dependencies:
 - [express](https://github.com/expressjs/express)
