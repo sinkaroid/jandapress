@@ -229,7 +229,7 @@ The missing piece of hentaifox.com - https://sinkaroid.github.io/jandapress/#api
     - https://janda.sinkaroid.org/hentaifox/get?book=97527
     - https://janda.sinkaroid.org/hentaifox/search?key=milf
     - https://janda.sinkaroid.org/hentaifox/search?key=milf&page=2&sort=latest
-    - https://janda.sinkaroid.org/hentaifox/randon
+    - https://janda.sinkaroid.org/hentaifox/random
 
 ### Asmhentai
 The missing piece of asmhentai.com - https://sinkaroid.github.io/jandapress/#api-asmhentai
