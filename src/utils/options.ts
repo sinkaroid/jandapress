@@ -10,5 +10,6 @@ export default {
   NHENTAI_IP_3: "http://138.2.77.198:3002",
   NHENTAI_IP_4: "http://129.150.63.211:3002",
   ASMHENTAI: "https://asmhentai.com",
-  THREEHENTAI: "http://3hentai.net"
+  THREEHENTAI: "http://3hentai.net",
+  NHENTAI_TO: "https://nhentai.to"
 };
