@@ -15,7 +15,7 @@ class JandaPress {
   useragent: string;
   constructor() {
     this.url = "";
-    this.useragent = "jandapress/1.0.5 Node.js/16.9.1";
+    this.useragent = process.env.USER_AGENT || "jandapress/1.0.5 Node.js/16.9.1";
   }
 
   async simulateCookie(target: string, parseJson = false): Promise<p.IResponse | unknown> {
@@ -30,7 +30,7 @@ class JandaPress {
           agent: new HttpsCookieAgent({ cookies: { jar, }, }),
         },
         headers: {
-          "User-Agent": process.env.USER_AGENT || "",
+          "User-Agent": this.useragent,
         },
       });
 
@@ -43,7 +43,7 @@ class JandaPress {
           agent: new HttpsCookieAgent({ cookies: { jar, }, }),
         },
         headers: {
-          "User-Agent": process.env.USER_AGENT || "",
+          "User-Agent": this.useragent,
         },
       });
 
@@ -91,11 +91,22 @@ class JandaPress {
       return cached;
     } else if (url.includes("/random")) {
       console.log("Random should not be cached");
-      const res = await p({ url: url, followRedirects: true });
+      const res = await p({ 
+        url: url, 
+        headers: {
+          "User-Agent": this.useragent,
+        },
+        followRedirects: true });
       return res.body;
     } else {
       console.log("Fetching from source");
-      const res = await p({ url: url, followRedirects: true });
+      const res = await p({ 
+        url: url, 
+        headers: {
+          "User-Agent": this.useragent,
+        },
+        followRedirects: true 
+      });
       await keyv.set(url, res.body, ttl);
       return res.body;
     }
