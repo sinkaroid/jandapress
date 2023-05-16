@@ -44,7 +44,7 @@ The motivation of this project is to bring you an actionable data related doujin
 You enjoy consume doujin sites to build web applications. There are a lot sites that have effort especially pururin, simply-hentai and etc, not official api available nor public resource that can be used for everyone. Instead making lot of abstraction and enumerating them manually, You can rely on jandapress to make less of pain. The current state is FREE to use, meant all anonymous usage is allowed no aunthentication required and CORS was enabled.
 
 ## The solution
-<a href="https://github.com/sinkaroid/jandapress/wiki/Routing"><img src="https://cdn.discordapp.com/attachments/952117487166705747/1025602331456307230/jandaflow2.png" width="550"></a>
+<a href="https://github.com/sinkaroid/jandapress/wiki/Routing"><img src="https://cdn.discordapp.com/attachments/1082449595033997434/1107863120275320852/jandapressflow_1.png" width="800"></a>
 
 ## Features
 
@@ -66,6 +66,7 @@ You enjoy consume doujin sites to build web applications. There are a lot sites 
 | `simply-hentai` | [![Simply-hentai](https://github.com/sinkaroid/jandapress/workflows/Simply-hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/simply-hentai.yml) | ✅  | ❌      | ❌      |
 | `asmhentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/Asmhentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/asmhentai.yml)            | ✅  | ✅     | ✅     |
 | `3hentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/3hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/3hentai.yml)            | ✅  | ✅     | ✅     |
+| `nhentai.to`     | [![Nhentaito](https://github.com/sinkaroid/jandapress/workflows/Nhentaito%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/nhentaito.yml)            | ✅  | ✅     | ✅     |
 
 ## Prerequisites
 <table>
@@ -266,6 +267,22 @@ The missing piece of 3hentai.net - https://sinkaroid.github.io/jandapress/#api-3
   - Example
     - https://janda.sinkaroid.org/3hentai/get?book=608979
     - https://janda.sinkaroid.org/3hentai/search?key=futanari&page=2&sort=popular-7d
+
+### Nhentai.to
+The missing piece of nhentai.to - https://sinkaroid.github.io/jandapress/#api-nhentaito
+- `/nhentaito`: nhentaito api
+  - **get**, takes parameters : `book`
+  - **search**, takes parameters : `key`, `?page`
+  - **related**, takes parameters : `book`
+  - **random**
+  - <u>sort parameters on search</u>
+    - None
+  - Example
+    - https://janda.sinkaroid.org/nhentaito/get?book=272
+    - https://janda.sinkaroid.org/nhentaito/search?key=futanari
+    - https://janda.sinkaroid.org/nhentaito/search?key=futanari&page=2
+    - https://janda.sinkaroid.org/nhentaito/related?book=272
+
 
 ## Status response
 `"success": true,` or `"success": false,`
