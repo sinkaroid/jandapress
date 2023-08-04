@@ -207,14 +207,11 @@ The missing piece of nhentai.net - https://sinkaroid.github.io/jandapress/#api-n
 The missing piece of pururin.to - https://sinkaroid.github.io/jandapress/#api-pururin
 - `/pururin` : pururin api
   - **get**, takes parameters : `book`
-  - **search**, takes parameters : `key`, `?page`, `?sort`
+  - **search**, takes parameters : `key`, `?page`
   - **random**
-  - <u>sort parameters on search</u>
-    - "newest", "most-popular", "highest-rated", "most-viewed", "title", "random" 
   - Example
     - https://janda.sinkaroid.org/pururin/get?book=63373
     - https://janda.sinkaroid.org/pururin/search?key=futanari
-    - https://janda.sinkaroid.org/pururin/search?key=futanari&page=2&sort=most-viewed
     - https://janda.sinkaroid.org/pururin/random
 
 ### Hentaifox
