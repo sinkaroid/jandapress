@@ -130,9 +130,9 @@ export const isNumeric = (val: string): boolean => {
  */
 export async function getIdRandomPururin(): Promise<number> {
   const randomNumber = Math.floor(Math.random() * 500) + 1;
-  const raw = await p(`${c.PURURIN}/browse/random?page=${randomNumber}`);
+  const raw = await p(`${c.PURURIN}/browse?sort=newest&page=${randomNumber}`);
   const $ = load(raw.body);
-  const gallery = $("img.card-img-top").map((i, el) => $(el).attr("data-src")).get();
+  const gallery = $(".card.card-gallery").map((i, el) => $(el).attr("href")).get();
   const galleryNumber = gallery.map(el => removeNonNumeric(el));
   const randomgallery = galleryNumber[Math.floor(Math.random() * galleryNumber.length)];
   return parseInt(randomgallery);
