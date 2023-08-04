@@ -1164,14 +1164,6 @@
             "field": "page",
             "defaultValue": "1",
             "description": "<p>Page number</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "sort",
-            "defaultValue": "newest",
-            "description": ""
           }
         ]
       }
@@ -1188,7 +1180,7 @@
     "examples": [
       {
         "title": "curl",
-        "content": "curl -i https://janda.sinkaroid.org/pururin/search?key=yuri\ncurl -i https://janda.sinkaroid.org/pururin/search?key=yuri&page=2&sort=newest",
+        "content": "curl -i https://janda.sinkaroid.org/pururin/search?key=yuri",
         "type": "curl"
       },
       {
