@@ -28,7 +28,8 @@ export async function scrapeContent(url: string, random = false) {
     else res = await janda.fetchBody(url), raw = res;
 
     const $ = load(raw);
-    const title: string = $("div.content-wrapper h1").html() || "";
+    
+    const title: string = $("meta[property='og:title']").attr("content") || "";
     if (!title) throw Error("Not found");
     
     const tags: string[] = $("div.content-wrapper ul.list-inline li").map((i, abc) => {
@@ -37,8 +38,8 @@ export async function scrapeContent(url: string, random = false) {
 
     const cover = $("meta[property='og:image']").attr("content");
     const extension = `.${cover?.split(".").pop()}`;
-    const total: number = parseInt($("gallery-thumbnails").attr(":total") || "0");
-    const id: number = parseInt($("gallery-thumbnails").attr(":id") || "0");
+    const total: number = parseInt($("span[itemprop='numberOfPages']").text()) || 0;
+    const id: number = parseInt($("meta[property='og:url']").attr("content")?.split("/")[4] || "0");
 
     const image = [];
     for (let i = 0; i < total; i++) {
