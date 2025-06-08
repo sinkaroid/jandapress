@@ -1,5 +1,5 @@
 export default {
-  PURURIN: "https://pururin.to",
+  PURURIN: "https://pururin.me",
   HENTAIFOX: "https://hentaifox.com",
   HENTAI2READ: "https://hentai2read.com",
   SIMPLY_HENTAI: "https://simply-hentai.com",

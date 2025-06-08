@@ -7,6 +7,7 @@ const extension = {
   j: "jpg",
   p: "png",
   g: "gif",
+  w: "webp",
 };
 
 interface INhentaiGet {
