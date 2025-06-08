@@ -1,5 +1,5 @@
 <div align="center">
-<a href="https://janda.sinkaroid.org"><img width="500" src="https://cdn.discordapp.com/attachments/1046495201176334467/1055678255866318898/tomoe-janda.png" alt="jandapress"></a>
+<a href="https://janda.sinkaroid.org"><img width="500" src="resources/project/images/tomoe-janda.png" alt="jandapress"></a>
 
 <h4 align="center">RESTful and experimental API for the doujinboards</h4>
 <p align="center">
@@ -17,7 +17,7 @@ The motivation of this project is to bring you an actionable data related doujin
 
 ---
 
-<a href="https://janda.sinkaroid.org"><img align="right" src="https://cdn.discordapp.com/attachments/952117487166705747/986315079802814524/tomoe.png" width="300"></a>
+<a href="https://janda.sinkaroid.org"><img align="right" src="resources/project/images/tomoe.png" width="300"></a>
 
 - [Jandapress](#)
   - [The problem](#the-problem)
@@ -44,7 +44,7 @@ The motivation of this project is to bring you an actionable data related doujin
 You enjoy consume doujin sites to build web applications. There are a lot sites that have effort especially pururin, simply-hentai and etc, not official api available nor public resource that can be used for everyone. Instead making lot of abstraction and enumerating them manually, You can rely on jandapress to make less of pain. The current state is FREE to use, meant all anonymous usage is allowed no aunthentication required and CORS was enabled.
 
 ## The solution
-<a href="https://github.com/sinkaroid/jandapress/wiki/Routing"><img src="https://cdn.discordapp.com/attachments/1082449595033997434/1107863120275320852/jandapressflow_1.png" width="800"></a>
+<a href="https://github.com/sinkaroid/jandapress/wiki/Routing"><img src="resources/project/images/jandapressflow_1.png" width="800"></a>
 
 ## Features
 
@@ -135,12 +135,12 @@ docker run -d \
 ## Nhentai Guide
 ### The problem
 https://nhentai.net was Clouflare protection enabled, for default jandapress use [real IP address to bypass the protection](https://github.com/sinkaroid/jandapress/blob/master/src/utils/options.ts#L7..L10), but **sometimes** even it's from IP address the `/api` path return error that means admins or their maintainer don't allow us to request from the IP address.
-![image](https://cdn.discordapp.com/attachments/952117487166705747/1073694957111627906/Screenshot_265.png)
+![image](resources/project/images/Screenshot_265.png)
 
 ### The solution
 You will need instance such as VPS and install Chrome or Chromium or Firefox, You have to set `NHENTAI_IP_ORIGIN` to `false`, set `COOKIE` and `USER_AGENT`. We'll simulate the request with [tough-cookie](https://github.com/salesforce/tough-cookie) and [http-cookie-agent](https://www.npmjs.com/package/http-cookie-agent) 
 
-![image](https://cdn.discordapp.com/attachments/952117487166705747/1073699069643468902/Screenshot_267_copy.jpg)
+![image](resources/project/images/Screenshot_267_copy.jpg)
 
 - set `NHENTAI_IP_ORIGIN` to `false` in `.env` file
 - open browser and go to https://nhentai.net
@@ -276,7 +276,7 @@ The missing piece of 3hentai.net - https://sinkaroid.github.io/jandapress/#api-3
     - https://janda.sinkaroid.org/3hentai/search?key=futanari&page=2&sort=popular-7d
     - https://janda.sinkaroid.org/3hentai/random
 
-### Nhentai.to
+### Nhentai.to (outdated)
 The missing piece of nhentai.to - https://sinkaroid.github.io/jandapress/#api-nhentaito
 - `/nhentaito`: nhentaito api
   - **get**, takes parameters : `book`
