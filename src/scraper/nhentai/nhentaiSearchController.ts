@@ -7,6 +7,7 @@ const extension = {
   j: "jpg",
   p: "png",
   g: "gif",
+  w: "webp",
 };
 
 interface INhentaiSearch {
@@ -29,7 +30,7 @@ export async function scrapeContent(url: string) {
   try {
     const res = await janda.fetchJson(url);
     const rawData = res as NhentaiSearch;
-  
+
     const content = [];
 
     for (let i = 0; i < rawData.result.length; i++) {
@@ -54,7 +55,7 @@ export async function scrapeContent(url: string) {
       };
       content.push(objectData);
     }
-    
+
     const data = {
       success: true,
       data: content,
@@ -63,7 +64,7 @@ export async function scrapeContent(url: string) {
       source: url.replace(c.NHENTAI_IP, c.NHENTAI),
     };
     return data;
-    
+
   } catch (err) {
     const e = err as Error;
     throw Error(e.message);
