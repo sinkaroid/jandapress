@@ -176,6 +176,26 @@ export function nhentaiStrategy() {
   return strategy;
 }
 
+/**
+ * Predict the extension of hentaiFox images
+ * @param url 
+ * @returns Promise<".jpg" | ".webp"> lolz
+ */
+export async function hentaiFoxPredictedExtension(url: string): Promise<".jpg" | ".webp"> {
+  try {
+    const jpgUrl = url;
+    const res = await p({ url: jpgUrl, method: "HEAD", followRedirects: true });
+
+    if (res.statusCode === 200) {
+      return ".jpg";
+    } else {
+      return ".webp";
+    }
+  } catch (err) {
+    return ".webp";
+  }
+}
+
 export {
   getPururinInfo, getPururinPageCount, getUrl, getId, getDate, timeAgo,
   mock, getPururinLanguage, removeNonNumeric
