@@ -1,12 +1,11 @@
-import { scrapeContent } from "../../scraper/pururin/pururinGetController";
+import { scrapeContent } from "../../scraper/pururin/pururinGetControllerRandom";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
-import { getIdRandomPururin, maybeError } from "../../utils/modifier";
+import { maybeError } from "../../utils/modifier";
 import { Request, Response } from "express";
 
 export async function randomPururin(req: Request, res: Response) {
   try {
-    const id = await getIdRandomPururin();
     
     /**
      * @api {get} /pururin/random Random pururin
@@ -36,7 +35,7 @@ export async function randomPururin(req: Request, res: Response) {
      * 
      */
     
-    const url = `${c.PURURIN}/gallery/${id}/janda`;
+    const url = `${c.PURURIN}/random`;
     const data = await scrapeContent(url, true);
     logger.info({
       path: req.path,
