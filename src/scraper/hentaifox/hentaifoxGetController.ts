@@ -1,6 +1,7 @@
 import { load } from "cheerio";
 import JandaPress from "../../JandaPress";
 import c from "../../utils/options";
+import { hentaiFoxPredictedExtension } from "../../utils/modifier";
 
 interface IHentaiFoxGet {
   title: string;
@@ -18,14 +19,20 @@ export async function scrapeContent(url: string) {
     const res = await janda.fetchBody(url);
     const $ = load(res);
     const id = parseInt($("a.g_button")?.attr("href")?.split("/")[2] || "");
-  
+
     const category = $("a.tag_btn").map((i, abc) => {
       return $(abc)?.text()?.replace(/[0-9]/g, "").trim();
     }).get();
 
     const imgSrc = $("img").map((i, el) => $(el).attr("data-src")).get();
+    const img1_clean = imgSrc[0].replace(/\/\d+$/, "");
+    const extPredict = img1_clean.replace("t.", ".");
+    const extPredicted = await hentaiFoxPredictedExtension(extPredict);
+    // console.log("Extension Predicted:", extPredicted);
+
     const parameterImg2 = imgSrc[0].split("/").slice(0, 5).join("/");
-    const extensionImg = `.${imgSrc[0].split(".").slice(-1)[0]}`;
+    const extensionImg = extPredicted;
+
     const info = $("span.i_text.pages").map((i, abc) => {
       return $(abc).text();
     }).get();
@@ -36,7 +43,7 @@ export async function scrapeContent(url: string) {
       image.push(`${parameterImg2}/${i + 1}${extensionImg}`);
     }
     const titleInfo = $("div.info").children("h1").text();
-   
+
     const objectData: IHentaiFoxGet = {
       title: titleInfo,
       id: id,
