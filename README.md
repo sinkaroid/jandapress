@@ -197,10 +197,10 @@ The missing piece of nhentai.net - https://sinkaroid.github.io/jandapress/#api-n
   - <u>sort parameters on search</u>
     - "popular-today", "popular-week", "popular"
   - Example
-    - https://janda.sinkaroid.org/nhentai/get?book=177013
+    - https://janda.sinkaroid.org/nhentai/get?book=577774
     - https://janda.sinkaroid.org/nhentai/search?key=futanari
     - https://janda.sinkaroid.org/nhentai/search?key=futanari&page=2&sort=popular-today
-    - https://janda.sinkaroid.org/nhentai/related?book=177013
+    - https://janda.sinkaroid.org/nhentai/related?book=577774
     - https://janda.sinkaroid.org/nhentai/random
 
 ### Pururin
