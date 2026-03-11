@@ -34,28 +34,35 @@ app.get("/", slow, limiter, async (req, res) => {
 app.use(scrapeRoutes());
 
 app.get("/g/:id", slow, limiter, (req, res) => {
-  if (!isNumeric(req.params.id)) throw Error("This path need required number to work");
-  res.redirect(301, `https://nhentai.net/g/${req.params.id}`);
+  const id = req.params.id as string;
+
+  if (!isNumeric(id)) throw Error("This path need required number to work");
+
+  res.redirect(301, `https://nhentai.net/g/${id}`);
 });
 
 app.get("/p/:id", slow, limiter, (req, res) => {
-  if (!isNumeric(req.params.id)) throw Error("This path need required number to work");
-  res.redirect(301, `https://pururin.to/gallery/${req.params.id}/re=janda`);
+  const id = req.params.id as string;
+
+  if (!isNumeric(id)) throw Error("This path need required number to work");
+
+  res.redirect(301, `https://pururin.to/gallery/${id}/re=janda`);
 });
 
 app.get("/h/:id", slow, limiter, (req, res) => {
-  if (!isNumeric(req.params.id)) throw Error("This path need required number to work");
-  res.redirect(301, `https://hentaifox.com/gallery/${req.params.id}`);
+  const id = req.params.id as string;
+
+  if (!isNumeric(id)) throw Error("This path need required number to work");
+
+  res.redirect(301, `https://hentaifox.com/gallery/${id}`);
 });
 
 app.get("/a/:id", slow, limiter, (req, res) => {
-  if (!isNumeric(req.params.id)) throw Error("This path need required number to work");
-  res.redirect(301, `https://asmhentai.com/g/${req.params.id}`);
-});
+  const id = req.params.id as string;
 
-app.get("/to/:id", slow, limiter, (req, res) => {
-  if (!isNumeric(req.params.id)) throw Error("This path need required number to work");
-  res.redirect(301, `https://nhentai.to/g/${req.params.id}`);
+  if (!isNumeric(id)) throw Error("This path need required number to work");
+
+  res.redirect(301, `https://asmhentai.com/g/${id}`);
 });
 
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -69,7 +76,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.use((error: any, res: Response) => {
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({
     message: error.message,
     stack: error.stack

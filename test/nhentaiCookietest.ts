@@ -14,7 +14,7 @@ async function test() {
       agent: new HttpsCookieAgent({ cookies: { jar, }, }),
     },
     "headers": {
-      "User-Agent": process.env.USER_AGENT || "jandapress/1.0.6 Node.js/16.9.1",
+      "User-Agent": process.env.USER_AGENT || "jandapress/7.0.1-alpha Node.js/22.22.0",
     },
   });
   

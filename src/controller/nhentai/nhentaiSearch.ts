@@ -13,34 +13,34 @@ export async function searchNhentai(req: Request, res: Response) {
     if (!sorting.includes(sort)) throw Error("Invalid sort: " + sorting.join(", "));
 
     /**
-     * @api {get} /nhentai/search Search nhentai
+     * @api {get} /nhentai/search/:key Search nhentai
      * @apiName Search nhentai
      * @apiGroup nhentai
      * @apiDescription Search doujinshi on nhentai
+     *
      * @apiParam {String} key Keyword to search
      * @apiParam {Number} [page=1] Page number
-     * @apiParam {String} [sort=popular-today] 
-     * 
+     * @apiParam {String} [sort=popular-today] Sort type
+     *
      * @apiSuccessExample {json} Success-Response:
-     *    HTTP/1.1 200 OK
-     *    HTTP/1.1 400 Bad Request
-     * 
+     * HTTP/1.1 200 OK
+     * HTTP/1.1 400 Bad Request
+     *
      * @apiExample {curl} curl
      * curl -i https://janda.sinkaroid.org/nhentai/search?key=yuri
      * curl -i https://janda.sinkaroid.org/nhentai/search?key=yuri&page=2&sort=popular-today
-     * 
+     *
      * @apiExample {js} JS/TS
      * import axios from "axios"
-     * 
      * axios.get("https://janda.sinkaroid.org/nhentai/search?key=yuri")
      * .then(res => console.log(res.data))
      * .catch(err => console.error(err))
-     * 
+     *
      * @apiExample {python} Python
      * import aiohttp
      * async with aiohttp.ClientSession() as session:
-     *  async with session.get("https://janda.sinkaroid.org/nhentai/search?key=yuri") as resp:
-     *    print(await resp.json())
+     *   async with session.get("https://janda.sinkaroid.org/nhentai/search?key=yuri") as resp:
+     *     print(await resp.json())
      */
 
     const url = `${nhentaiStrategy()}/api/galleries/search?query=${key}&sort=${sort}&page=${page}`;

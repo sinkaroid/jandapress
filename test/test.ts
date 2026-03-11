@@ -1,32 +1,45 @@
-import c from "../src/utils/options";
+import test from "node:test";
+import assert from "node:assert/strict";
 import p from "phin";
+import c from "../src/utils/options";
 import { name, version } from "../package.json";
 
-function getKeyByValue(data: any, value: string) {
-  return Object.keys(data).find(key => data[key] === value);
+const UA = `${name}/${version} Node.js/22.22.0`;
+
+const sources = [
+  c.NHENTAI,
+  c.HENTAIFOX,
+  c.PURURIN,
+  c.ASMHENTAI,
+  c.SIMPLY_HENTAI_PROXIFIED,
+  c.HENTAI2READ,
+  c.THREEHENTAI
+];
+
+function getKeyByValue(data: Record<string, string>, value: string) {
+  return Object.keys(data).find(k => data[k] === value);
 }
 
-for (const url of
-  [
-    c.NHENTAI_IP_4,
-    c.HENTAIFOX,
-    c.PURURIN,
-    c.ASMHENTAI,
-    c.SIMPLY_HENTAI_PROXIFIED,
-    c.HENTAI2READ,
-    c.THREEHENTAI
-  ]) {
-  p({ 
-    url: url, 
-    headers: {
-      "User-Agent": `${name}/${version} Node.js/16.9.1`,
-    }
-  }).then(res => {
-    if (res.statusCode !== 200 && res.statusCode !== 308 && res.statusCode !== 301) {
-      throw new Error(`${url} of ${getKeyByValue(c, url)} is not available, status: ${res.statusCode}, couldn't be scrape`);
-    }
-    else {
-      console.log(`${url} is available status: ${res.statusCode}, could be scrape`);
-    }
+async function check(url: string) {
+  const res = await p({
+    url,
+    headers: { "User-Agent": UA },
+    followRedirects: true
+  });
+
+  const ok = [200, 301, 308].includes(res.statusCode || 0);
+
+  console.log(`${url} → ${res.statusCode}`);
+
+  assert.equal(
+    ok,
+    true,
+    `${url} (${getKeyByValue(c, url)}) is not available`
+  );
+}
+
+for (const url of sources) {
+  test(`source: ${getKeyByValue(c, url)}`, async () => {
+    await check(url);
   });
 }
