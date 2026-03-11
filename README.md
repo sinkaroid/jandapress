@@ -4,11 +4,11 @@
 <h4 align="center">RESTful and experimental API for the doujinboards</h4>
 <p align="center">
 	<a href="https://github.com/sinkaroid/jandapress/actions/workflows/playground.yml"><img src="https://github.com/sinkaroid/jandapress/workflows/Playground/badge.svg"></a>
-	<a href="https://codeclimate.com/github/sinkaroid/jandapress/maintainability"><img src="https://api.codeclimate.com/v1/badges/829b8fe63ab78a425f0b/maintainability" /></a>
+	<a href="https://qlty.sh/gh/sinkaroid/projects/jandapress"><img src="https://qlty.sh/gh/sinkaroid/projects/jandapress/maintainability.svg" alt="Maintainability" /></a>
 </p>
 
 Jandapress was named **JCE** (Janda Cheerio Express) and definitely depends on them.  
-The motivation of this project is to bring you an actionable data related doujin with gather in mind.
+The motivation behind this project is to provide developers with accessible and actionable data from various doujinshi sources, with a focus on aggregation and ease of integration for applications and services.
 
 <a href="https://sinkaroid.github.io/jandapress">Playground</a> •
 <a href="https://github.com/sinkaroid/jandapress/blob/master/CONTRIBUTING.md">Contributing</a> •
@@ -22,13 +22,14 @@ The motivation of this project is to bring you an actionable data related doujin
 - [Jandapress](#)
   - [The problem](#the-problem)
   - [The solution](#the-solution)
-  - [Testing](#running-tests)
-    - [Running tests](#running-tests)
+  - [Running tests](#running-tests)
+    - [Tests](#tests)
+  - [Features](#features)
   - [Prerequisites](#prerequisites)
     - [Installation](#installation)
       - [Docker](#docker)
       - [Manual](#manual)
-    - [Running tests](#running-tests)
+    - [Tests](#tests)
     - [Nhentai Guide](#nhentai-guide)
   - [Playground](https://sinkaroid.github.io/jandapress)
     - [Routing](#playground)
@@ -36,7 +37,7 @@ The motivation of this project is to bring you an actionable data related doujin
   - [CLosing remarks](https://github.com/sinkaroid/jandapress/blob/master/CLOSING_REMARKS.md)
     - [Alternative links](https://github.com/sinkaroid/jandapress/blob/master/CLOSING_REMARKS.md#alternative-links)
   - [Pronunciation](#Pronunciation)
-  - [Client libraries / Wrappers](#client-libraries--wrappers)
+  - [Client libraries](#client-libraries)
   - [Legal](#legal)
 
 
@@ -52,6 +53,19 @@ The current state of the service is **free to use**, meaning anonymous usage is 
 
 ## The solution
 <a href="https://github.com/sinkaroid/jandapress/wiki/Routing"><img src="resources/project/images/jandapressflow_1.png" width="800"></a>
+
+## Running tests
+Some tests may fail in CI environments because certain doujin websites restrict or block automated requests originating from CI infrastructure and shared IP ranges.
+
+| Site            | Status                                                                                                                                                                            | Get | Search | Random |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | ------ | ------ |
+| `nhentai`       | [![Nhentai](https://github.com/sinkaroid/jandapress/workflows/Nhentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/nhentai.yml)                   | ✅  | ✅     | ✅     |
+| `pururin`       | [![Pururin](https://github.com/sinkaroid/jandapress/workflows/Pururin%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/pururin.yml)                  | ✅  | ✅     | ✅     |
+| `hentaifox`     | [![Hentaifox](https://github.com/sinkaroid/jandapress/workflows/Hentaifox%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/hentaifox.yml)             | ✅  | ✅     | ✅     |
+| `hentai2read`   | [![Hentai2read](https://github.com/sinkaroid/jandapress/workflows/Hentai2read%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/hentai2read.yml)       | ✅  | ✅     | ❌      |
+| `simply-hentai` | [![Simply-hentai](https://github.com/sinkaroid/jandapress/workflows/Simply-hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/simply-hentai.yml) | ✅  | ❌      | ❌      |
+| `asmhentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/Asmhentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/asmhentai.yml)            | ✅  | ✅     | ✅     |
+| `3hentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/3hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/3hentai.yml)            | ✅  | ✅     | ✅     |
 
 ## Features
 
@@ -156,18 +170,6 @@ You will need an instance such as a VPS with a browser installed (Chrome, Chromi
 └── https://developers.cloudflare.com/fundamentals
 
 You must ensure that the cookie remains valid. If the cookie expires, it must be refreshed manually. This process can also be automated using a scheduled task such as a cron job or an interval-based refresh.
-## Running tests
-Some tests may fail in CI environments because certain doujin websites restrict or block automated requests originating from CI infrastructure and shared IP ranges.
-
-| Site            | Status                                                                                                                                                                            | Get | Search | Random |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | ------ | ------ |
-| `nhentai`       | [![Nhentai](https://github.com/sinkaroid/jandapress/workflows/Nhentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/nhentai.yml)                   | ✅  | ✅     | ✅     |
-| `pururin`       | [![Pururin](https://github.com/sinkaroid/jandapress/workflows/Pururin%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/pururin.yml)                  | ✅  | ✅     | ✅     |
-| `hentaifox`     | [![Hentaifox](https://github.com/sinkaroid/jandapress/workflows/Hentaifox%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/hentaifox.yml)             | ✅  | ✅     | ✅     |
-| `hentai2read`   | [![Hentai2read](https://github.com/sinkaroid/jandapress/workflows/Hentai2read%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/hentai2read.yml)       | ✅  | ✅     | ❌      |
-| `simply-hentai` | [![Simply-hentai](https://github.com/sinkaroid/jandapress/workflows/Simply-hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/simply-hentai.yml) | ✅  | ❌      | ❌      |
-| `asmhentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/Asmhentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/asmhentai.yml)            | ✅  | ✅     | ✅     |
-| `3hentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/3hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/3hentai.yml)            | ✅  | ✅     | ✅     |
 
 ## Tests
 
@@ -319,9 +321,9 @@ We have discontinued providing public APIs and playground services due to ongoin
 To continue using Jandapress, please deploy and run your own self-hosted instance.
 
 ## Pronunciation
-[`id_ID`](https://www.localeplanet.com/java/id-ID/index.html) • **/jan·da/** — Dewasa dan mengikat; _(?)_ **/press/** shorthand for https://expressjs.com
+[`id_ID`](https://www.localeplanet.com/java/id-ID/index.html) • **/jan·da/** — Dewasa dan mengikat; _(?)_ **/press/** shorthand for expressjs; _(?)_
 
-## Client libraries / Wrappers
+## Client libraries
 Seamlessly integrate with the languages you love, simplified the usage, and intelisense definitions on your IDEs
 
 - [janda](https://github.com/sinkaroid/janda) Python wrapper by [sinkaroid](https://github.com/sinkaroid)
