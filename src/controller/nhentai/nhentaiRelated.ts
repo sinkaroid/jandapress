@@ -10,7 +10,7 @@ export async function relatedNhentai(req: Request, res: Response) {
     if (!isNumeric(book)) throw Error("Value must be number");
 
     /**
-     * @api {get} /nhentai/related/:book Get related nhentai
+     * @api {get} /nhentai/related?book=:book Get related nhentai
      * @apiName Get related nhentai
      * @apiGroup nhentai
      * @apiDescription Get related or similar doujinshi on nhentai based on id

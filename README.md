@@ -286,10 +286,11 @@ The missing piece of 3hentai.net - https://sinkaroid.github.io/jandapress/#api-3
 
 ## Frequently asked questions 
 **Q: The website response is slow**  
-> That's unfortunate, This repository was opensource already, You can host and deploy Jandapress with your own instance. Any fixes and improvements will updating to this repo.
+> That's unfortunate, this repository was opensource already, You can host and deploy Jandapress with your own instance. Any fixes and improvements will updating to this repo.  
 
-**Q: I dont want to host my own instance**   
-> That's unfortunate, Hit the "Sponsor this project" button, any kind of donations will helps me to funding the development.
+> **March 11, 2026**:
+We have discontinued providing public APIs and playground services due to ongoing abuse and excessive usage.
+To continue using Jandapress, please deploy and run your own self-hosted instance.
 
 ## Pronunciation
 [`id_ID`](https://www.localeplanet.com/java/id-ID/index.html) • **/jan·da/** — Dewasa dan mengikat; _(?)_

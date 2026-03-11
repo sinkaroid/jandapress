@@ -13,7 +13,7 @@ export async function searchNhentai(req: Request, res: Response) {
     if (!sorting.includes(sort)) throw Error("Invalid sort: " + sorting.join(", "));
 
     /**
-     * @api {get} /nhentai/search/:key Search nhentai
+     * @api {get} /nhentai/search?key=:key Search nhentai
      * @apiName Search nhentai
      * @apiGroup nhentai
      * @apiDescription Search doujinshi on nhentai

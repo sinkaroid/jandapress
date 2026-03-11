@@ -10,7 +10,7 @@ export async function getNhentai(req: Request, res: Response) {
     if (!isNumeric(book)) throw Error("Parameter book must be number");
 
     /**
-     * @api {get} /nhentai/get/:book Get nhentai
+     * @api {get} /nhentai/get?book=:book Get nhentai
      * @apiName Get nhentai
      * @apiGroup nhentai
      * @apiDescription Get a doujinshi on nhentai based on id
