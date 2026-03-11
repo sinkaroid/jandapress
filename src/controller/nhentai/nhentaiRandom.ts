@@ -18,19 +18,19 @@ export async function randomNhentai(req: Request, res: Response) {
      *   HTTP/1.1 400 Bad Request
      * 
      * @apiExample {curl} curl
-     * curl -i https://janda.sinkaroid.org/nhentai/random
+     * curl -i http://localhost:3000/nhentai/random
      * 
      * @apiExample {js} JS/TS
      * import axios from "axios"
      * 
-     * axios.get("https://janda.sinkaroid.org/nhentai/random")
+     * axios.get("http://localhost:3000/nhentai/random")
      * .then(res => console.log(res.data))
      * .catch(err => console.error(err))
      * 
      * @apiExample {python} Python
      * import aiohttp
      * async with aiohttp.ClientSession() as session:
-     *  async with session.get("https://janda.sinkaroid.org/nhentai/random") as resp:
+     *  async with session.get("http://localhost:3000/nhentai/random") as resp:
      *    print(await resp.json())
      * 
      */

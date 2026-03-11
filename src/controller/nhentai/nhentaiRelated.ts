@@ -10,7 +10,7 @@ export async function relatedNhentai(req: Request, res: Response) {
     if (!isNumeric(book)) throw Error("Value must be number");
 
     /**
-     * @api {get} /nhentai/related/:book Get related nhentai
+     * @api {get} /nhentai/related?book=:book Get related nhentai
      * @apiName Get related nhentai
      * @apiGroup nhentai
      * @apiDescription Get related or similar doujinshi on nhentai based on id
@@ -22,18 +22,18 @@ export async function relatedNhentai(req: Request, res: Response) {
      * HTTP/1.1 400 Bad Request
      * 
      * @apiExample {curl} curl
-     * curl -i https://janda.sinkaroid.org/nhentai/related?book=123
+     * curl -i http://localhost:3000/nhentai/related?book=123
      * 
      * @apiExample {js} JS/TS
      * import axios from "axios"
-     * axios.get("https://janda.sinkaroid.org/nhentai/related?book=123")
+     * axios.get("http://localhost:3000/nhentai/related?book=123")
      * .then(res => console.log(res.data))
      * .catch(err => console.error(err))
      * 
      * @apiExample {python} Python
      * import aiohttp
      * async with aiohttp.ClientSession() as session:
-     *   async with session.get("https://janda.sinkaroid.org/nhentai/related?book=123") as resp:
+     *   async with session.get("http://localhost:3000/nhentai/related?book=123") as resp:
      *     print(await resp.json())
      */
 

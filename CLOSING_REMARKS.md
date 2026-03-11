@@ -11,13 +11,11 @@ allows this services to operate.
 - [simply-hentai](https://simply-hentai.com)
 - [3hentai](http://3hentai.net)
 
-Major dependencies:
+Stack:
 - [express](https://github.com/expressjs/express)
 - [cheerio](https://cheerio.js.org/)
 - [keyv](https://github.com/jaredwray/keyv)
 
-# Alternative-links
-Just in case if https://janda.mod.land down, here some alternative deployment
-
-- https://janda.sinkaroid.org
-- https://janda.fly.dev
+> **March 11, 2026**:
+We have discontinued providing public APIs and playground services due to ongoing abuse and excessive usage.
+To continue using Jandapress, please deploy and run your own self-hosted instance.

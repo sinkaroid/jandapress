@@ -1,5 +1,5 @@
 <div align="center">
-<a href="https://janda.sinkaroid.org"><img width="500" src="resources/project/images/tomoe-janda.png" alt="jandapress"></a>
+<a href="http://localhost:3000"><img width="500" src="resources/project/images/tomoe-janda.png" alt="jandapress"></a>
 
 <h4 align="center">RESTful and experimental API for the doujinboards</h4>
 <p align="center">
@@ -17,13 +17,13 @@ The motivation of this project is to bring you an actionable data related doujin
 
 ---
 
-<a href="https://janda.sinkaroid.org"><img align="right" src="resources/project/images/tomoe.png" width="300"></a>
+<a href="http://localhost:3000"><img align="right" src="resources/project/images/tomoe.png" width="300"></a>
 
 - [Jandapress](#)
   - [The problem](#the-problem)
   - [The solution](#the-solution)
-  - [Features](#features)
-    - [Jandapress vs. the doujinboards](#jandapress-vs-the-whole-doujin-sites)
+  - [Testing](#running-tests)
+    - [Running tests](#running-tests)
   - [Prerequisites](#prerequisites)
     - [Installation](#installation)
       - [Docker](#docker)
@@ -41,36 +41,31 @@ The motivation of this project is to bring you an actionable data related doujin
 
 
 ## The problem
-You enjoy consume doujin sites to build web applications. there are a lot sites that have effort especially pururin, simply-hentai and etc, not official api available nor public resource that can be used for everyone. Instead making lot of abstraction and enumerating them manually, You can rely on jandapress to make less of pain. The current state is FREE to use, meant all anonymous usage is allowed no aunthentication required and CORS was enabled.
+
+Many developers consume doujin websites as a source of data when building web applications. However, most of these sites — such as pururin, simply-hentai, and others — do not provide official APIs or public resources that can be easily integrated into applications.
+
+As a result, developers often need to implement their own scraping logic, build multiple abstractions, and manually maintain integrations for each site.
+
+Jandapress aims to simplify this process by providing a unified interface for accessing data across multiple doujin sites. Instead of maintaining separate implementations, developers can rely on Jandapress to reduce complexity and development overhead.
+
+The current state of the service is **free to use**, meaning anonymous usage is allowed. No authentication is required, and **CORS is enabled** to support browser-based applications.
 
 ## The solution
 <a href="https://github.com/sinkaroid/jandapress/wiki/Routing"><img src="resources/project/images/jandapressflow_1.png" width="800"></a>
 
 ## Features
 
-- Gather the most doujin sites
-- Objects taken that are consistent structure
-- Objects taken is re-appended to make extendable
-- All in one: get, search, and random methods
-- In the future we may implement JWT authentication
-- Pure scraping, except nh sigh..
-
-## Jandapress vs. the whole doujin sites
-**Features availability** that Jandapress has
-| Site            | Status                                                                                                                                                                            | Get | Search | Random |
-| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | ------ | ------ |
-| `nhentai`       | [![Nhentai](https://github.com/sinkaroid/jandapress/workflows/Nhentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/nhentai.yml)                   | ✅  | ✅     | ✅     |
-| `pururin`       | [![Pururin](https://github.com/sinkaroid/jandapress/workflows/Pururin%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/pururin.yml)                  | ✅  | ✅     | ✅     |
-| `hentaifox`     | [![Hentaifox](https://github.com/sinkaroid/jandapress/workflows/Hentaifox%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/hentaifox.yml)             | ✅  | ✅     | ✅     |
-| `hentai2read`   | [![Hentai2read](https://github.com/sinkaroid/jandapress/workflows/Hentai2read%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/hentai2read.yml)       | ✅  | ✅     | ❌      |
-| `simply-hentai` | [![Simply-hentai](https://github.com/sinkaroid/jandapress/workflows/Simply-hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/simply-hentai.yml) | ✅  | ❌      | ❌      |
-| `asmhentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/Asmhentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/asmhentai.yml)            | ✅  | ✅     | ✅     |
-| `3hentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/3hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/3hentai.yml)            | ✅  | ✅     | ✅     |
+- Aggregates data from multiple doujin sites.
+- Provides a consistent and structured response format across all sources.
+- Extracted objects are normalized and reassembled to support extensibility.
+- Unified interface supporting **get**, **search**, and **random** methods.
+- Planned support for optional **JWT authentication** in future releases.
+- Primarily based on pure scraping techniques (with limited exceptions where required).
 
 
 ## Prerequisites
 <table>
-	<td><b>NOTE:</b> NodeJS 20.x or higher</td>
+	<td><b>NOTE:</b> NodeJS 20.x or higher / or simply just use docker</td>
 </table>
 
 To handle several requests from each web, You will also need [Redis](https://redis.io/) for persistent caching, free tier is available on [Redis Labs](https://redislabs.com/), You can also choose another provider as we using [keyv](https://github.com/jaredwray/keyv) Key-value storage with support for multiple backends. All data must be stored in `<Buffer>` here.
@@ -134,34 +129,68 @@ docker run -d \
 
 ## Nhentai Guide
 ### The problem
-https://nhentai.net was Clouflare protection enabled, for default jandapress use [real IP address to bypass the protection](https://github.com/sinkaroid/jandapress/blob/master/src/utils/options.ts#L7..L10), but **sometimes** even it's from IP address the `/api` path return error that means admins or their maintainer don't allow us to request from the IP address.
+https://nhentai.net is protected by Cloudflare. By default, Jandapress uses a [real IP address to bypass the protection](https://github.com/sinkaroid/jandapress/blob/master/src/utils/options.ts#L7..L10). However, in some cases the `/api` endpoint may still return an error even when the request originates from a valid IP address. This typically indicates that the site administrators have restricted requests from certain IP ranges.
+
 ![image](resources/project/images/Screenshot_265.png)
 
 ### The solution
-You will need instance such as VPS and install Chrome or Chromium or Firefox, You have to set `NHENTAI_IP_ORIGIN` to `false`, set `COOKIE` and `USER_AGENT`. We'll simulate the request with [tough-cookie](https://github.com/salesforce/tough-cookie) and [http-cookie-agent](https://www.npmjs.com/package/http-cookie-agent) 
+You will need an instance such as a VPS with a browser installed (Chrome, Chromium, or Firefox). Set `NHENTAI_IP_ORIGIN` to `false`, then configure `COOKIE` and `USER_AGENT`. Requests will be simulated using [tough-cookie](https://github.com/salesforce/tough-cookie) and [http-cookie-agent](https://www.npmjs.com/package/http-cookie-agent).
 
 ![image](resources/project/images/Screenshot_267_copy.jpg)
 
-- set `NHENTAI_IP_ORIGIN` to `false` in `.env` file
-- open browser and go to https://nhentai.net
-- verify you are human
-- open devtools and set custom user agent
-- reload the page and wait cloudflare again
-- open devtools and go to network tab and request
-- get the `cf_clearance` value and set it to `COOKIE` in `.env` file 
-- set the user agent to `USER_AGENT` in `.env` file
-- test that your cookie is working `npm run test:cf`
-  - it should return 200 status code otherwise watch your step
+- set `NHENTAI_IP_ORIGIN` to `false` in `.env`
+- open a browser and go to https://nhentai.net
+- complete the human verification if prompted
+- open DevTools and set a custom user agent
+- reload the page and wait for the Cloudflare verification again
+- open DevTools and navigate to the Network tab
+- obtain the `cf_clearance` value and set it as `COOKIE` in `.env`
+- set the same user agent as `USER_AGENT` in `.env`
+- verify that the cookie works by running `npm run test:cf`
+  - it should return a **200 status code**, otherwise review the steps above
 
-[The documentation](https://developers.cloudflare.com/fundamentals/get-started/reference/cloudflare-cookies/#:~:text=This%20cookie%20expires%20after%2030,Bot%20Management%2C%20a%20session%20identifier.) said and correct me if I'm wrong:
-> This cookie expires after 30 minutes of continuous inactivity by the end user. The cookie contains information related to the calculation of Cloudflare’s proprietary bot score and, when Anomaly Detection is enabled on Bot Management, a session identifier. 
+[The documentation](https://developers.cloudflare.com/fundamentals/get-started/reference/cloudflare-cookies/#:~:text=This%20cookie%20expires%20after%2030,Bot%20Management%2C%20a%20session%20identifier.) states:
+
+> This cookie expires after 30 minutes of continuous inactivity by the end user. The cookie contains information related to the calculation of Cloudflare’s proprietary bot score and, when Anomaly Detection is enabled on Bot Management, a session identifier.
 
 └── https://developers.cloudflare.com/fundamentals
 
-You will need to make your cookie is not expired otherwise manual update is required, it can be with set interval or cron job to automate your request.
-
+You must ensure that the cookie remains valid. If the cookie expires, it must be refreshed manually. This process can also be automated using a scheduled task such as a cron job or an interval-based refresh.
 ## Running tests
-Jandapress testing
+Some tests may fail in CI environments because certain doujin websites restrict or block automated requests originating from CI infrastructure and shared IP ranges.
+
+| Site            | Status                                                                                                                                                                            | Get | Search | Random |
+| --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | ------ | ------ |
+| `nhentai`       | [![Nhentai](https://github.com/sinkaroid/jandapress/workflows/Nhentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/nhentai.yml)                   | ✅  | ✅     | ✅     |
+| `pururin`       | [![Pururin](https://github.com/sinkaroid/jandapress/workflows/Pururin%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/pururin.yml)                  | ✅  | ✅     | ✅     |
+| `hentaifox`     | [![Hentaifox](https://github.com/sinkaroid/jandapress/workflows/Hentaifox%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/hentaifox.yml)             | ✅  | ✅     | ✅     |
+| `hentai2read`   | [![Hentai2read](https://github.com/sinkaroid/jandapress/workflows/Hentai2read%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/hentai2read.yml)       | ✅  | ✅     | ❌      |
+| `simply-hentai` | [![Simply-hentai](https://github.com/sinkaroid/jandapress/workflows/Simply-hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/simply-hentai.yml) | ✅  | ❌      | ❌      |
+| `asmhentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/Asmhentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/asmhentai.yml)            | ✅  | ✅     | ✅     |
+| `3hentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/3hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/3hentai.yml)            | ✅  | ✅     | ✅     |
+
+## Tests
+
+Run the following commands to execute tests for each supported source:
+
+```bash
+# Check whether all supported sites are available for scraping
+npm run test:scrape
+
+# Check whether nhentai is currently under Cloudflare protection
+npm run test:cf
+
+# Run tests for individual sources
+npm run test:nhentai
+npm run test:pururin
+npm run test:hentaifox
+npm run test:asmhentai
+npm run test:hentai2read
+npm run test:simply-hentai
+npm run test:3hentai
+```
+
+
 
 ### Start the production server
 `npm run start:prod`
@@ -169,19 +198,16 @@ Jandapress testing
 ### Running development server
 `npm run start:dev`
 
-### Check the whole sites, It's available for scraping or not
-`npm run test`
-
-### Check nhentai It's under cloudflare protection or not
-`npm run test:cf`
-
 ### Generating playground like swagger from apidoc definition
 `npm run build:apidoc`
 
 > To running other tests, you can see object scripts in file `package.json`
 
 ## Playground
-https://sinkaroid.github.io/jandapress
+https://sinkaroid.github.io/jandapress  
+> **March 11, 2026**:
+We have discontinued providing public APIs and playground services due to ongoing abuse and excessive usage.
+To continue using Jandapress, please deploy and run your own self-hosted instance.
 
 - These `parameter?`: means is optional
 
@@ -197,11 +223,11 @@ The missing piece of nhentai.net - https://sinkaroid.github.io/jandapress/#api-n
   - <u>sort parameters on search</u>
     - "popular-today", "popular-week", "popular"
   - Example
-    - https://janda.sinkaroid.org/nhentai/get?book=577774
-    - https://janda.sinkaroid.org/nhentai/search?key=futanari
-    - https://janda.sinkaroid.org/nhentai/search?key=futanari&page=2&sort=popular-today
-    - https://janda.sinkaroid.org/nhentai/related?book=577774
-    - https://janda.sinkaroid.org/nhentai/random
+    - http://localhost:3000/nhentai/get?book=577774
+    - http://localhost:3000/nhentai/search?key=futanari
+    - http://localhost:3000/nhentai/search?key=futanari&page=2&sort=popular-today
+    - http://localhost:3000/nhentai/related?book=577774
+    - http://localhost:3000/nhentai/random
 
 ### Pururin
 The missing piece of pururin.to - https://sinkaroid.github.io/jandapress/#api-pururin
@@ -210,9 +236,9 @@ The missing piece of pururin.to - https://sinkaroid.github.io/jandapress/#api-pu
   - **search**, takes parameters : `key`, `?page`
   - **random**
   - Example
-    - https://janda.sinkaroid.org/pururin/get?book=63373
-    - https://janda.sinkaroid.org/pururin/search?key=futanari
-    - https://janda.sinkaroid.org/pururin/random
+    - http://localhost:3000/pururin/get?book=63373
+    - http://localhost:3000/pururin/search?key=futanari
+    - http://localhost:3000/pururin/random
 
 ### Hentaifox
 The missing piece of hentaifox.com - https://sinkaroid.github.io/jandapress/#api-hentaifox
@@ -223,10 +249,10 @@ The missing piece of hentaifox.com - https://sinkaroid.github.io/jandapress/#api
   - <u>sort parameters on search</u>
     - "latest", "popular"
   - Example
-    - https://janda.sinkaroid.org/hentaifox/get?book=97527
-    - https://janda.sinkaroid.org/hentaifox/search?key=milf
-    - https://janda.sinkaroid.org/hentaifox/search?key=milf&page=2&sort=latest
-    - https://janda.sinkaroid.org/hentaifox/random
+    - http://localhost:3000/hentaifox/get?book=97527
+    - http://localhost:3000/hentaifox/search?key=milf
+    - http://localhost:3000/hentaifox/search?key=milf&page=2&sort=latest
+    - http://localhost:3000/hentaifox/random
 
 ### Asmhentai
 The missing piece of asmhentai.com - https://sinkaroid.github.io/jandapress/#api-asmhentai
@@ -237,10 +263,10 @@ The missing piece of asmhentai.com - https://sinkaroid.github.io/jandapress/#api
   - <u>sort parameters on search</u>
     - None
   - Example
-    - https://janda.sinkaroid.org/asmhentai/get?book=416773
-    - https://janda.sinkaroid.org/asmhentai/search?key=futanari
-    - https://janda.sinkaroid.org/asmhentai/search?key=futanari&page=2
-    - https://janda.sinkaroid.org/asmhentai/random
+    - http://localhost:3000/asmhentai/get?book=416773
+    - http://localhost:3000/asmhentai/search?key=futanari
+    - http://localhost:3000/asmhentai/search?key=futanari&page=2
+    - http://localhost:3000/asmhentai/random
 
 ### Hentai2read
 The missing piece of hentai2read.com - https://sinkaroid.github.io/jandapress/#api-hentai2read
@@ -250,8 +276,8 @@ The missing piece of hentai2read.com - https://sinkaroid.github.io/jandapress/#a
   - <u>sort parameters on search</u>
     - TBA
   - Example
-    - https://janda.sinkaroid.org/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1
-    - https://janda.sinkaroid.org/hentai2read/search?key=futanari
+    - http://localhost:3000/hentai2read/get?book=butabako_shotaone_matome_fgo_hen/1
+    - http://localhost:3000/hentai2read/search?key=futanari
 
 ### Simply-hentai
 The missing piece of simply-hentai.com - https://sinkaroid.github.io/jandapress/#api-simply-hentai
@@ -260,7 +286,7 @@ The missing piece of simply-hentai.com - https://sinkaroid.github.io/jandapress/
   - <u>sort parameters on search</u>
     - TBA
   - Example
-    - https://janda.sinkaroid.org/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages
+    - http://localhost:3000/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages
 
 ### 3hentai
 The missing piece of 3hentai.net - https://sinkaroid.github.io/jandapress/#api-3hentai
@@ -271,10 +297,10 @@ The missing piece of 3hentai.net - https://sinkaroid.github.io/jandapress/#api-3
   - <u>sort parameters on search</u>
     - "recent", "popular-24h", "popular-7d", "popular"
   - Example
-    - https://janda.sinkaroid.org/3hentai/get?book=608979
-    - https://janda.sinkaroid.org/3hentai/search?key=futanari
-    - https://janda.sinkaroid.org/3hentai/search?key=futanari&page=2&sort=popular-7d
-    - https://janda.sinkaroid.org/3hentai/random
+    - http://localhost:3000/3hentai/get?book=608979
+    - http://localhost:3000/3hentai/search?key=futanari
+    - http://localhost:3000/3hentai/search?key=futanari&page=2&sort=popular-7d
+    - http://localhost:3000/3hentai/random
 
 
 ## Status response
@@ -286,14 +312,14 @@ The missing piece of 3hentai.net - https://sinkaroid.github.io/jandapress/#api-3
 
 ## Frequently asked questions 
 **Q: The website response is slow**  
-> That's unfortunate, This repository was opensource already, You can host and deploy Jandapress with your own instance. Any fixes and improvements will updating to this repo.
+> That's unfortunate, this repository was opensource already, You can host and deploy Jandapress with your own instance. Any fixes and improvements will updating to this repo.  
 
-**Q: I dont want to host my own instance**   
-> That's unfortunate, Hit the "Sponsor this project" button, any kind of donations will helps me to funding the development.
+> **March 11, 2026**:
+We have discontinued providing public APIs and playground services due to ongoing abuse and excessive usage.
+To continue using Jandapress, please deploy and run your own self-hosted instance.
 
 ## Pronunciation
-[`id_ID`](https://www.localeplanet.com/java/id-ID/index.html) • **/jan·da/** — Dewasa dan mengikat; _(?)_
-
+[`id_ID`](https://www.localeplanet.com/java/id-ID/index.html) • **/jan·da/** — Dewasa dan mengikat; _(?)_ **/press/** shorthand for https://expressjs.com
 
 ## Client libraries / Wrappers
 Seamlessly integrate with the languages you love, simplified the usage, and intelisense definitions on your IDEs

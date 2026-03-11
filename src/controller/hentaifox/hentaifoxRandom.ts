@@ -17,19 +17,19 @@ export async function randomHentaifox(req: Request, res: Response) {
      *   HTTP/1.1 400 Bad Request
      * 
      * @apiExample {curl} curl
-     * curl -i https://janda.sinkaroid.org/hentaifox/random
+     * curl -i http://localhost:3000/hentaifox/random
      * 
      * @apiExample {js} JS/TS
      * import axios from "axios"
      * 
-     * axios.get("https://janda.sinkaroid.org/hentaifox/random")
+     * axios.get("http://localhost:3000/hentaifox/random")
      * .then(res => console.log(res.data))
      * .catch(err => console.error(err))
      * 
      * @apiExample {python} Python
      * import aiohttp
      * async with aiohttp.ClientSession() as session:
-     *  async with session.get("https://janda.sinkaroid.org/hentaifox/random") as resp:
+     *  async with session.get("http://localhost:3000/hentaifox/random") as resp:
      *    print(await resp.json())
      * 
      */
