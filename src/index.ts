@@ -76,7 +76,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((error: Error, req: Request, res: Response) => {
   res.status(500).json({
     message: error.message,
     stack: error.stack

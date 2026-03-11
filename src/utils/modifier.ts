@@ -1,9 +1,6 @@
-import JandaPress from "../JandaPress";
 import p from "phin";
 import { load } from "cheerio";
 import c from "./options";
-
-const janda = new JandaPress();
 
 /**
  * Get Pururin info and replace
@@ -202,6 +199,8 @@ export async function hentaiFoxPredictedExtension(url: string): Promise<".jpg" |
       return ".webp";
     }
   } catch (err) {
+    const e = err as Error;
+    console.log(e.message);
     return ".webp";
   }
 }
