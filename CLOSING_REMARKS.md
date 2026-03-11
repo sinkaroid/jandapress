@@ -11,7 +11,11 @@ allows this services to operate.
 - [simply-hentai](https://simply-hentai.com)
 - [3hentai](http://3hentai.net)
 
-Dependencies:
+Stack:
 - [express](https://github.com/expressjs/express)
 - [cheerio](https://cheerio.js.org/)
 - [keyv](https://github.com/jaredwray/keyv)
+
+> **March 11, 2026**:
+We have discontinued providing public APIs and playground services due to ongoing abuse and excessive usage.
+To continue using Jandapress, please deploy and run your own self-hosted instance.
