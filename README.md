@@ -41,7 +41,7 @@ The motivation of this project is to bring you an actionable data related doujin
 
 
 ## The problem
-You enjoy consume doujin sites to build web applications. There are a lot sites that have effort especially pururin, simply-hentai and etc, not official api available nor public resource that can be used for everyone. Instead making lot of abstraction and enumerating them manually, You can rely on jandapress to make less of pain. The current state is FREE to use, meant all anonymous usage is allowed no aunthentication required and CORS was enabled.
+You enjoy consume doujin sites to build web applications. there are a lot sites that have effort especially pururin, simply-hentai and etc, not official api available nor public resource that can be used for everyone. Instead making lot of abstraction and enumerating them manually, You can rely on jandapress to make less of pain. The current state is FREE to use, meant all anonymous usage is allowed no aunthentication required and CORS was enabled.
 
 ## The solution
 <a href="https://github.com/sinkaroid/jandapress/wiki/Routing"><img src="resources/project/images/jandapressflow_1.png" width="800"></a>
@@ -49,7 +49,7 @@ You enjoy consume doujin sites to build web applications. There are a lot sites 
 ## Features
 
 - Gather the most doujin sites
-- Objects taken that are consistent structure, almost
+- Objects taken that are consistent structure
 - Objects taken is re-appended to make extendable
 - All in one: get, search, and random methods
 - In the future we may implement JWT authentication
@@ -66,11 +66,11 @@ You enjoy consume doujin sites to build web applications. There are a lot sites 
 | `simply-hentai` | [![Simply-hentai](https://github.com/sinkaroid/jandapress/workflows/Simply-hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/simply-hentai.yml) | ✅  | ❌      | ❌      |
 | `asmhentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/Asmhentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/asmhentai.yml)            | ✅  | ✅     | ✅     |
 | `3hentai`     | [![Asmhentai](https://github.com/sinkaroid/jandapress/workflows/3hentai%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/3hentai.yml)            | ✅  | ✅     | ✅     |
-| `nhentai.to`     | [![Nhentaito](https://github.com/sinkaroid/jandapress/workflows/Nhentaito%20test/badge.svg)](https://github.com/sinkaroid/jandapress/actions/workflows/nhentaito.yml)            | ✅  | ✅     | ✅     |
+
 
 ## Prerequisites
 <table>
-	<td><b>NOTE:</b> NodeJS 16.x or higher</td>
+	<td><b>NOTE:</b> NodeJS 20.x or higher</td>
 </table>
 
 To handle several requests from each web, You will also need [Redis](https://redis.io/) for persistent caching, free tier is available on [Redis Labs](https://redislabs.com/), You can also choose another provider as we using [keyv](https://github.com/jaredwray/keyv) Key-value storage with support for multiple backends. All data must be stored in `<Buffer>` here.
@@ -100,7 +100,7 @@ NHENTAI_IP_ORIGIN = true
 COOKIE = "cf_clearance=l7RsUjiZ3LHAZZKcM7BcCylwD2agwPDU7l9zkg8MzPo-1676044652-0-250"
 
 # you must set USER_AGENT if NHENTAI_IP_ORIGIN is false, read the jandapress docs
-USER_AGENT = "jandapress/1.0.5 Node.js/16.9.1"
+USER_AGENT = "jandapress/7.0.1-alpha Node.js/22.22.0"
 ```
 
 ### Docker
@@ -117,7 +117,7 @@ docker run -d \
   -e EXPIRE_CACHE='1' \
   -e NHENTAI_IP_ORIGIN='false' \
   -e COOKIE='cf_clearance=AbcDefGhijY7RYSKv3YeJUjrI5xQ2Uc-666-0-250' \
-  -e USER_AGENT='jandapress/1.0.5 Node.js/16.9.1' \
+  -e USER_AGENT='jandapress/7.0.1-alpha Node.js/22.22.0' \
   ghcr.io/sinkaroid/jandapress:latest
 ```
 
@@ -275,22 +275,6 @@ The missing piece of 3hentai.net - https://sinkaroid.github.io/jandapress/#api-3
     - https://janda.sinkaroid.org/3hentai/search?key=futanari
     - https://janda.sinkaroid.org/3hentai/search?key=futanari&page=2&sort=popular-7d
     - https://janda.sinkaroid.org/3hentai/random
-
-### Nhentai.to (outdated)
-The missing piece of nhentai.to - https://sinkaroid.github.io/jandapress/#api-nhentaito
-- `/nhentaito`: nhentaito api
-  - **get**, takes parameters : `book`
-  - **search**, takes parameters : `key`, `?page`
-  - **related**, takes parameters : `book`
-  - **random**
-  - <u>sort parameters on search</u>
-    - None
-  - Example
-    - https://janda.sinkaroid.org/nhentaito/get?book=272
-    - https://janda.sinkaroid.org/nhentaito/search?key=futanari
-    - https://janda.sinkaroid.org/nhentaito/search?key=futanari&page=2
-    - https://janda.sinkaroid.org/nhentaito/related?book=272
-    - https://janda.sinkaroid.org/nhentaito/random
 
 
 ## Status response

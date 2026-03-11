@@ -35,12 +35,6 @@ import { get3hentai } from "../controller/3hentai/3hentaiGet";
 import { search3hentai } from "../controller/3hentai/3hentaiSearch";
 import { random3hentai } from "../controller/3hentai/3hentaiRandom";
 
-// nhentaito
-import { getNhentaiTo } from "../controller/nhentaito/nhentaiToGet";
-import { randomNhentaiTo } from "../controller/nhentaito/nhentaiToRandom";
-import { searchNhentaiTo } from "../controller/nhentaito/nhentaiToSearch";
-import { relatedNhentaiTo } from "../controller/nhentaito/nhentaiToRelated";
-
 
 function scrapeRoutes() {
   const router = Router();
@@ -63,10 +57,6 @@ function scrapeRoutes() {
   router.get("/3hentai/get", cors(), slow, limiter, get3hentai);
   router.get("/3hentai/search", cors(), slow, limiter, search3hentai);
   router.get("/3hentai/random", cors(), slow, limiter, random3hentai);
-  router.get("/nhentaito/get", cors(), slow, limiter, getNhentaiTo);
-  router.get("/nhentaito/random", cors(), slow, limiter, randomNhentaiTo);
-  router.get("/nhentaito/search", cors(), slow, limiter, searchNhentaiTo);
-  router.get("/nhentaito/related", cors(), slow, limiter, relatedNhentaiTo);
 
   return router;
 }

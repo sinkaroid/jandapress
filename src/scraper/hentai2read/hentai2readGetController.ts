@@ -1,6 +1,7 @@
 import { load } from "cheerio";
 import JandaPress from "../../JandaPress";
 import c from "../../utils/options";
+import { raw } from "express";
 
 interface IHentai2readGet {
   title: string;
@@ -30,20 +31,27 @@ export async function scrapeContent(url: string) {
     const gDataClean: string = gData?.replace(/[\s\S]*var gData = /, "").replace(/;/g, "").replace(/'/g, "\"") || "";
     const gDataJson = JSON.parse(gDataClean);
     const images = gDataJson.images.map((el: string) => `https://cdn-ngocok-static.sinxdr.workers.dev/hentai${el}`);
-   
+
     const objectData: IHentai2readGet = {
       title: gDataJson.title,
       id: url.replace(c.HENTAI2READ, ""),
       image: images
     };
 
-    const data: IHentai2readGetPush = {
+    const objectDataPush: IHentai2readGetPush = {
       data: objectData,
       main_url: gDataJson.mainURL,
       current_url: gDataJson.currentURL,
       next_url: gDataJson.nextURL,
       previus_url: gDataJson.previousURL
     };
+
+    const data = {
+      success: true,
+      ...objectDataPush,
+      source: `${c.HENTAI2READ}${objectData.id}`,
+    };
+
     return data;
   } catch (err) {
     const e = err as Error;

@@ -1,9 +1,13 @@
 import p, { IResponse } from "phin";
 import Keyv from "keyv";
+import KeyvRedis from "@keyv/redis";
 import { CookieJar } from "tough-cookie";
 import { HttpsCookieAgent } from "http-cookie-agent/http";
 
-const keyv = new Keyv(process.env.REDIS_URL);
+const keyv = process.env.REDIS_URL
+  ? new Keyv({ store: new KeyvRedis(process.env.REDIS_URL) })
+  : new Keyv();
+  
 const strategy = process.env.NHENTAI_IP_ORIGIN || "true";
 
 keyv.on("error", err => console.log("Connection Error", err));
@@ -15,7 +19,7 @@ class JandaPress {
   useragent: string;
   constructor() {
     this.url = "";
-    this.useragent = process.env.USER_AGENT || "jandapress/1.0.5 Node.js/16.9.1";
+    this.useragent = process.env.USER_AGENT || "jandapress/7.0.1-alpha Node.js/22.22.0";
   }
 
   async simulateCookie(target: string, parseJson = false): Promise<p.IResponse | unknown> {

@@ -10,7 +10,7 @@ export async function getNhentai(req: Request, res: Response) {
     if (!isNumeric(book)) throw Error("Parameter book must be number");
 
     /**
-     * @api {get} /nhentai/get?book=:book Get nhentai
+     * @api {get} /nhentai/get/:book Get nhentai
      * @apiName Get nhentai
      * @apiGroup nhentai
      * @apiDescription Get a doujinshi on nhentai based on id
@@ -18,26 +18,24 @@ export async function getNhentai(req: Request, res: Response) {
      * @apiParam {Number} book Book ID
      * 
      * @apiSuccessExample {json} Success-Response:
-     *   HTTP/1.1 200 OK
-     *   HTTP/1.1 400 Bad Request
+     * HTTP/1.1 200 OK
+     * HTTP/1.1 400 Bad Request
      * 
      * @apiExample {curl} curl
      * curl -i https://janda.sinkaroid.org/nhentai/get?book=123
      * 
      * @apiExample {js} JS/TS
      * import axios from "axios"
-     * 
      * axios.get("https://janda.sinkaroid.org/nhentai/get?book=123")
      * .then(res => console.log(res.data))
-     * .catch(err => console.error(err))
      * 
      * @apiExample {python} Python
      * import aiohttp
      * async with aiohttp.ClientSession() as session:
-     *  async with session.get("https://janda.sinkaroid.org/nhentai/get?book=123") as resp:
-     *    print(await resp.json())
+     *   async with session.get("https://janda.sinkaroid.org/nhentai/get?book=123") as resp:
+     *     print(await resp.json())
      */
-    
+
     const url = `${nhentaiStrategy()}/api/gallery/${book}`;
     const data = await scrapeContent(url);
     logger.info({
