@@ -142,16 +142,26 @@ export async function getIdRandomPururin(): Promise<number> {
  * Simulate random on nhentai
  * @returns Promise<number>
  */
-export async function getIdRandomNhentai(): Promise<number> {
-  if (process.env.NHENTAI_IP_ORIGIN === "false") {
-    const res: any = await janda.simulateCookie(`${c.NHENTAI}/random`);
 
-    const getId = res.socket._httpMessage.path;
-    return parseInt(getId.replace(/^\/g\/([0-9]+)\/?$/, "$1"));
-  } else {
-    const end = 1234;
-    const start = 567890;
-    return Math.floor(Math.random() * (end - start + 1)) + start;
+export async function getIdRandomNhentai(): Promise<number> {
+  const start = 1;
+  const end = 567890;
+
+  while (true) {
+    const id = Math.floor(Math.random() * (end - start + 1)) + start;
+
+    try {
+      const res = await p({
+        url: `https://nhentai.net/api/gallery/${id}`,
+        timeout: 5000
+      });
+
+      if (res.statusCode === 200) {
+        return id;
+      }
+    } catch {
+      // ignore error and retry
+    }
   }
 }
 

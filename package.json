@@ -1,6 +1,6 @@
 {
   "name": "jandapress",
-  "version": "7.0.1-alpha",
+  "version": "7.0.2-alpha",
   "description": "RESTful and experimental API for the Doujinshi, Pressing the whole nhentai, pururin, hentaifox, and more.",
   "main": "build/src/index.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "build:apidoc": "npm run build:freshdoc && npx apidoc -i src -o docs",
     "test:scrape": "ts-node test/test.ts",
     "test:cf": "ts-node test/nhentaiCookietest.ts",
-    "test:nhentai": "npx start-server-and-test 3000 \"curl -v http://localhost:3000/nhentai/get?book=577774 | jq '.'\"",
+    "test:nhentai": "start-server-and-test \"npm run start:dev\" 3000 \"node -r ts-node/register --test --test-name-pattern=^nhentai$ test/jandapress.test.ts\"",
     "test:pururin": "start-server-and-test \"npm run start:dev\" 3000 \"node -r ts-node/register --test --test-name-pattern=^pururin$ test/jandapress.test.ts\"",
     "test:hentaifox": "start-server-and-test \"npm run start:dev\" 3000 \"node -r ts-node/register --test --test-name-pattern=^hentaifox$ test/jandapress.test.ts\"",
     "test:asmhentai": "start-server-and-test \"npm run start:dev\" 3000 \"node -r ts-node/register --test --test-name-pattern=^asmhentai$ test/jandapress.test.ts\"",
@@ -24,8 +24,8 @@
   },
   "apidoc": {
     "title": "Jandapress API Documentation",
-    "url": "https://janda.sinkaroid.org",
-    "sampleUrl": "https://janda.sinkaroid.org",
+    "url": "http://localhost:3000",
+    "sampleUrl": "http://localhost:3000",
     "name": "Jandapress"
   },
   "keywords": [],
