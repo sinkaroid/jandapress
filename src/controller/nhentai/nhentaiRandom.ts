@@ -1,6 +1,7 @@
 import { scrapeContent } from "../../scraper/nhentai/nhentaiGetController";
 import { logger } from "../../utils/logger";
-import { nhentaiStrategy, getIdRandomNhentai, maybeError } from "../../utils/modifier";
+import { getIdRandomNhentai, maybeError } from "../../utils/modifier";
+import { nhentaiGetUrl } from "../../utils/nhentai";
 import { Request, Response } from "express";
 
 export async function randomNhentai(req: Request, res: Response) {
@@ -35,7 +36,7 @@ export async function randomNhentai(req: Request, res: Response) {
      * 
      */
 
-    const url = `${nhentaiStrategy()}/api/gallery/${id}`;
+    const url = nhentaiGetUrl(String(id));
     const data = await scrapeContent(url, true);
     logger.info({
       path: req.path,

@@ -1,6 +1,8 @@
 import p from "phin";
 import { load } from "cheerio";
 import c from "./options";
+import { IncomingHttpHeaders } from "http";
+import { nhentaiRandomUrl } from "./nhentai";
 
 /**
  * Get Pururin info and replace
@@ -141,25 +143,21 @@ export async function getIdRandomPururin(): Promise<number> {
  */
 
 export async function getIdRandomNhentai(): Promise<number> {
-  const start = 1;
-  const end = 567890;
+  const res = await p({
+    url: nhentaiRandomUrl(),
+    parse: "json",
+    headers: nhentaiHeaders(),
+    timeout: 10000
+  });
 
-  while (true) {
-    const id = Math.floor(Math.random() * (end - start + 1)) + start;
+  const body = res.body as Record<string, unknown>;
+  const id = extractNhentaiId(body);
 
-    try {
-      const res = await p({
-        url: `https://nhentai.net/api/gallery/${id}`,
-        timeout: 5000
-      });
-
-      if (res.statusCode === 200) {
-        return id;
-      }
-    } catch {
-      // ignore error and retry
-    }
+  if (!id) {
+    throw Error("Cannot parse nhentai random gallery id");
   }
+
+  return id;
 }
 
 /**
@@ -173,14 +171,38 @@ export function maybeError(success: boolean, message: string) {
 }
 
 /**
- * Get nhentai strategy from origin api or simulating the request cookie
- * @returns string
+ * Common headers for nhentai official API.
+ * Uses API key when provided in env.
  */
-export function nhentaiStrategy() {
-  let strategy: string;
-  if (process.env.NHENTAI_IP_ORIGIN === "true" || process.env.NHENTAI_IP_ORIGIN === undefined) strategy = c.NHENTAI_IP;
-  else strategy = c.NHENTAI;
-  return strategy;
+export function nhentaiHeaders(): IncomingHttpHeaders {
+  const key = process.env.NHENTAI_API_KEY?.trim();
+  const userAgent = process.env.USER_AGENT || "jandapress/7.1.1-alpha Node.js/22.22.0";
+  const maskedKey = key ? `${key.slice(0, 6)}...(${key.length})` : "none";
+
+  console.log(`[nhentai] headers ready | apiKey=${maskedKey} | auth=${key ? "Bearer" : "none"} | ua=${userAgent}`);
+
+  return {
+    "User-Agent": userAgent,
+    ...(key ? { Authorization: `Bearer ${key}` } : {}),
+  };
+}
+
+function extractNhentaiId(input: unknown): number | null {
+  if (typeof input === "number" && Number.isFinite(input)) return input;
+
+  if (input && typeof input === "object") {
+    const rec = input as Record<string, unknown>;
+    const direct = rec.id ?? rec.gallery_id ?? rec.galleryId;
+
+    if (typeof direct === "number" && Number.isFinite(direct)) return direct;
+
+    for (const value of Object.values(rec)) {
+      const nested = extractNhentaiId(value);
+      if (nested) return nested;
+    }
+  }
+
+  return null;
 }
 
 /**

@@ -1,53 +1,37 @@
 import JandaPress from "../../JandaPress";
 import c from "../../utils/options";
 import { getDate, timeAgo } from "../../utils/modifier";
-import { Nhentai } from "../../interfaces";
-
-const extension = {
-  j: "jpg",
-  p: "png",
-  g: "gif",
-  w: "webp",
-};
-
-interface INhentaiGet {
-  title: string;
-  optional_title: object;
-  id: number;
-  language: string;
-  tags: string[];
-  total: number;
-  image: string[];
-  num_pages: number;
-  num_favorites: number;
-  artist: string[];
-  group: string;
-  parodies: string[];
-  characters: string[];
-  upload_date: string;
-}
+import { NhentaiLegacy } from "../../interfaces/nhentai-legacy";
+import { INhentaiGet } from "../../interfaces/nhentai";
+import { NhentaiV2Detail } from "../../interfaces/nhentai-v2";
 
 const janda = new JandaPress();
 
 export async function scrapeContent(url: string, random = false) {
   try {
-    let res, raw;
-    if (random) res = await janda.simulateNhentaiRequest(url), raw = res as Nhentai;
-    else res = await janda.fetchJson(url), raw = res as Nhentai;
+    let res;
+    if (random) res = await janda.simulateNhentaiRequest(url);
+    else res = await janda.fetchJson(url);
+    const raw = res as NhentaiLegacy | NhentaiV2Detail;
 
-    const GALLERY = "https://i.nhentai.net/galleries";
-    const imagesRaw = raw.images.pages;
+    const CDN = "https://i.nhentai.net";
+    const pages = "pages" in raw ? raw.pages || [] : [];
+    const legacyPages = "images" in raw ? (raw.images?.pages || []) : [];
 
-    const images = Object.keys(imagesRaw)
-      .map((key) => imagesRaw[parseInt(key)].t);
-
-    const imageList = [];
-    for (let i = 0; i < images.length; i++) {
-      imageList.push(`${GALLERY}/${raw.media_id}/${i + 1}.${(extension as any)[images[i]]}`);
-    }
+    const imageList = pages.length > 0
+      ? pages.map((page) => `${CDN}/${page.path}`)
+      : legacyPages.map((page, index) => {
+        const ext = ({
+          j: "jpg",
+          p: "png",
+          g: "gif",
+          w: "webp",
+        } as const)[page.t as "j" | "p" | "g" | "w"] || "jpg";
+        return `${CDN}/galleries/${raw.media_id}/${index + 1}.${ext}`;
+      });
 
     //get all tags.name
-    const tagsRaw = raw.tags;
+    const tagsRaw = raw.tags || [];
     // all tags without filter
     // const tags = Object.keys(tagsRaw).map((key) => tagsRaw[parseInt(key)].name);
 

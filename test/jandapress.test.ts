@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import p from "phin";
+import { nhentaiHeaders } from "../src/utils/modifier";
 
 const port = process.env.PORT ?? 3000;
 
@@ -12,15 +13,25 @@ type ApiResponse = {
 };
 
 async function fetchNhentaiApi(id: number) {
-  const res = await p({
-    url: `https://nhentai.net/api/gallery/${id}`,
-    parse: "json"
-  });
+  const urls = [
+    `https://nhentai.net/api/v2/galleries/${id}`,
+    `https://nhentai.net/api/gallery/${id}`,
+  ];
 
-  assert.equal(res.statusCode, 200);
+  for (const url of urls) {
+    try {
+      const res = await p({ url, parse: "json", headers: nhentaiHeaders() });
+      if (res.statusCode !== 200) continue;
 
-  const json = res.body as any;
-  assert.equal(json.id, id);
+      const json = res.body as any;
+      const resolvedId = json.id ?? json?.result?.id;
+      if (resolvedId === id) return;
+    } catch {
+      // try next endpoint
+    }
+  }
+
+  throw new Error(`Failed to validate nhentai id ${id} using official API endpoints`);
 }
 
 async function run(path: string, id?: number) {

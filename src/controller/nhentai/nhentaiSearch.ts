@@ -1,16 +1,17 @@
 import { scrapeContent } from "../../scraper/nhentai/nhentaiSearchController";
 import { logger } from "../../utils/logger";
-import { nhentaiStrategy, maybeError } from "../../utils/modifier";
-const sorting = ["popular-today", "popular-week", "popular"];
+import { maybeError } from "../../utils/modifier";
+import { NHENTAI_SEARCH_SORTS, nhentaiSearchUrl } from "../../utils/nhentai";
 import { Request, Response } from "express";
 
 export async function searchNhentai(req: Request, res: Response) {
   try {
     const key = req.query.key || "";
-    const page = req.query.page || 1;
-    const sort = req.query.sort as string || sorting[0] as string;
+    const page = Number(req.query.page || 1);
+    const sort = req.query.sort as string || NHENTAI_SEARCH_SORTS[0] as string;
     if (!key) throw Error("Parameter key is required");
-    if (!sorting.includes(sort)) throw Error("Invalid sort: " + sorting.join(", "));
+    if (!Number.isInteger(page) || page < 1) throw Error("Parameter page must be positive integer");
+    if (!NHENTAI_SEARCH_SORTS.includes(sort as typeof NHENTAI_SEARCH_SORTS[number])) throw Error("Invalid sort: " + NHENTAI_SEARCH_SORTS.join(", "));
 
     /**
      * @api {get} /nhentai/search?key=:key Search nhentai
@@ -43,7 +44,7 @@ export async function searchNhentai(req: Request, res: Response) {
      *     print(await resp.json())
      */
 
-    const url = `${nhentaiStrategy()}/api/galleries/search?query=${key}&sort=${sort}&page=${page}`;
+    const url = nhentaiSearchUrl(String(key), page, sort);
     const data = await scrapeContent(url);
     logger.info({
       path: req.path,
