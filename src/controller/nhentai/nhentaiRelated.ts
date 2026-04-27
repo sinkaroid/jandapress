@@ -1,6 +1,7 @@
 import { scrapeContent } from "../../scraper/nhentai/nhentaiRelatedController";
 import { logger } from "../../utils/logger";
-import { nhentaiStrategy, isNumeric, maybeError } from "../../utils/modifier";
+import { isNumeric, maybeError } from "../../utils/modifier";
+import { nhentaiRelatedUrl } from "../../utils/nhentai";
 import { Request, Response } from "express";
 
 export async function relatedNhentai(req: Request, res: Response) {
@@ -37,7 +38,7 @@ export async function relatedNhentai(req: Request, res: Response) {
      *     print(await resp.json())
      */
 
-    const url = `${nhentaiStrategy()}/api/gallery/${book}/related`;
+    const url = nhentaiRelatedUrl(book);
     const data = await scrapeContent(url);
     logger.info({
       path: req.path,

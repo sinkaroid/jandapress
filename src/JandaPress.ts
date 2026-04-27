@@ -1,15 +1,12 @@
 import p, { IResponse } from "phin";
 import Keyv from "keyv";
 import KeyvRedis from "@keyv/redis";
-import { CookieJar } from "tough-cookie";
-import { HttpsCookieAgent } from "http-cookie-agent/http";
+import { nhentaiHeaders } from "./utils/modifier";
 
 const keyv = process.env.REDIS_URL
   ? new Keyv({ store: new KeyvRedis(process.env.REDIS_URL) })
   : new Keyv();
   
-const strategy = process.env.NHENTAI_IP_ORIGIN || "true";
-
 keyv.on("error", err => console.log("Connection Error", err));
 const ttl = 1000 * 60 * 60 * Number(process.env.EXPIRE_CACHE);
 
@@ -19,66 +16,27 @@ class JandaPress {
   useragent: string;
   constructor() {
     this.url = "";
-    this.useragent = process.env.USER_AGENT || "jandapress/7.0.1-alpha Node.js/22.22.0";
-  }
-
-  async simulateCookie(target: string, parseJson = false): Promise<p.IResponse | unknown> {
-    const jar = new CookieJar();
-    jar.setCookie(process.env.COOKIE || "", "https://nhentai.net/").catch(err => console.log(err.message));
-
-    if (!parseJson) {
-      const res = await p({
-        url: target,
-        followRedirects: true,
-        core: {
-          agent: new HttpsCookieAgent({ cookies: { jar, }, }),
-        },
-        headers: {
-          "User-Agent": this.useragent,
-        },
-      });
-
-      return res;
-    } else {
-      const res = await p({
-        url: target,
-        parse: "json",
-        core: {
-          agent: new HttpsCookieAgent({ cookies: { jar, }, }),
-        },
-        headers: {
-          "User-Agent": this.useragent,
-        },
-      });
-
-      return res.body;
-    }
-
-
+    this.useragent = process.env.USER_AGENT || "jandapress/7.1.1-alpha Node.js/22.22.0";
   }
 
   /**
-   * Simulating nhentai request if origin api is not available
-   * You'll need [tough-cookie](https://www.npmjs.com/package/tough-cookie) and [http-cookie-agent](https://www.npmjs.com/package/http-cookie-agent) to make this work
+   * Execute nhentai request against official API.
    * @param target url to fetch
    * @returns Promise<unknown>
    * @throws Error
    */
   async simulateNhentaiRequest(target: string): Promise<unknown> {
-    if (strategy === "true") {
+    try {
       const res = await p({
         url: target,
-        parse: "json"
+        parse: "json",
+        headers: nhentaiHeaders(),
+        followRedirects: true
       });
       return res.body;
-    } else {
-      try {
-        const res = await this.simulateCookie(target, true);
-        return res;
-      } catch (err) {
-        const e = err as Error;
-        throw new Error(e.message);
-      }
+    } catch (err) {
+      const e = err as Error;
+      throw new Error(e.message);
     }
   }
 
