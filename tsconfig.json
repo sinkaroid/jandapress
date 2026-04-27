@@ -14,7 +14,7 @@
     "typeRoots": ["./node_modules/@types"],
     "inlineSourceMap": true,
     "downlevelIteration": true,
-    "ignoreDeprecations": "6.0",
+    "ignoreDeprecations": "5.0",
     "newLine": "lf",
     "strict": true,
     "strictBindCallApply": true,
