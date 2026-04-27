@@ -88,7 +88,7 @@ To handle several requests from each web, You will also need [Redis](https://red
 Rename `.env.schema` to `.env` and fill the value with your own
 
 ```bash
-# railway, fly.dev, heroku, vercel or any free service, NHENTAI_IP_ORIGIN should be true
+# railway, fly.dev, heroku, vercel or any free service
 RAILWAY = sinkaroid
 
 # default port
@@ -100,16 +100,11 @@ REDIS_URL = redis://default:somenicepassword@redis-666.c10.us-east-6-6.ec666.clo
 # ttl expire cache (in X hour)
 EXPIRE_CACHE = 1
 
-# nhentai strategy
-# default is true which is assign to request on IP instead of nhentai.net with cloudflare
-# if you have instance like vps you need chromium or firefox installed and set it to false
-NHENTAI_IP_ORIGIN = true
+# optional: API key for nhentai official API
+NHENTAI_API_KEY = ""
 
-# you must set COOKIE if NHENTAI_IP_ORIGIN is false, read the jandapress docs 
-COOKIE = "cf_clearance=l7RsUjiZ3LHAZZKcM7BcCylwD2agwPDU7l9zkg8MzPo-1676044652-0-250"
-
-# you must set USER_AGENT if NHENTAI_IP_ORIGIN is false, read the jandapress docs
-USER_AGENT = "jandapress/7.0.1-alpha Node.js/22.22.0"
+# optional custom user agent for upstream requests
+USER_AGENT = "jandapress/7.1.1-alpha Node.js/22.22.0"
 ```
 
 ### Docker
@@ -124,9 +119,8 @@ docker run -d \
   -p 3025:3000 \
   -e REDIS_URL='redis://default:somenicepassword@redis-666.c10.us-east-6-6.ec666.cloud.redislabs.com:1337' \
   -e EXPIRE_CACHE='1' \
-  -e NHENTAI_IP_ORIGIN='false' \
-  -e COOKIE='cf_clearance=AbcDefGhijY7RYSKv3YeJUjrI5xQ2Uc-666-0-250' \
-  -e USER_AGENT='jandapress/7.0.1-alpha Node.js/22.22.0' \
+  -e NHENTAI_API_KEY='' \
+  -e USER_AGENT='jandapress/7.1.1-alpha Node.js/22.22.0' \
   ghcr.io/sinkaroid/jandapress:latest
 ```
 
@@ -142,34 +136,13 @@ docker run -d \
   - `npm run start:dev`
 
 ## Nhentai Guide
-### The problem
-https://nhentai.net is protected by Cloudflare. By default, Jandapress uses a [real IP address to bypass the protection](https://github.com/sinkaroid/jandapress/blob/master/src/utils/options.ts#L7..L10). However, in some cases the `/api` endpoint may still return an error even when the request originates from a valid IP address. This typically indicates that the site administrators have restricted requests from certain IP ranges.
-
-![image](resources/project/images/Screenshot_265.png)
-
 ### The solution
-You will need an instance such as a VPS with a browser installed (Chrome, Chromium, or Firefox). Set `NHENTAI_IP_ORIGIN` to `false`, then configure `COOKIE` and `USER_AGENT`. Requests will be simulated using [tough-cookie](https://github.com/salesforce/tough-cookie) and [http-cookie-agent](https://www.npmjs.com/package/http-cookie-agent).
+Jandapress now targets the nhentai official API endpoints (`/api/v2`) for search, related, and random ID discovery.
 
-![image](resources/project/images/Screenshot_267_copy.jpg)
-
-- set `NHENTAI_IP_ORIGIN` to `false` in `.env`
-- open a browser and go to https://nhentai.net
-- complete the human verification if prompted
-- open DevTools and set a custom user agent
-- reload the page and wait for the Cloudflare verification again
-- open DevTools and navigate to the Network tab
-- obtain the `cf_clearance` value and set it as `COOKIE` in `.env`
-- set the same user agent as `USER_AGENT` in `.env`
-- verify that the cookie works by running `npm run test:cf`
-  - it should return a **200 status code**, otherwise review the steps above
-
-[The documentation](https://developers.cloudflare.com/fundamentals/get-started/reference/cloudflare-cookies/#:~:text=This%20cookie%20expires%20after%2030,Bot%20Management%2C%20a%20session%20identifier.) states:
-
-> This cookie expires after 30 minutes of continuous inactivity by the end user. The cookie contains information related to the calculation of Cloudflare’s proprietary bot score and, when Anomaly Detection is enabled on Bot Management, a session identifier.
-
-└── https://developers.cloudflare.com/fundamentals
-
-You must ensure that the cookie remains valid. If the cookie expires, it must be refreshed manually. This process can also be automated using a scheduled task such as a cron job or an interval-based refresh.
+- set `NHENTAI_API_KEY` in `.env` (optional but recommended)
+- set `USER_AGENT` in `.env` if you need a custom upstream identifier
+- validate upstream with `npm run test` or `npm run test:nhentai`
+- if you want to adjust nhentai contracts/mapping, read `docs/nhentai-api-contract.md` first
 
 ## Tests
 
@@ -178,9 +151,6 @@ Run the following commands to execute tests for each supported source:
 ```bash
 # Check whether all supported sites are available for scraping
 npm run test:scrape
-
-# Check whether nhentai is currently under Cloudflare protection
-npm run test:cf
 
 # Run tests for individual sources
 npm run test:nhentai
@@ -223,7 +193,7 @@ The missing piece of nhentai.net - https://sinkaroid.github.io/jandapress/#api-n
   - **related**, takes parameters : `book`
   - **random**
   - <u>sort parameters on search</u>
-    - "popular-today", "popular-week", "popular"
+    - "date", "popular", "popular-today", "popular-week", "popular-month"
   - Example
     - http://localhost:3000/nhentai/get?book=577774
     - http://localhost:3000/nhentai/search?key=futanari
@@ -333,3 +303,4 @@ Seamlessly integrate with the languages you love, simplified the usage, and inte
 This tool can be freely copied, modified, altered, distributed without any attribution whatsoever. However, if you feel
 like this tool deserves an attribution, mention it. It won't hurt anybody.
 > Licence: WTF.
+
