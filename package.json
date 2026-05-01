@@ -1,32 +1,24 @@
 {
   "name": "jandapress",
-  "version": "8.0.1-alpha",
+  "version": "10.0.1-alpha",
   "description": "RESTful and experimental API for the Doujinshi, Pressing the whole nhentai, pururin, hentaifox, and more.",
   "main": "build/src/index.js",
   "scripts": {
-    "build": "rimraf build && tsc",
-    "start": "node build/src/index.js",
-    "start:prod": "npm run build && node build/src/index.js",
-    "start:dev": "ts-node-dev src/index.ts",
-    "lint": "npx eslint . --ext .ts",
-    "lint:fix": "npx eslint . --fix",
-    "build:freshdoc": "rimraf docs",
-    "build:apidoc": "npm run build:freshdoc && npx apidoc -i src -o docs",
-    "test:scrape": "ts-node test/test.ts",
-    "test": "ts-node test/nh.ts",
-    "test:nhentai": "start-server-and-test \"npm run start:dev\" 3000 \"node -r ts-node/register --test --test-name-pattern=^nhentai$ test/jandapress.test.ts\"",
-    "test:pururin": "start-server-and-test \"npm run start:dev\" 3000 \"node -r ts-node/register --test --test-name-pattern=^pururin$ test/jandapress.test.ts\"",
-    "test:hentaifox": "start-server-and-test \"npm run start:dev\" 3000 \"node -r ts-node/register --test --test-name-pattern=^hentaifox$ test/jandapress.test.ts\"",
-    "test:asmhentai": "start-server-and-test \"npm run start:dev\" 3000 \"node -r ts-node/register --test --test-name-pattern=^asmhentai$ test/jandapress.test.ts\"",
-    "test:hentai2read": "start-server-and-test \"npm run start:dev\" 3000 \"node -r ts-node/register --test --test-name-pattern=^hentai2read$ test/jandapress.test.ts\"",
-    "test:simply-hentai": "start-server-and-test \"npm run start:dev\" 3000 \"node -r ts-node/register --test --test-name-pattern=^simply-hentai$ test/jandapress.test.ts\"",
-    "test:3hentai": "start-server-and-test \"npm run start:dev\" 3000 \"node -r ts-node/register --test --test-name-pattern=^3hentai$ test/jandapress.test.ts\""
-  },
-  "apidoc": {
-    "title": "Jandapress API Documentation",
-    "url": "http://localhost:3000",
-    "sampleUrl": "http://localhost:3000",
-    "name": "Jandapress"
+    "build": "bunx tsc",
+    "start": "bun run src/index.ts",
+    "start:prod": "bun run build/src/index.js",
+    "start:dev": "bun run --watch src/index.ts",
+    "lint": "bunx eslint . --ext .ts",
+    "lint:fix": "bunx eslint . --fix",
+    "test:scrape": "bun run test/test.ts",
+    "test": "bun run test/nh.ts",
+    "test:nhentai": "bun test test/jandapress.test.ts --test-name-pattern=^nhentai$",
+    "test:pururin": "bun test test/jandapress.test.ts --test-name-pattern=^pururin$",
+    "test:hentaifox": "bun test test/jandapress.test.ts --test-name-pattern=^hentaifox$",
+    "test:asmhentai": "bun test test/jandapress.test.ts --test-name-pattern=^asmhentai$",
+    "test:hentai2read": "bun test test/jandapress.test.ts --test-name-pattern=^hentai2read$",
+    "test:simply-hentai": "bun test test/jandapress.test.ts --test-name-pattern=^simply-hentai$",
+    "test:3hentai": "bun test test/jandapress.test.ts --test-name-pattern=^3hentai$"
   },
   "keywords": [],
   "author": "sinkaroid",
@@ -38,31 +30,22 @@
   "dependencies": {
     "@keyv/redis": "^5.1.6",
     "cheerio": "^1.2.0",
-    "cors": "^2.8.6",
-    "dotenv": "^17.3.1",
-    "express": "^5.2.1",
-    "express-rate-limit": "^8.3.1",
-    "express-slow-down": "^3.0.1",
+    "hono": "^4.9.9",
     "keyv": "^5.6.0",
-    "phin": "^3.7.1",
-    "pino": "^10.3.1",
-    "pino-pretty": "^13.1.3"
+    "@hono/swagger-ui": "^0.5.2",
+    "@hono/zod-openapi": "^0.19.10",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
-    "@types/node": "^25.4.0",
+    "@types/bun": "^1.3.13",
     "@typescript-eslint/eslint-plugin": "^8.57.0",
     "@typescript-eslint/parser": "^8.57.0",
-    "apidoc": "^1.2.0",
-    "eslint": "^10.0.3",
-    "rimraf": "^6.1.3",
-    "start-server-and-test": "^2.1.5",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "5.9.3"
+    "eslint": "^9.38.0",
+    "globals": "^17.5.0",
+    "typescript": "^6.0.3"
   },
   "engines": {
-    "node": ">=22"
-  }
+    "bun": ">=1.3.13"
+  },
+  "packageManager": "bun@1.3.13"
 }
