@@ -1,10 +1,9 @@
-import test from "node:test";
-import assert from "node:assert/strict";
-import p from "phin";
+/// <reference types="bun" />
+import { expect, test } from "bun:test";
 import c from "../src/utils/options";
 import { name, version } from "../package.json";
 
-const UA = `${name}/${version} Node.js/22.22.0`;
+const UA = `${name}/${version} Bun/1.3.13`;
 
 const sources = [
   c.NHENTAI,
@@ -21,21 +20,16 @@ function getKeyByValue(data: Record<string, string>, value: string) {
 }
 
 async function check(url: string) {
-  const res = await p({
-    url,
+  const res = await fetch(url, {
     headers: { "User-Agent": UA },
-    followRedirects: true
+    redirect: "follow"
   });
 
-  const ok = [200, 301, 308].includes(res.statusCode || 0);
+  const ok = [200, 301, 308].includes(res.status || 0);
 
-  console.log(`${url} → ${res.statusCode}`);
+  console.log(`${url} → ${res.status}`);
 
-  assert.equal(
-    ok,
-    true,
-    `${url} (${getKeyByValue(c, url)}) is not available`
-  );
+  expect(ok, `${url} (${getKeyByValue(c, url)}) is not available`).toBe(true);
 }
 
 for (const url of sources) {

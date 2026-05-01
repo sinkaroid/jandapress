@@ -1,9 +1,26 @@
-import test from "node:test";
-import assert from "node:assert/strict";
-import p from "phin";
+/// <reference types="bun" />
+import { afterAll, beforeAll, expect, test } from "bun:test";
 import { nhentaiHeaders } from "../src/utils/modifier";
 
 const port = process.env.PORT ?? 3000;
+const baseUrl = `http://localhost:${port}`;
+let spawnedServer: {
+  kill: () => void;
+  stderr?: ReadableStream<Uint8Array> | null;
+} | null = null;
+type BunGlobal = typeof globalThis & {
+  Bun?: {
+    spawn: (cmd: string[], options: {
+      cwd: string;
+      env: Record<string, string | undefined>;
+      stdout: "ignore" | "pipe";
+      stderr: "ignore" | "pipe";
+    }) => {
+      kill: () => void;
+      stderr?: ReadableStream<Uint8Array> | null;
+    };
+  };
+};
 
 type ApiResponse = {
   success: boolean;
@@ -11,6 +28,77 @@ type ApiResponse = {
     id?: number;
   };
 };
+
+type NhentaiApiResponse = {
+  id?: number;
+  result?: {
+    id?: number;
+  };
+};
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function canReachApi() {
+  try {
+    const res = await fetch(`${baseUrl}/`, {
+      redirect: "follow",
+      signal: AbortSignal.timeout(1500)
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function waitForApiReady(timeoutMs = 20000) {
+  const startedAt = Date.now();
+
+  while (Date.now() - startedAt < timeoutMs) {
+    if (await canReachApi()) return;
+    await sleep(200);
+  }
+
+  throw new Error(`Timed out waiting for API server on ${baseUrl}`);
+}
+
+beforeAll(async () => {
+  if (await canReachApi()) {
+    return;
+  }
+
+  const bunRuntime = (globalThis as BunGlobal).Bun;
+  if (!bunRuntime) {
+    throw new Error("Bun runtime not available");
+  }
+
+  spawnedServer = bunRuntime.spawn(["bun", "run", "src/index.ts"], {
+    cwd: process.cwd(),
+    env: {
+      ...process.env,
+      PORT: `${port}`
+    },
+    stdout: "ignore",
+    stderr: "pipe"
+  });
+
+  try {
+    await waitForApiReady();
+  } catch (error) {
+    const server = spawnedServer;
+    const stderr = server?.stderr ? await new Response(server.stderr).text() : "";
+    server?.kill();
+    spawnedServer = null;
+    throw new Error(`Failed to boot API server. ${error instanceof Error ? error.message : String(error)}\n${stderr}`);
+  }
+});
+
+afterAll(() => {
+  if (!spawnedServer) return;
+  spawnedServer.kill();
+  spawnedServer = null;
+});
 
 async function fetchNhentaiApi(id: number) {
   const urls = [
@@ -20,10 +108,10 @@ async function fetchNhentaiApi(id: number) {
 
   for (const url of urls) {
     try {
-      const res = await p({ url, parse: "json", headers: nhentaiHeaders() });
-      if (res.statusCode !== 200) continue;
+      const res = await fetch(url, { headers: nhentaiHeaders(), redirect: "follow" });
+      if (res.status !== 200) continue;
 
-      const json = res.body as any;
+      const json = await res.json() as NhentaiApiResponse;
       const resolvedId = json.id ?? json?.result?.id;
       if (resolvedId === id) return;
     } catch {
@@ -36,22 +124,21 @@ async function fetchNhentaiApi(id: number) {
 
 async function run(path: string, id?: number) {
   try {
-    const res = await p({
-      url: `http://localhost:${port}${path}`,
-      parse: "json",
-      timeout: 20000
+    const res = await fetch(`${baseUrl}${path}`, {
+      redirect: "follow",
+      signal: AbortSignal.timeout(20000)
     });
 
-    assert.equal(res.statusCode, 200);
+    expect(res.status).toBe(200);
 
-    const json = res.body as ApiResponse;
+    const json = await res.json() as ApiResponse;
 
     console.log(JSON.stringify(json, null, 2));
 
     if (!json.success) throw new Error("scraper failed");
 
     if (id !== undefined) {
-      assert.equal(json.data?.id, id);
+      expect(json.data?.id).toBe(id);
     }
   } catch (err) {
     if (path.startsWith("/nhentai") && id !== undefined) {
