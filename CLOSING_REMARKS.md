@@ -1,7 +1,7 @@
 # Closing remarks
 
-I hope you have found this project useful. All the major credit really goes to the all the doujin sites, which
-allows this services to operate.
+I hope you have found this project useful. All the major credit really goes to all the doujin sites, which
+allow this service to operate.
 
 - [nhentai](https://nhentai.net)
 - [pururin](https://pururin.to)
@@ -12,7 +12,9 @@ allows this services to operate.
 - [3hentai](http://3hentai.net)
 
 Stack:
-- [express](https://github.com/expressjs/express)
+- ~~[express](https://github.com/expressjs/express)~~
+- [bun](https://bun.sh)
+- [hono](https://hono.dev)
 - [cheerio](https://cheerio.js.org/)
 - [keyv](https://github.com/jaredwray/keyv)
 
