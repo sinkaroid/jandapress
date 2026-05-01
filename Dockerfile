@@ -1,13 +1,23 @@
-FROM node:22
+# syntax=docker/dockerfile:1
 
-WORKDIR /srv/app
+FROM oven/bun:1.3.13-alpine AS base
+WORKDIR /app
+ENV NODE_ENV=production
 
-COPY package*.json ./
-RUN npm install
+FROM base AS deps
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 
-COPY . .
-RUN npm run build
+FROM deps AS build
+COPY tsconfig.json ./
+COPY src ./src
+RUN bun run build
+
+FROM base AS runtime
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile --production
+COPY --from=build /app/build ./build
 
 EXPOSE 3000
 
-CMD ["node", "build/src/index.js"]
+CMD ["bun", "run", "build/src/index.js"]
