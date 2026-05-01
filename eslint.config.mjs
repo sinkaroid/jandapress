@@ -1,7 +1,8 @@
-const tsParser = require("@typescript-eslint/parser");
-const tsPlugin = require("@typescript-eslint/eslint-plugin");
+import tsParser from "@typescript-eslint/parser";
+import tsPlugin from "@typescript-eslint/eslint-plugin";
+import globals from "globals";
 
-module.exports = [
+export default [
   {
     ignores: ["node_modules/**", "build/**"],
   },
@@ -14,12 +15,7 @@ module.exports = [
         sourceType: "module",
       },
       globals: {
-        module: "readonly",
-        require: "readonly",
-        __dirname: "readonly",
-        __filename: "readonly",
-        process: "readonly",
-        Buffer: "readonly",
+        ...globals.node,
         console: "readonly",
       },
     },
@@ -27,8 +23,12 @@ module.exports = [
       "@typescript-eslint": tsPlugin,
     },
     rules: {
-      // Minimal base rules without @eslint/js dependency
-      "no-unused-vars": "error",
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": ["error", {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "ignoreRestSiblings": true
+      }],
       "no-undef": "error",
       "linebreak-style": 0,
       "quotes": ["error", "double"],
@@ -39,7 +39,7 @@ module.exports = [
       "no-unreachable": "error",
       "no-eval": "error",
       "no-global-assign": "error",
-      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
       "indent": ["error", 2],
     },
   },
