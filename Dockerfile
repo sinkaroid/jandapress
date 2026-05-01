@@ -17,6 +17,7 @@ FROM base AS runtime
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile --production
 COPY --from=build /app/build ./build
+USER bun
 
 EXPOSE 3000
 

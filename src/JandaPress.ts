@@ -59,6 +59,9 @@ class JandaPress {
         },
         redirect: "follow"
       });
+      if (!res.ok) {
+        throw new Error(`Request failed with status ${res.status}`);
+      }
       const body = Buffer.from(await res.arrayBuffer());
       return body;
     } else {
@@ -69,6 +72,9 @@ class JandaPress {
         },
         redirect: "follow"
       });
+      if (!res.ok) {
+        throw new Error(`Request failed with status ${res.status}`);
+      }
       const body = Buffer.from(await res.arrayBuffer());
       await keyv.set(url, body, ttl);
       return body;
@@ -107,7 +113,10 @@ class JandaPress {
   }
 
   async getServer(): Promise<string> {
-    const raw = await fetch("http://ip-api.com/json");
+    const raw = await fetch("https://ip-api.com/json");
+    if (!raw.ok) {
+      throw new Error(`Request failed with status ${raw.status}`);
+    }
     const data = await raw.json() as { country: string, regionName: string };
     return `${data.country}, ${data.regionName}`;
     

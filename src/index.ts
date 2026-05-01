@@ -50,7 +50,7 @@ scrapeRoutes(app);
 app.get("/g/:id", slow, limiter, (c) => {
   const id = c.req.param("id");
 
-  if (!isNumeric(id)) throw Error("This path need required number to work");
+  if (!isNumeric(id)) return c.json({ message: "This path need required number to work" }, 400);
 
   return c.redirect(`https://nhentai.net/g/${id}`, 301);
 });
@@ -58,7 +58,7 @@ app.get("/g/:id", slow, limiter, (c) => {
 app.get("/p/:id", slow, limiter, (c) => {
   const id = c.req.param("id");
 
-  if (!isNumeric(id)) throw Error("This path need required number to work");
+  if (!isNumeric(id)) return c.json({ message: "This path need required number to work" }, 400);
 
   return c.redirect(`https://pururin.to/gallery/${id}/re=janda`, 301);
 });
@@ -66,7 +66,7 @@ app.get("/p/:id", slow, limiter, (c) => {
 app.get("/h/:id", slow, limiter, (c) => {
   const id = c.req.param("id");
 
-  if (!isNumeric(id)) throw Error("This path need required number to work");
+  if (!isNumeric(id)) return c.json({ message: "This path need required number to work" }, 400);
 
   return c.redirect(`https://hentaifox.com/gallery/${id}`, 301);
 });
@@ -74,7 +74,7 @@ app.get("/h/:id", slow, limiter, (c) => {
 app.get("/a/:id", slow, limiter, (c) => {
   const id = c.req.param("id");
 
-  if (!isNumeric(id)) throw Error("This path need required number to work");
+  if (!isNumeric(id)) return c.json({ message: "This path need required number to work" }, 400);
 
   return c.redirect(`https://asmhentai.com/g/${id}`, 301);
 });
@@ -91,9 +91,16 @@ app.notFound((c) => {
 });
 
 app.onError((error, c) => {
-  return c.json({
+  logger.error({
+    path: c.req.path,
+    method: c.req.method,
+    ip: getIp(c.req.raw.headers),
+    useragent: c.req.header("User-Agent"),
     message: error.message,
     stack: error.stack
+  });
+  return c.json({
+    message: error.message
   }, 500);
 });
 

@@ -42,7 +42,7 @@ export const openAPISpec = {
         summary: "Search nhentai galleries",
         operationId: "nhentaiSearch",
         parameters: [
-          { name: "query", in: "query", required: true, schema: { type: "string" } },
+          { name: "key", in: "query", required: true, schema: { type: "string" } },
           { name: "page", in: "query", required: false, schema: { type: "string" } },
         ],
         responses: { "200": { description: "Success" } },
@@ -80,7 +80,7 @@ export const openAPISpec = {
         summary: "Search pururin galleries",
         operationId: "pururinSearch",
         parameters: [
-          { name: "query", in: "query", required: true, schema: { type: "string" } },
+          { name: "key", in: "query", required: true, schema: { type: "string" } },
           { name: "page", in: "query", required: false, schema: { type: "string" } },
         ],
         responses: { "200": { description: "Success" } },
@@ -108,7 +108,7 @@ export const openAPISpec = {
         summary: "Search hentaifox galleries",
         operationId: "hentaifoxSearch",
         parameters: [
-          { name: "query", in: "query", required: true, schema: { type: "string" } },
+          { name: "key", in: "query", required: true, schema: { type: "string" } },
           { name: "page", in: "query", required: false, schema: { type: "string" } },
         ],
         responses: { "200": { description: "Success" } },
@@ -136,7 +136,7 @@ export const openAPISpec = {
         summary: "Search asmhentai galleries",
         operationId: "asmhentaiSearch",
         parameters: [
-          { name: "query", in: "query", required: true, schema: { type: "string" } },
+          { name: "key", in: "query", required: true, schema: { type: "string" } },
           { name: "page", in: "query", required: false, schema: { type: "string" } },
         ],
         responses: { "200": { description: "Success" } },
@@ -164,7 +164,7 @@ export const openAPISpec = {
         summary: "Search hentai2read galleries",
         operationId: "hentai2readSearch",
         parameters: [
-          { name: "query", in: "query", required: true, schema: { type: "string" } },
+          { name: "key", in: "query", required: true, schema: { type: "string" } },
           { name: "page", in: "query", required: false, schema: { type: "string" } },
         ],
         responses: { "200": { description: "Success" } },
@@ -195,7 +195,7 @@ export const openAPISpec = {
         summary: "Search 3hentai galleries",
         operationId: "threeHentaiSearch",
         parameters: [
-          { name: "query", in: "query", required: true, schema: { type: "string" } },
+          { name: "key", in: "query", required: true, schema: { type: "string" } },
           { name: "page", in: "query", required: false, schema: { type: "string" } },
         ],
         responses: { "200": { description: "Success" } },

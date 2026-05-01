@@ -29,7 +29,7 @@ async function check(url: string) {
 
   console.log(`${url} → ${res.status}`);
 
-  expect(ok, `${url} (${getKeyByValue(c, url)}) is not available`).toBe(true);
+  expect(ok).toBe(true);
 }
 
 for (const url of sources) {

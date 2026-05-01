@@ -12,18 +12,42 @@ const SLOW_MAX_DELAY_MS = 20000;
 const BUCKET_MAX_SIZE = 50000;
 const SWEEP_MS = 30000;
 const buckets = new Map<string, Counter>();
+let overflowCounter: Counter | null = null;
+const TRUSTED_IP_HEADERS = ["cf-connecting-ip", "fly-client-ip", "x-vercel-forwarded-for", "x-client-ip"] as const;
+const ALLOW_UNTRUSTED_PROXY_HEADERS = process.env.ALLOW_UNTRUSTED_PROXY_HEADERS === "true";
+
+function firstIp(value: string): string {
+  return value.split(",")[0]?.trim() ?? "unknown";
+}
 
 function getIp(headers: HeaderReader): string {
-  const forwarded = headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0]?.trim() ?? "unknown";
-  const realIp = headers.get("x-real-ip");
-  if (realIp) return realIp;
+  for (const header of TRUSTED_IP_HEADERS) {
+    const candidate = headers.get(header);
+    if (candidate) return firstIp(candidate);
+  }
+  if (ALLOW_UNTRUSTED_PROXY_HEADERS) {
+    const forwarded = headers.get("x-forwarded-for");
+    if (forwarded) return firstIp(forwarded);
+    const realIp = headers.get("x-real-ip");
+    if (realIp) return firstIp(realIp);
+  }
   return "unknown";
 }
 
 function touch(key: string): Counter {
   const now = Date.now();
   const current = buckets.get(key);
+
+  // When the map is saturated, reuse one in-memory fallback bucket instead of creating unbounded keys.
+  if (!current && buckets.size >= BUCKET_MAX_SIZE) {
+    if (!overflowCounter || overflowCounter.resetAt <= now) {
+      overflowCounter = { count: 1, resetAt: now + WINDOW_MS };
+      return overflowCounter;
+    }
+    overflowCounter.count += 1;
+    return overflowCounter;
+  }
+
   if (!current || current.resetAt <= now) {
     const fresh = { count: 1, resetAt: now + WINDOW_MS };
     buckets.set(key, fresh);
