@@ -1,6 +1,8 @@
-import { Router } from "express";
-import cors from "cors";
+import type { Hono } from "hono";
+import { cors } from "hono/cors";
 import { slow, limiter } from "../utils/limit-options";
+import { adaptLegacyHandler } from "../utils/express-compat";
+import type { AppBindings } from "../types/hono-bindings";
 
 // hentaifox
 import { searchHentaifox } from "../controller/hentaifox/hentaifoxSearch";
@@ -36,29 +38,26 @@ import { search3hentai } from "../controller/3hentai/3hentaiSearch";
 import { random3hentai } from "../controller/3hentai/3hentaiRandom";
 
 
-function scrapeRoutes() {
-  const router = Router();
-  router.get("/hentaifox/search", cors(), slow, limiter, searchHentaifox);
-  router.get("/hentaifox/get", cors(), slow, limiter, getHentaifox);
-  router.get("/hentaifox/random", cors(), slow, limiter, randomHentaifox);
-  router.get("/pururin/get", cors(), slow, limiter, getPururin);
-  router.get("/pururin/search", cors(), slow, limiter, searchPururin);
-  router.get("/pururin/random", cors(), slow, limiter, randomPururin);
-  router.get("/hentai2read/search", cors(), slow, limiter, searchHentai2read);
-  router.get("/hentai2read/get", cors(), slow, limiter, getHentai2read);
-  router.get("/simply-hentai/get", cors(), slow, limiter, getSimplyhentai);
-  router.get("/asmhentai/get", cors(), slow, limiter, getAsmhentai);
-  router.get("/asmhentai/search", cors(), slow, limiter, searchAsmhentai);
-  router.get("/asmhentai/random", cors(), slow, limiter, randomAsmhentai);
-  router.get("/nhentai/get", cors(), slow, limiter, getNhentai);
-  router.get("/nhentai/search", cors(), slow, limiter, searchNhentai);
-  router.get("/nhentai/related", cors(), slow, limiter, relatedNhentai);
-  router.get("/nhentai/random", cors(), slow, limiter, randomNhentai);
-  router.get("/3hentai/get", cors(), slow, limiter, get3hentai);
-  router.get("/3hentai/search", cors(), slow, limiter, search3hentai);
-  router.get("/3hentai/random", cors(), slow, limiter, random3hentai);
-
-  return router;
+function scrapeRoutes(app: Hono<AppBindings>) {
+  app.get("/hentaifox/search", cors(), slow, limiter, adaptLegacyHandler(searchHentaifox));
+  app.get("/hentaifox/get", cors(), slow, limiter, adaptLegacyHandler(getHentaifox));
+  app.get("/hentaifox/random", cors(), slow, limiter, adaptLegacyHandler(randomHentaifox));
+  app.get("/pururin/get", cors(), slow, limiter, adaptLegacyHandler(getPururin));
+  app.get("/pururin/search", cors(), slow, limiter, adaptLegacyHandler(searchPururin));
+  app.get("/pururin/random", cors(), slow, limiter, adaptLegacyHandler(randomPururin));
+  app.get("/hentai2read/search", cors(), slow, limiter, adaptLegacyHandler(searchHentai2read));
+  app.get("/hentai2read/get", cors(), slow, limiter, adaptLegacyHandler(getHentai2read));
+  app.get("/simply-hentai/get", cors(), slow, limiter, adaptLegacyHandler(getSimplyhentai));
+  app.get("/asmhentai/get", cors(), slow, limiter, adaptLegacyHandler(getAsmhentai));
+  app.get("/asmhentai/search", cors(), slow, limiter, adaptLegacyHandler(searchAsmhentai));
+  app.get("/asmhentai/random", cors(), slow, limiter, adaptLegacyHandler(randomAsmhentai));
+  app.get("/nhentai/get", cors(), slow, limiter, adaptLegacyHandler(getNhentai));
+  app.get("/nhentai/search", cors(), slow, limiter, adaptLegacyHandler(searchNhentai));
+  app.get("/nhentai/related", cors(), slow, limiter, adaptLegacyHandler(relatedNhentai));
+  app.get("/nhentai/random", cors(), slow, limiter, adaptLegacyHandler(randomNhentai));
+  app.get("/3hentai/get", cors(), slow, limiter, adaptLegacyHandler(get3hentai));
+  app.get("/3hentai/search", cors(), slow, limiter, adaptLegacyHandler(search3hentai));
+  app.get("/3hentai/random", cors(), slow, limiter, adaptLegacyHandler(random3hentai));
 }
 
 export default scrapeRoutes;

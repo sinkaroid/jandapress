@@ -1,5 +1,4 @@
 import { load } from "cheerio";
-import p from "phin";
 import JandaPress from "../../JandaPress";
 import c from "../../utils/options";
 import { getPururinInfo, getUrl } from "../../utils/modifier";
@@ -23,9 +22,13 @@ const janda = new JandaPress();
 
 export async function scrapeContent(url: string, random = false) {
   try {
-    let res, raw;
-    if (random) res = await p({ url: url, followRedirects: true }), raw = res.body;
-    else res = await janda.fetchBody(url), raw = res;
+    let raw: Buffer | string;
+    if (random) {
+      const res = await fetch(url, { redirect: "follow" });
+      raw = await res.text();
+    } else {
+      raw = await janda.fetchBody(url);
+    }
 
     const $ = load(raw);
     

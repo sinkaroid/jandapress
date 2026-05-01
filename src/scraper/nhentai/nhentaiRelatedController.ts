@@ -45,8 +45,11 @@ export async function scrapeContent(url: string) {
     };
     return data;
 
-  } catch (err: any) {
-    throw Error(err.message);
+  } catch (err) {
+    if (err instanceof Error) {
+      throw Error(err.message);
+    }
+    throw Error("Unknown error");
   }
 }
 

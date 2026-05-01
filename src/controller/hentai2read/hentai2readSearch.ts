@@ -2,9 +2,10 @@ import { scrapeContent } from "../../scraper/hentai2read/hentai2readSearchContro
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
 import { maybeError } from "../../utils/modifier";
-import { Request, Response } from "express";
+import type { LegacyRequest } from "../../interfaces/legacy-request";
+import type { LegacyResponse } from "../../interfaces/legacy-response";
 
-export async function searchHentai2read(req: Request, res: Response) {
+export async function searchHentai2read(req: LegacyRequest, res: LegacyResponse) {
   try {
     const key = req.query.key || "";
     if (!key) throw Error("Parameter book is required");

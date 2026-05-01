@@ -2,10 +2,11 @@ import { scrapeContent } from "../../scraper/3hentai/3hentaiSearchController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
 import { maybeError } from "../../utils/modifier";
-import { Request, Response } from "express";
+import type { LegacyRequest } from "../../interfaces/legacy-request";
+import type { LegacyResponse } from "../../interfaces/legacy-response";
 const sorting = ["recent", "popular-24h", "popular-7d", "popular"];
 
-export async function search3hentai(req: Request, res: Response) {
+export async function search3hentai(req: LegacyRequest, res: LegacyResponse) {
   try {
     const key = req.query.key || "";
     const page = req.query.page || 1;

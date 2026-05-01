@@ -1,0 +1,1 @@
+export type LegacyQuery = Record<string, string | string[]>;

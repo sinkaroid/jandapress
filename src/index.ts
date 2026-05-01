@@ -1,19 +1,29 @@
-import "dotenv/config";
+import { Hono } from "hono";
+import { swaggerUI } from "@hono/swagger-ui";
 import JandaPress from "./JandaPress";
-import express from "express";
-import { Request, Response, NextFunction } from "express";
+import type { HeaderReader } from "./interfaces/header-reader";
+import type { AppBindings } from "./types/hono-bindings";
 import scrapeRoutes from "./router/endpoint";
+import { openAPISpec } from "./lib/openapi-spec";
 import { slow, limiter } from "./utils/limit-options";
 import { logger } from "./utils/logger";
 import { isNumeric } from "./utils/modifier";
 import * as pkg from "../package.json";
 
 const janda = new JandaPress();
-const app = express();
+const app = new Hono<AppBindings>();
+
+function getIp(headers: HeaderReader): string {
+  const forwarded = headers.get("x-forwarded-for");
+  if (forwarded) return forwarded.split(",")[0]?.trim() ?? "unknown";
+  const realIp = headers.get("x-real-ip");
+  if (realIp) return realIp;
+  return "unknown";
+}
 
 
-app.get("/", slow, limiter, async (req, res) => {
-  res.send({
+app.get("/", slow, limiter, async (c) => {
+  const data = {
     success: true,
     message: "Hi, I'm alive!",
     endpoint: "https://github.com/sinkaroid/jandapress/blob/master/README.md#routing",
@@ -22,66 +32,76 @@ app.get("/", slow, limiter, async (req, res) => {
     heap: janda.currentProccess().heap,
     server: await janda.getServer(),
     version: `${pkg.version}`,
-  });
+  };
   logger.info({
-    path: req.path,
-    method: req.method,
-    ip: req.ip,
-    useragent: req.get("User-Agent")
+    path: c.req.path,
+    method: c.req.method,
+    ip: getIp(c.req.raw.headers),
+    useragent: c.req.header("User-Agent")
   });
+  return c.json(data);
 });
 
-app.use(scrapeRoutes());
+app.get("/doc", (c) => c.json(openAPISpec));
+app.get("/playground", swaggerUI({ url: "/doc" }));
 
-app.get("/g/:id", slow, limiter, (req, res) => {
-  const id = req.params.id as string;
+scrapeRoutes(app);
+
+app.get("/g/:id", slow, limiter, (c) => {
+  const id = c.req.param("id");
 
   if (!isNumeric(id)) throw Error("This path need required number to work");
 
-  res.redirect(301, `https://nhentai.net/g/${id}`);
+  return c.redirect(`https://nhentai.net/g/${id}`, 301);
 });
 
-app.get("/p/:id", slow, limiter, (req, res) => {
-  const id = req.params.id as string;
+app.get("/p/:id", slow, limiter, (c) => {
+  const id = c.req.param("id");
 
   if (!isNumeric(id)) throw Error("This path need required number to work");
 
-  res.redirect(301, `https://pururin.to/gallery/${id}/re=janda`);
+  return c.redirect(`https://pururin.to/gallery/${id}/re=janda`, 301);
 });
 
-app.get("/h/:id", slow, limiter, (req, res) => {
-  const id = req.params.id as string;
+app.get("/h/:id", slow, limiter, (c) => {
+  const id = c.req.param("id");
 
   if (!isNumeric(id)) throw Error("This path need required number to work");
 
-  res.redirect(301, `https://hentaifox.com/gallery/${id}`);
+  return c.redirect(`https://hentaifox.com/gallery/${id}`, 301);
 });
 
-app.get("/a/:id", slow, limiter, (req, res) => {
-  const id = req.params.id as string;
+app.get("/a/:id", slow, limiter, (c) => {
+  const id = c.req.param("id");
 
   if (!isNumeric(id)) throw Error("This path need required number to work");
 
-  res.redirect(301, `https://asmhentai.com/g/${id}`);
+  return c.redirect(`https://asmhentai.com/g/${id}`, 301);
 });
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-  res.status(404);
-  next(Error(`The page not found in path ${req.url} and method ${req.method}`));
+app.notFound((c) => {
+  const message = `The page not found in path ${c.req.path} and method ${c.req.method}`;
   logger.error({
-    path: req.url,
-    method: req.method,
-    ip: req.ip,
-    useragent: req.get("User-Agent")
+    path: c.req.path,
+    method: c.req.method,
+    ip: getIp(c.req.raw.headers),
+    useragent: c.req.header("User-Agent")
   });
+  return c.json({ message }, 404);
 });
 
-app.use((error: Error, req: Request, res: Response) => {
-  res.status(500).json({
+app.onError((error, c) => {
+  return c.json({
     message: error.message,
     stack: error.stack
-  });
+  }, 500);
 });
 
+const port = Number(process.env.PORT || 3000);
 
-app.listen(process.env.PORT || 3000, () => console.log(`${pkg.name} is running on port ${process.env.PORT || 3000}`));
+console.log(`${pkg.name} is running on port ${port}`);
+
+export default {
+  fetch: app.fetch,
+  port
+};

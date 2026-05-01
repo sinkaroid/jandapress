@@ -2,9 +2,10 @@ import { scrapeContent } from "../../scraper/asmhentai/asmhentaiSearchController
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
 import { maybeError } from "../../utils/modifier";
-import { Request, Response } from "express";
+import type { LegacyRequest } from "../../interfaces/legacy-request";
+import type { LegacyResponse } from "../../interfaces/legacy-response";
 
-export async function searchAsmhentai(req: Request, res: Response) {
+export async function searchAsmhentai(req: LegacyRequest, res: LegacyResponse) {
   try {
     const key = req.query.key || "";
     const page = req.query.page || 1;

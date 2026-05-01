@@ -1,7 +1,5 @@
-import p from "phin";
 import { load } from "cheerio";
 import c from "./options";
-import { IncomingHttpHeaders } from "http";
 import { nhentaiRandomUrl } from "./nhentai";
 
 /**
@@ -79,8 +77,8 @@ function getDate(date: Date) {
  */
 function timeAgo(input: Date) {
   const date = new Date(input);
-  const formatter: any = new Intl.RelativeTimeFormat("en");
-  const ranges: { [key: string]: number } = {
+  const formatter = new Intl.RelativeTimeFormat("en");
+  const ranges: Partial<Record<Intl.RelativeTimeFormatUnit, number>> = {
     years: 3600 * 24 * 365,
     months: 3600 * 24 * 30,
     weeks: 3600 * 24 * 7,
@@ -90,9 +88,11 @@ function timeAgo(input: Date) {
     seconds: 1
   };
   const secondsElapsed = (date.getTime() - Date.now()) / 1000;
-  for (const key in ranges) {
-    if (ranges[key] < Math.abs(secondsElapsed)) {
-      const delta = secondsElapsed / ranges[key];
+  for (const key of Object.keys(ranges) as Intl.RelativeTimeFormatUnit[]) {
+    const seconds = ranges[key];
+    if (!seconds) continue;
+    if (seconds < Math.abs(secondsElapsed)) {
+      const delta = secondsElapsed / seconds;
       return formatter.format(Math.round(delta), key);
     }
   }
@@ -104,10 +104,10 @@ function timeAgo(input: Date) {
  * @returns boolean
  */
 async function mock(url: string) {
-  const site = await p({ url: url });
-  if (site.statusCode === 200) {
+  const site = await fetch(url, { redirect: "follow" });
+  if (site.status === 200) {
     return true;
-  } else if (site.statusCode === 308) {
+  } else if (site.status === 308) {
     return true;
   } else {
     return false;
@@ -129,8 +129,9 @@ export const isNumeric = (val: string): boolean => {
  */
 export async function getIdRandomPururin(): Promise<number> {
   const randomNumber = Math.floor(Math.random() * 500) + 1;
-  const raw = await p(`${c.PURURIN}/browse?sort=newest&page=${randomNumber}`);
-  const $ = load(raw.body);
+  const raw = await fetch(`${c.PURURIN}/browse?sort=newest&page=${randomNumber}`);
+  const html = await raw.text();
+  const $ = load(html);
   const gallery = $(".card.card-gallery").map((i, el) => $(el).attr("href")).get();
   const galleryNumber = gallery.map(el => removeNonNumeric(el));
   const randomgallery = galleryNumber[Math.floor(Math.random() * galleryNumber.length)];
@@ -143,14 +144,12 @@ export async function getIdRandomPururin(): Promise<number> {
  */
 
 export async function getIdRandomNhentai(): Promise<number> {
-  const res = await p({
-    url: nhentaiRandomUrl(),
-    parse: "json",
+  const res = await fetch(nhentaiRandomUrl(), {
     headers: nhentaiHeaders(),
-    timeout: 10000
+    redirect: "follow"
   });
 
-  const body = res.body as Record<string, unknown>;
+  const body = await res.json() as Record<string, unknown>;
   const id = extractNhentaiId(body);
 
   if (!id) {
@@ -174,9 +173,9 @@ export function maybeError(success: boolean, message: string) {
  * Common headers for nhentai official API.
  * Uses API key when provided in env.
  */
-export function nhentaiHeaders(): IncomingHttpHeaders {
+export function nhentaiHeaders(): Record<string, string> {
   const key = process.env.NHENTAI_API_KEY?.trim();
-  const userAgent = process.env.USER_AGENT || "jandapress/7.1.1-alpha Node.js/22.22.0";
+  const userAgent = process.env.USER_AGENT || "jandapress/10.0.1-alpha Bun/1.3.13";
   const maskedKey = key ? `${key.slice(0, 6)}...(${key.length})` : "none";
 
   console.log(`[nhentai] headers ready | apiKey=${maskedKey} | auth=${key ? "Bearer" : "none"} | ua=${userAgent}`);
@@ -213,9 +212,9 @@ function extractNhentaiId(input: unknown): number | null {
 export async function hentaiFoxPredictedExtension(url: string): Promise<".jpg" | ".webp"> {
   try {
     const jpgUrl = url;
-    const res = await p({ url: jpgUrl, method: "HEAD", followRedirects: true });
+    const res = await fetch(jpgUrl, { method: "HEAD", redirect: "follow" });
 
-    if (res.statusCode === 200) {
+    if (res.status === 200) {
       return ".jpg";
     } else {
       return ".webp";

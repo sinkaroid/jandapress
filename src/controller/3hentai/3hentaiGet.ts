@@ -2,9 +2,10 @@ import { scrapeContent } from "../../scraper/3hentai/3hentaiGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
 import { isNumeric, maybeError } from "../../utils/modifier";
-import { Request, Response } from "express";
+import type { LegacyRequest } from "../../interfaces/legacy-request";
+import type { LegacyResponse } from "../../interfaces/legacy-response";
 
-export async function get3hentai(req: Request, res: Response) {
+export async function get3hentai(req: LegacyRequest, res: LegacyResponse) {
   try {
     const book = req.query.book as string;
     if (!book) throw Error("Parameter book is required");

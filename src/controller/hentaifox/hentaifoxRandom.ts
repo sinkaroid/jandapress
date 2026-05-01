@@ -1,10 +1,11 @@
-import { Request, Response } from "express";
 import { scrapeContent } from "../../scraper/hentaifox/hentaifoxGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
 import { maybeError } from "../../utils/modifier";
+import type { LegacyRequest } from "../../interfaces/legacy-request";
+import type { LegacyResponse } from "../../interfaces/legacy-response";
 
-export async function randomHentaifox(req: Request, res: Response) {
+export async function randomHentaifox(req: LegacyRequest, res: LegacyResponse) {
   try {
     /**
      * @api {get} /hentaifox/random Random hentaifox

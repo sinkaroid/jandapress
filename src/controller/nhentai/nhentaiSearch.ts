@@ -2,9 +2,10 @@ import { scrapeContent } from "../../scraper/nhentai/nhentaiSearchController";
 import { logger } from "../../utils/logger";
 import { maybeError } from "../../utils/modifier";
 import { NHENTAI_SEARCH_SORTS, nhentaiSearchUrl } from "../../utils/nhentai";
-import { Request, Response } from "express";
+import type { LegacyRequest } from "../../interfaces/legacy-request";
+import type { LegacyResponse } from "../../interfaces/legacy-response";
 
-export async function searchNhentai(req: Request, res: Response) {
+export async function searchNhentai(req: LegacyRequest, res: LegacyResponse) {
   try {
     const key = req.query.key || "";
     const page = Number(req.query.page || 1);

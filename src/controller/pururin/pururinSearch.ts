@@ -2,10 +2,11 @@ import { scrapeContent } from "../../scraper/pururin/pururinSearchController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
 import { maybeError } from "../../utils/modifier";
+import type { LegacyRequest } from "../../interfaces/legacy-request";
+import type { LegacyResponse } from "../../interfaces/legacy-response";
 // const sorting = ["newest", "most-popular", "highest-rated", "most-viewed", "title", "random"];
-import { Request, Response } from "express";
 
-export async function searchPururin(req: Request, res: Response) {
+export async function searchPururin(req: LegacyRequest, res: LegacyResponse) {
   try {
     const key = req.query.key as string;
     const page = req.query.page || 1;

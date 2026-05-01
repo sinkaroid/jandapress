@@ -2,9 +2,10 @@ import { scrapeContent } from "../../scraper/asmhentai/asmhentaiGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
 import { maybeError } from "../../utils/modifier";
-import { Request, Response } from "express";
+import type { LegacyRequest } from "../../interfaces/legacy-request";
+import type { LegacyResponse } from "../../interfaces/legacy-response";
 
-export async function randomAsmhentai(req: Request, res: Response) {
+export async function randomAsmhentai(req: LegacyRequest, res: LegacyResponse) {
   try {
     /**
      * @api {get} /asmhentai/random Random asmhentai

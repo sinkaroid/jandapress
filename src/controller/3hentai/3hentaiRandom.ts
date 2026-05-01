@@ -1,10 +1,11 @@
 import { scrapeContent } from "../../scraper/3hentai/3hentaiGetController";
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
-import { Request, Response } from "express";
 import { maybeError } from "../../utils/modifier";
+import type { LegacyRequest } from "../../interfaces/legacy-request";
+import type { LegacyResponse } from "../../interfaces/legacy-response";
 
-export async function random3hentai(req: Request, res: Response) {
+export async function random3hentai(req: LegacyRequest, res: LegacyResponse) {
   try {
     /**
      * @api {get} /3hentai/random Random 3hentai

@@ -2,9 +2,10 @@ import { scrapeContent } from "../../scraper/pururin/pururinGetControllerRandom"
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
 import { maybeError } from "../../utils/modifier";
-import { Request, Response } from "express";
+import type { LegacyRequest } from "../../interfaces/legacy-request";
+import type { LegacyResponse } from "../../interfaces/legacy-response";
 
-export async function randomPururin(req: Request, res: Response) {
+export async function randomPururin(req: LegacyRequest, res: LegacyResponse) {
   try {
     
     /**

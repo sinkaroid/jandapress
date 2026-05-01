@@ -2,10 +2,11 @@ import { scrapeContent } from "../../scraper/hentaifox/hentaifoxSearchController
 import c from "../../utils/options";
 import { logger } from "../../utils/logger";
 import { maybeError } from "../../utils/modifier";
+import type { LegacyRequest } from "../../interfaces/legacy-request";
+import type { LegacyResponse } from "../../interfaces/legacy-response";
 const sorting = ["latest", "popular"];
-import { Request, Response } from "express";
 
-export async function searchHentaifox(req: Request, res: Response) {
+export async function searchHentaifox(req: LegacyRequest, res: LegacyResponse) {
   try {
     /**
      * @api {get} /hentaifox/search Search hentaifox
