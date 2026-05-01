@@ -1,26 +1,9 @@
 /// <reference types="bun" />
-import { afterAll, beforeAll, expect, test } from "bun:test";
+import { expect, test } from "bun:test";
+import app from "../src/index";
 import { nhentaiHeaders } from "../src/utils/modifier";
 
-const port = process.env.PORT ?? 3000;
-const baseUrl = `http://localhost:${port}`;
-let spawnedServer: {
-  kill: () => void;
-  stderr?: ReadableStream<Uint8Array> | null;
-} | null = null;
-type BunGlobal = typeof globalThis & {
-  Bun?: {
-    spawn: (cmd: string[], options: {
-      cwd: string;
-      env: Record<string, string | undefined>;
-      stdout: "ignore" | "pipe";
-      stderr: "ignore" | "pipe";
-    }) => {
-      kill: () => void;
-      stderr?: ReadableStream<Uint8Array> | null;
-    };
-  };
-};
+const baseUrl = "http://localhost:3000";
 
 type ApiResponse = {
   success: boolean;
@@ -35,70 +18,6 @@ type NhentaiApiResponse = {
     id?: number;
   };
 };
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function canReachApi() {
-  try {
-    const res = await fetch(`${baseUrl}/`, {
-      redirect: "follow",
-      signal: AbortSignal.timeout(1500)
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
-async function waitForApiReady(timeoutMs = 20000) {
-  const startedAt = Date.now();
-
-  while (Date.now() - startedAt < timeoutMs) {
-    if (await canReachApi()) return;
-    await sleep(200);
-  }
-
-  throw new Error(`Timed out waiting for API server on ${baseUrl}`);
-}
-
-beforeAll(async () => {
-  if (await canReachApi()) {
-    return;
-  }
-
-  const bunRuntime = (globalThis as BunGlobal).Bun;
-  if (!bunRuntime) {
-    throw new Error("Bun runtime not available");
-  }
-
-  spawnedServer = bunRuntime.spawn(["bun", "run", "src/index.ts"], {
-    cwd: process.cwd(),
-    env: {
-      ...process.env,
-      PORT: `${port}`
-    },
-    stdout: "ignore",
-    stderr: "pipe"
-  });
-
-  try {
-    await waitForApiReady();
-  } catch (error) {
-    const server = spawnedServer;
-    const stderr = server?.stderr ? await new Response(server.stderr).text() : "";
-    server?.kill();
-    spawnedServer = null;
-    throw new Error(`Failed to boot API server. ${error instanceof Error ? error.message : String(error)}\n${stderr}`);
-  }
-});
-
-afterAll(() => {
-  if (!spawnedServer) return;
-  spawnedServer.kill();
-  spawnedServer = null;
-});
 
 async function fetchNhentaiApi(id: number) {
   const urls = [
@@ -124,10 +43,13 @@ async function fetchNhentaiApi(id: number) {
 
 async function run(path: string, id?: number) {
   try {
-    const res = await fetch(`${baseUrl}${path}`, {
-      redirect: "follow",
-      signal: AbortSignal.timeout(20000)
+    const req = new Request(`${baseUrl}${path}`, {
+      method: "GET",
+      headers: {
+        "x-real-ip": "127.0.0.1",
+      },
     });
+    const res = await app.fetch(req);
 
     expect(res.status).toBe(200);
 
