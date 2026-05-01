@@ -7,7 +7,7 @@
 	<a href="https://qlty.sh/gh/sinkaroid/projects/jandapress"><img src="https://qlty.sh/gh/sinkaroid/projects/jandapress/maintainability.svg" alt="Maintainability" /></a>
 </p>
 
-Jandapress was named **JCE** (Janda Cheerio Express) and definitely depends on them.  
+Jandapress was originally named **JCE** (Janda Cheerio Express (legacy name)) and now runs on **Bun** + **Hono**.  
 The motivation behind this project is to provide developers with accessible and actionable data from various doujinshi sources, with a focus on aggregation and ease of integration for applications and services.
 
 <a href="https://sinkaroid.github.io/jandapress">Playground</a> •
@@ -79,7 +79,7 @@ Some tests may fail in CI environments because certain doujin websites restrict 
 
 ## Prerequisites
 <table>
-	<td><b>NOTE:</b> NodeJS 20.x or higher / or simply just use docker</td>
+  <td><b>NOTE:</b> Bun 1.3.13 or higher / or simply just use docker</td>
 </table>
 
 To handle several requests from each web, You will also need [Redis](https://redis.io/) for persistent caching, free tier is available on [Redis Labs](https://redislabs.com/), You can also choose another provider as we using [keyv](https://github.com/jaredwray/keyv) Key-value storage with support for multiple backends. All data must be stored in `<Buffer>` here.
@@ -104,7 +104,7 @@ EXPIRE_CACHE = 1
 NHENTAI_API_KEY = ""
 
 # optional custom user agent for upstream requests
-USER_AGENT = "jandapress/7.1.1-alpha Node.js/22.22.0"
+USER_AGENT = "jandapress/10.0.1-alpha Bun/1.3.13"
 ```
 
 ### Docker
@@ -120,7 +120,7 @@ docker run -d \
   -e REDIS_URL='redis://default:somenicepassword@redis-666.c10.us-east-6-6.ec666.cloud.redislabs.com:1337' \
   -e EXPIRE_CACHE='1' \
   -e NHENTAI_API_KEY='' \
-  -e USER_AGENT='jandapress/7.1.1-alpha Node.js/22.22.0' \
+  -e USER_AGENT='jandapress/10.0.1-alpha Bun/1.3.13' \
   ghcr.io/sinkaroid/jandapress:latest
 ```
 
@@ -129,11 +129,11 @@ docker run -d \
     git clone https://github.com/sinkaroid/jandapress.git
 
 - Install dependencies
-  - `npm install / yarn install`
+  - `bun install`
 - Jandapress production
-  - `npm run start:prod`
+  - `bun run start:prod`
 - Jandapress testing and hot reload
-  - `npm run start:dev`
+  - `bun run start:dev`
 
 ## Nhentai Guide
 ### The solution
@@ -141,7 +141,7 @@ Jandapress now targets the nhentai official API endpoints (`/api/v2`) for search
 
 - set `NHENTAI_API_KEY` in `.env` (optional but recommended)
 - set `USER_AGENT` in `.env` if you need a custom upstream identifier
-- validate upstream with `npm run test` or `npm run test:nhentai`
+- validate upstream with `bun run test` or `bun run test:nhentai`
 - if you want to adjust nhentai contracts/mapping, read `docs/nhentai-api-contract.md` first
 
 ## Tests
@@ -150,28 +150,28 @@ Run the following commands to execute tests for each supported source:
 
 ```bash
 # Check whether all supported sites are available for scraping
-npm run test:scrape
+bun run test:scrape
 
 # Run tests for individual sources
-npm run test:nhentai
-npm run test:pururin
-npm run test:hentaifox
-npm run test:asmhentai
-npm run test:hentai2read
-npm run test:simply-hentai
-npm run test:3hentai
+bun run test:nhentai
+bun run test:pururin
+bun run test:hentaifox
+bun run test:asmhentai
+bun run test:hentai2read
+bun run test:simply-hentai
+bun run test:3hentai
 ```
 
 
 
 ### Start the production server
-`npm run start:prod`
+`bun run start:prod`
 
 ### Running development server
-`npm run start:dev`
+`bun run start:dev`
 
-### Generating playground like swagger from apidoc definition
-`npm run build:apidoc`
+### OpenAPI and playground
+`bun run build` then open `/doc` or `/playground`
 
 > To running other tests, you can see object scripts in file `package.json`
 
@@ -291,7 +291,7 @@ We have discontinued providing public APIs and playground services due to ongoin
 To continue using Jandapress, please deploy and run your own self-hosted instance.
 
 ## Pronunciation
-[`id_ID`](https://www.localeplanet.com/java/id-ID/index.html) • **/jan·da/** — Dewasa dan mengikat; _(?)_ **/press/** shorthand for expressjs; _(?)_
+[`id_ID`](https://www.localeplanet.com/java/id-ID/index.html) • **/jan·da/** — Dewasa dan mengikat; _(?)_ **/press/** shorthand for expressjs (legacy name); _(?)_
 
 ## Client libraries
 Seamlessly integrate with the languages you love, simplified the usage, and intelisense definitions on your IDEs

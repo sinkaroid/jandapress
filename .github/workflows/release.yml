@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set release metadata
+        id: meta
+        shell: bash
+        run: |
+          VERSION="$(jq -r .version package.json)"
+          TAG="v${VERSION}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Check if tag already exists
+        id: tag_check
+        shell: bash
+        run: |
+          if git ls-remote --tags origin "refs/tags/${{ steps.meta.outputs.tag }}" | grep -q "${{ steps.meta.outputs.tag }}"; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build changelog
+        if: steps.tag_check.outputs.exists == 'false'
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          configurationJson: |
+            {
+              "template": "## Changelog\n\n{{CHANGELOG}}",
+              "pr_template": "- #{{NUMBER}} {{TITLE}} (@{{AUTHOR}})",
+              "empty_template": "- No notable changes."
+            }
+
+      - name: Create GitHub release
+        if: steps.tag_check.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: Release ${{ steps.meta.outputs.tag }}
+          target_commitish: master
+          body: ${{ steps.changelog.outputs.changelog }}
+          generate_release_notes: true
+          append_body: true
+
+      - name: Skip release when tag exists
+        if: steps.tag_check.outputs.exists == 'true'
+        run: echo "Tag ${{ steps.meta.outputs.tag }} already exists. Skipping release creation."
