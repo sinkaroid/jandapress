@@ -1,6 +1,16 @@
 import { load } from "cheerio";
 import c from "./options";
 import { nhentaiRandomUrl } from "./nhentai";
+import * as pkg from "../../package.json";
+
+function runtimeBunVersion(): string {
+  const bunFromGlobal = (globalThis as { Bun?: { version?: string } }).Bun?.version;
+  return bunFromGlobal ?? process.versions.bun ?? "unknown";
+}
+
+export function defaultUserAgent(): string {
+  return `${pkg.name}/${pkg.version} Bun/${runtimeBunVersion()}`;
+}
 
 /**
  * Get Pururin info and replace
@@ -175,7 +185,7 @@ export function maybeError(success: boolean, message: string) {
  */
 export function nhentaiHeaders(): Record<string, string> {
   const key = process.env.NHENTAI_API_KEY?.trim();
-  const userAgent = process.env.USER_AGENT || "jandapress/10.0.1-alpha Bun/1.3.13";
+  const userAgent = process.env.USER_AGENT || defaultUserAgent();
   const maskedKey = key ? `${key.slice(0, 6)}...(${key.length})` : "none";
 
   console.log(`[nhentai] headers ready | apiKey=${maskedKey} | auth=${key ? "Bearer" : "none"} | ua=${userAgent}`);
