@@ -8,6 +8,17 @@ const keyv = process.env.REDIS_URL
   
 keyv.on("error", err => console.log("Connection Error", err));
 const ttl = 1000 * 60 * 60 * Number(process.env.EXPIRE_CACHE);
+const GEO_TIMEOUT_MS = 3000;
+
+let cachedLastLocation: string | null = null;
+let lastLocationTimestamp = 0;
+
+function cachedLocationOrUnknown(): string {
+  if (cachedLastLocation && lastLocationTimestamp > 0) {
+    return cachedLastLocation;
+  }
+  return "Unknown";
+}
 
 
 class JandaPress {
@@ -113,11 +124,16 @@ class JandaPress {
   }
 
   async getServer(): Promise<string> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), GEO_TIMEOUT_MS);
+
     try {
       // ip-api free tier often rejects HTTPS requests with 403;
-      const raw = await fetch("https://ipwho.is/");
+      const raw = await fetch("https://ipwho.is/", {
+        signal: controller.signal,
+      });
       if (!raw.ok) {
-        return "Unknown";
+        return cachedLocationOrUnknown();
       }
       const data = await raw.json() as {
         success?: boolean;
@@ -125,13 +141,25 @@ class JandaPress {
         region?: string;
       };
       if (data.success === false) {
-        return "Unknown";
+        return cachedLocationOrUnknown();
       }
-      const country = data.country ?? "Unknown";
-      const region = data.region ?? "Unknown";
-      return `${country}, ${region}`;
+      const country = data.country?.trim();
+      const region = data.region?.trim();
+      if (!country || !region) {
+        return cachedLocationOrUnknown();
+      }
+
+      const location = `${country}, ${region}`;
+      cachedLastLocation = location;
+      lastLocationTimestamp = Date.now();
+      return location;
     } catch {
-      return "Unknown";
+      return cachedLocationOrUnknown();
+    } finally {
+      clearTimeout(timeoutId);
+      if (!controller.signal.aborted) {
+        controller.abort();
+      }
     }
     
   }
