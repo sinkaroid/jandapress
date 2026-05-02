@@ -186,7 +186,7 @@ To continue using Jandapress, please deploy and run your own self-hosted instanc
 - `/` : index page
 
 ### Nhentai
-The missing piece of nhentai.net - https://sinkaroid.github.io/jandapress/#api-nhentai
+The missing piece of nhentai - https://sinkaroid.github.io/jandapress/#GET/nhentai
 - `/nhentai` : nhentai api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`, `?page`, `?sort`
@@ -202,7 +202,7 @@ The missing piece of nhentai.net - https://sinkaroid.github.io/jandapress/#api-n
     - http://localhost:3000/nhentai/random
 
 ### Pururin
-The missing piece of pururin.to - https://sinkaroid.github.io/jandapress/#api-pururin
+The missing piece of pururin - https://sinkaroid.github.io/jandapress/#GET/pururin
 - `/pururin` : pururin api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`, `?page`
@@ -213,7 +213,7 @@ The missing piece of pururin.to - https://sinkaroid.github.io/jandapress/#api-pu
     - http://localhost:3000/pururin/random
 
 ### Hentaifox
-The missing piece of hentaifox.com - https://sinkaroid.github.io/jandapress/#api-hentaifox
+The missing piece of hentaifox - https://sinkaroid.github.io/jandapress/#GET/hentaifox
 - `/hentaifox`: hentaifox api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`, `?page`, `?sort`
@@ -227,7 +227,7 @@ The missing piece of hentaifox.com - https://sinkaroid.github.io/jandapress/#api
     - http://localhost:3000/hentaifox/random
 
 ### Asmhentai
-The missing piece of asmhentai.com - https://sinkaroid.github.io/jandapress/#api-asmhentai
+The missing piece of asmhentai - https://sinkaroid.github.io/jandapress/#GET/asmhentai
 - `/asmhentai`: asmhentai api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`, `?page`
@@ -241,7 +241,7 @@ The missing piece of asmhentai.com - https://sinkaroid.github.io/jandapress/#api
     - http://localhost:3000/asmhentai/random
 
 ### Hentai2read
-The missing piece of hentai2read.com - https://sinkaroid.github.io/jandapress/#api-hentai2read
+The missing piece of hentai2read - https://sinkaroid.github.io/jandapress/#GET/hentai2read
 - `/hentai2read`: hentai2read api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`
@@ -252,7 +252,7 @@ The missing piece of hentai2read.com - https://sinkaroid.github.io/jandapress/#a
     - http://localhost:3000/hentai2read/search?key=futanari
 
 ### Simply-hentai
-The missing piece of simply-hentai.com - https://sinkaroid.github.io/jandapress/#api-simply-hentai
+The missing piece of simply-hentai - https://sinkaroid.github.io/jandapress/#GET/simply-hentai
 - `/simply-hentai`: simply-hentai api
   - **get**, takes parameters : `book`
   - <u>sort parameters on search</u>
@@ -261,7 +261,7 @@ The missing piece of simply-hentai.com - https://sinkaroid.github.io/jandapress/
     - http://localhost:3000/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages
 
 ### 3hentai
-The missing piece of 3hentai.net - https://sinkaroid.github.io/jandapress/#api-3hentai
+The missing piece of 3hentai - https://sinkaroid.github.io/jandapress/#GET/3hentai
 - `/3hentai`: 3hentai api
   - **get**, takes parameters : `book`
   - **search**, takes parameters : `key`, `?page`, `?sort`
