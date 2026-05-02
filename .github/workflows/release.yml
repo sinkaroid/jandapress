@@ -42,30 +42,14 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Build changelog
-        if: steps.tag_check.outputs.exists == 'false'
-        id: changelog
-        uses: mikepenz/release-changelog-builder-action@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          configurationJson: |
-            {
-              "template": "## Changelog\n\n{{CHANGELOG}}",
-              "pr_template": "- #{{NUMBER}} {{TITLE}} (@{{AUTHOR}})",
-              "empty_template": "- No notable changes."
-            }
-
       - name: Create GitHub release
         if: steps.tag_check.outputs.exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.meta.outputs.tag }}
-          name: Release ${{ steps.meta.outputs.tag }}
+          name: ${{ steps.meta.outputs.tag }}
           target_commitish: master
-          body: ${{ steps.changelog.outputs.changelog }}
           generate_release_notes: true
-          append_body: true
 
       - name: Skip release when tag exists
         if: steps.tag_check.outputs.exists == 'true'

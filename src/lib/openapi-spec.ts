@@ -2,7 +2,7 @@ export const openAPISpec = {
   openapi: "3.0.0",
   info: {
     title: "JandaPress API",
-    version: "10.0.1-alpha",
+    version: "10.0.2-alpha",
     description: "RESTful API for nhentai, pururin, hentaifox, asmhentai, hentai2read, simply-hentai, and 3hentai.",
     contact: {
       name: "sinkaroid",
