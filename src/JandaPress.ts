@@ -1,6 +1,6 @@
 import Keyv from "keyv";
 import KeyvRedis from "@keyv/redis";
-import { nhentaiHeaders } from "./utils/modifier";
+import { defaultUserAgent, nhentaiHeaders } from "./utils/modifier";
 
 const keyv = process.env.REDIS_URL
   ? new Keyv({ store: new KeyvRedis(process.env.REDIS_URL) })
@@ -15,7 +15,7 @@ class JandaPress {
   useragent: string;
   constructor() {
     this.url = "";
-    this.useragent = process.env.USER_AGENT || "jandapress/10.0.1-alpha Bun/1.3.13";
+    this.useragent = process.env.USER_AGENT || defaultUserAgent();
   }
 
   /**
@@ -113,12 +113,26 @@ class JandaPress {
   }
 
   async getServer(): Promise<string> {
-    const raw = await fetch("https://ip-api.com/json");
-    if (!raw.ok) {
-      throw new Error(`Request failed with status ${raw.status}`);
+    try {
+      // ip-api free tier often rejects HTTPS requests with 403;
+      const raw = await fetch("https://ipwho.is/");
+      if (!raw.ok) {
+        return "Unknown";
+      }
+      const data = await raw.json() as {
+        success?: boolean;
+        country?: string;
+        region?: string;
+      };
+      if (data.success === false) {
+        return "Unknown";
+      }
+      const country = data.country ?? "Unknown";
+      const region = data.region ?? "Unknown";
+      return `${country}, ${region}`;
+    } catch {
+      return "Unknown";
     }
-    const data = await raw.json() as { country: string, regionName: string };
-    return `${data.country}, ${data.regionName}`;
     
   }
 }
