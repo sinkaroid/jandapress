@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { prometheus } from "@hono/prometheus";
 import { swaggerUI } from "@hono/swagger-ui";
 import JandaPress from "./JandaPress";
 import type { HeaderReader } from "./interfaces/header-reader";
@@ -8,10 +9,25 @@ import { openAPISpec } from "./lib/openapi-spec";
 import { slow, limiter } from "./utils/limit-options";
 import { logger } from "./utils/logger";
 import { isNumeric } from "./utils/modifier";
+import { registry, inflightMiddleware, startSystemMetrics } from "./utils/metrics";
 import * as pkg from "../package.json";
 
 const janda = new JandaPress();
 const app = new Hono<AppBindings>();
+
+// ── Prometheus Telemetry ────────────────────────────
+
+const { printMetrics, registerMetrics } = prometheus({
+  registry,
+});
+
+app.use("*", inflightMiddleware);
+app.use("*", registerMetrics);
+app.get("/metrics", printMetrics);
+
+// ── System Metrics Collector ────────────────────────
+
+startSystemMetrics();
 
 function getIp(headers: HeaderReader): string {
   const forwarded = headers.get("x-forwarded-for");
