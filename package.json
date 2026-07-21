@@ -19,7 +19,9 @@
     "test:asmhentai": "bun test test/jandapress.test.ts --test-name-pattern=^asmhentai$",
     "test:hentai2read": "bun test test/jandapress.test.ts --test-name-pattern=^hentai2read$",
     "test:simply-hentai": "bun test test/jandapress.test.ts --test-name-pattern=^simply-hentai$",
-    "test:3hentai": "bun test test/jandapress.test.ts --test-name-pattern=^3hentai$"
+    "test:3hentai": "bun test test/jandapress.test.ts --test-name-pattern=^3hentai$",
+    "test:rest:all": "bun run test:nhentai && bun run test:pururin && bun run test:hentaifox && bun run test:asmhentai && bun run test:hentai2read && bun run test:simply-hentai && bun run test:3hentai",
+    "test:graphql:all": "bun test test/graphql.test.ts"
   },
   "keywords": [],
   "author": "sinkaroid",
@@ -34,6 +36,7 @@
     "@hono/zod-openapi": "^0.19.10",
     "@keyv/redis": "^5.1.6",
     "cheerio": "^1.2.0",
+    "graphql": "^17.0.2",
     "hono": "^4.9.9",
     "keyv": "^5.6.0",
     "prom-client": "^15.1.3",

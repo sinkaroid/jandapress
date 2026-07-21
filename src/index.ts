@@ -11,6 +11,7 @@ import { logger } from "./utils/logger";
 import { isNumeric } from "./utils/modifier";
 import { registry, inflightMiddleware, startSystemMetrics } from "./utils/metrics";
 import * as pkg from "../package.json";
+import { graphqlHandler } from "./graphql/handler";
 
 const janda = new JandaPress();
 const app = new Hono<AppBindings>();
@@ -62,6 +63,12 @@ app.get("/doc", (c) => c.json(openAPISpec));
 app.get("/playground", swaggerUI({ url: "/doc" }));
 
 scrapeRoutes(app);
+
+// ── GraphQL (gated behind JANDAPRESS_GRAPHQL) ─────
+
+if (process.env.JANDAPRESS_GRAPHQL === "true") {
+  app.all("/graphql", graphqlHandler);
+}
 
 app.get("/g/:id", slow, limiter, (c) => {
   const id = c.req.param("id");
