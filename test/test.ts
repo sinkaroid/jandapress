@@ -3,7 +3,7 @@ import { expect, test } from "bun:test";
 import c from "../src/utils/options";
 import { name, version } from "../package.json";
 
-const UA = `${name}/${version} Bun/1.3.13`;
+const UA = `${name}/${version} Bun/1.3.14`;
 
 const sources = [
   c.NHENTAI,

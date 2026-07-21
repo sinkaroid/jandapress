@@ -81,7 +81,7 @@ Some tests may fail in CI environments because certain doujin websites restrict 
 ## Prerequisites
 
 <table>
-  <td><b>NOTE:</b> Bun 1.3.13 or higher / or simply just use docker</td>
+  <td><b>NOTE:</b> Bun 1.3.14 or higher / or simply just use docker</td>
 </table>
 
 To handle several requests from each web, You will also need [Redis](https://redis.io/) for persistent caching, free tier is available on [Redis Labs](https://redislabs.com/), You can also choose another provider as we using [keyv](https://github.com/jaredwray/keyv) Key-value storage with support for multiple backends. All data must be stored in `<Buffer>` here.
@@ -110,7 +110,7 @@ EXPIRE_CACHE = 1
 NHENTAI_API_KEY = ""
 
 # optional custom user agent for upstream requests
-USER_AGENT = "jandapress/10.0.1-alpha Bun/1.3.13"
+USER_AGENT = "jandapress/10.0.1-alpha Bun/1.3.14"
 ```
 
 ### Docker
@@ -127,7 +127,7 @@ docker run -d \
   -e REDIS_URL='redis://default:somenicepassword@redis-666.c10.us-east-6-6.ec666.cloud.redislabs.com:1337' \
   -e EXPIRE_CACHE='1' \
   -e NHENTAI_API_KEY='' \
-  -e USER_AGENT='jandapress/10.0.1-alpha Bun/1.3.13' \
+  -e USER_AGENT='jandapress/10.0.1-alpha Bun/1.3.14' \
   ghcr.io/sinkaroid/jandapress:latest
 ```
 
