@@ -1,7 +1,7 @@
 {
   "name": "jandapress",
-  "version": "10.1.0-alpha",
-  "description": "RESTful and experimental API for the Doujinshi, Pressing the whole nhentai, pururin, hentaifox, and more.",
+  "version": "10.2.0-alpha",
+  "description": "Unified REST + GraphQL API for nhentai and other doujinshi.",
   "main": "build/src/index.js",
   "scripts": {
     "clean": "rm -rf build",
