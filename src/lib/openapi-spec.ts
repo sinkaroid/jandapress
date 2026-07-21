@@ -5,7 +5,7 @@ export const openAPISpec = {
   info: {
     title: "JandaPress API",
     version: `${pkg.version}`,
-    description: "RESTful API for nhentai, pururin, hentaifox, asmhentai, hentai2read, simply-hentai, and 3hentai.",
+    description: `${pkg.description}`,
     contact: {
       name: "sinkaroid",
       url: "https://github.com/sinkaroid/jandapress",
@@ -248,6 +248,35 @@ export const openAPISpec = {
           { name: "id", in: "path", required: true, schema: { type: "string" } },
         ],
         responses: { "301": { description: "Redirect" } },
+      },
+    },
+    "/graphql": {
+      post: {
+        summary: "GraphQL endpoint",
+        operationId: "graphqlQuery",
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  query: { type: "string" },
+                  variables: { type: "object" },
+                },
+                required: ["query"],
+              },
+            },
+          },
+        },
+        responses: { "200": { description: "Success" } },
+      },
+      get: {
+        summary: "GraphQL GraphiQL playground or query",
+        operationId: "graphqlPlayground",
+        parameters: [
+          { name: "query", in: "query", required: false, schema: { type: "string" } },
+        ],
+        responses: { "200": { description: "Success" } },
       },
     },
     "/doc": {
