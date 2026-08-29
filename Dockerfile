@@ -1,7 +1,4 @@
-# syntax=docker/dockerfile:1
-
-# Build stage
-FROM rust:1.96-slim AS builder
+FROM rust:1.96-slim-bookworm AS builder
 RUN apt-get update && apt-get install -y pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/jandapress
