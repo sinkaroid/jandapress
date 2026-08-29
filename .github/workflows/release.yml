@@ -1,0 +1,86 @@
+name: Release
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          fetch-depth: 0
+
+      - name: Set release metadata
+        id: meta
+        run: |
+          VERSION="$(grep -m1 '^version =' Cargo.toml | cut -d '"' -f2)"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=v${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Check if tag already exists
+        id: tag_check
+        env:
+          TAG: ${{ steps.meta.outputs.tag }}
+        run: |
+          if git ls-remote --tags origin "refs/tags/$TAG" | grep -q "$TAG"; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate Release Notes
+        if: steps.tag_check.outputs.exists == 'false'
+        id: changelog
+        env:
+          TAG: ${{ steps.meta.outputs.tag }}
+        run: |
+          git fetch --tags
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          REPO_URL="${{ github.server_url }}/${{ github.repository }}"
+          if [ -z "$PREV_TAG" ]; then
+            NOTES=$(git log --pretty=format:"* %s ([%h]($REPO_URL/commit/%H))" --no-merges)
+            COMPARE_URL="$REPO_URL/commit/HEAD"
+          else
+            NOTES=$(git log --pretty=format:"* %s ([%h]($REPO_URL/commit/%H))" $PREV_TAG..HEAD --no-merges)
+            COMPARE_URL="$REPO_URL/compare/$PREV_TAG...$TAG"
+          fi
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NOTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "prev_tag=$PREV_TAG" >> $GITHUB_OUTPUT
+          echo "compare_url=$COMPARE_URL" >> $GITHUB_OUTPUT
+
+      - name: Create tag
+        if: steps.tag_check.outputs.exists == 'false'
+        env:
+          TAG: ${{ steps.meta.outputs.tag }}
+        run: |
+          git tag "$TAG"
+          git push origin "$TAG"
+
+      - name: Create GitHub release
+        if: steps.tag_check.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: ${{ steps.meta.outputs.tag }}
+          body: |
+            ## What's Changed
+            ${{ steps.changelog.outputs.notes }}
+
+            **Full Changelog**: ${{ steps.changelog.outputs.compare_url }}
+          target_commitish: master
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
