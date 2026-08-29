@@ -1,0 +1,24 @@
+[alias]
+# Clean the build directory
+clean-all = "clean"
+
+# Build the optimized production binary
+build-prod = "build --release"
+
+# Start the server in debug mode
+start = "run"
+
+# Start the server in watch development mode
+start-dev = "watch -x run"
+
+# Start the server in production mode
+start-prod = "run --release"
+
+# Run linter checks
+lint = "clippy --all-targets --all-features -- -D warnings"
+
+# Automatically fix linting issues
+lint-fix = "clippy --fix --allow-dirty --allow-staged"
+
+# Run tests
+test-all = "test"

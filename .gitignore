@@ -10,6 +10,13 @@ p.ts
 .idea
 CHANGELOG.md
 theme.zip
+.agent
 AGENT_SPECS/
 **/AGENT_SPECS/
 /legacy
+
+# Added by cargo
+
+/target
+/scratch
+/prd

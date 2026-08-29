@@ -1,0 +1,42 @@
+[package]
+name = "jandapress"
+version = "10.6.0"
+edition = "2024"
+rust-version = "1.85.0"
+
+[dependencies]
+# Async Runtime & Web Server
+tokio = { version = "1.43", features = ["full"] }
+axum = { version = "0.8", features = ["macros"] }
+tower = "0.5"
+tower-http = { version = "0.7", features = ["cors", "trace", "timeout"] }
+
+# Serialization & Validation
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0", features = ["preserve_order"] }
+validator = { version = "0.19", features = ["derive"] }
+dotenvy = "0.15"
+dashmap = "6.0"
+chrono = "0.4"
+futures = "0.3"
+
+# Scraping & HTTP Clients
+reqwest = { version = "0.13", features = ["json", "gzip", "deflate"] }
+scraper = "0.27"
+
+# Caching
+moka = { version = "0.12", features = ["future"] } # bounded in-memory cache
+redis = { version = "0.27", features = ["tokio-comp"] }
+deadpool-redis = "0.18"
+
+# GraphQL Gateway
+async-graphql = "7.2"
+async-graphql-axum = "7.2"
+
+# Metrics & Telemetry
+sysinfo = "0.33"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+urlencoding = "2.1"
