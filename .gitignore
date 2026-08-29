@@ -11,8 +11,8 @@ p.ts
 CHANGELOG.md
 theme.zip
 ## .agent
-## /scratch
-## /prd
+/scratch
+/prd
 AGENT_SPECS/
 **/AGENT_SPECS/
 /legacy
