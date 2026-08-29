@@ -10,7 +10,9 @@ p.ts
 .idea
 CHANGELOG.md
 theme.zip
-.agent
+## .agent
+## /scratch
+## /prd
 AGENT_SPECS/
 **/AGENT_SPECS/
 /legacy
@@ -18,5 +20,4 @@ AGENT_SPECS/
 # Added by cargo
 
 /target
-/scratch
-/prd
+

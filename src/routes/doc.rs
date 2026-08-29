@@ -325,3 +325,17 @@ pub async fn playground_handler() -> impl IntoResponse {
 </body>
 </html>"#)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs::File;
+    use std::io::Write;
+
+    #[tokio::test]
+    async fn dump_openapi() {
+        let json_val = doc_handler().await.0;
+        let mut file = File::create("openapi.json").unwrap();
+        file.write_all(serde_json::to_string_pretty(&json_val).unwrap().as_bytes()).unwrap();
+    }
+}

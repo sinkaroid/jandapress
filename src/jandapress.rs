@@ -21,6 +21,7 @@ impl JandaPress {
     pub fn new(config: &Config) -> Self {
         let client = reqwest::Client::builder()
             .timeout(Duration::from_secs(15))
+            .danger_accept_invalid_certs(true)
             .build()
             .unwrap_or_default();
 

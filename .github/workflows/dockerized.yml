@@ -1,9 +1,7 @@
-name: Docker
+name: Dockerized
 
 on:
   push:
-    branches: [master]
-  pull_request:
     branches: [master]
 
 permissions:
@@ -24,7 +22,7 @@ jobs:
         shell: bash
         run: |
           echo "image_name=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
-          echo "image_tag=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
+          echo "image_tag=$(grep -m1 '^version =' Cargo.toml | cut -d '"' -f2)" >> "$GITHUB_OUTPUT"
 
       - name: Log into GitHub Container Registry
         if: github.event_name == 'push'

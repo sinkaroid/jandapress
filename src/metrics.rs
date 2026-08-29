@@ -1,14 +1,32 @@
 use axum::{http::header::USER_AGENT, response::IntoResponse};
+use dashmap::DashMap;
 use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::LazyLock;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
-// Global metric states
+// Global metrics data registry
+pub struct RequestMetric {
+    pub count: AtomicU64,
+    pub duration_sum_micros: AtomicU64,
+}
+
+// HTTP request statistics grouped by "method,path,status"
+pub static HTTP_REQUESTS: LazyLock<DashMap<String, RequestMetric>> = LazyLock::new(DashMap::new);
+
+// Active in-flight requests grouped by method
+pub static HTTP_IN_FLIGHT: LazyLock<DashMap<String, AtomicU64>> = LazyLock::new(DashMap::new);
+
+// Global process and system stats
 pub static METRICS_START_TIME: AtomicU64 = AtomicU64::new(0);
 pub static METRICS_RSS: AtomicU64 = AtomicU64::new(0);
+pub static METRICS_VSZ: AtomicU64 = AtomicU64::new(0);
 pub static METRICS_LAG: AtomicU64 = AtomicU64::new(0); // represented as micro-seconds
 pub static METRICS_CPU_TOTAL: AtomicU64 = AtomicU64::new(0); // represented as micro-seconds
-pub static METRICS_IN_FLIGHT: AtomicU64 = AtomicU64::new(0);
-pub static METRICS_REQ_TOTAL: AtomicU64 = AtomicU64::new(0);
+pub static METRICS_DISK_READ: AtomicU64 = AtomicU64::new(0);
+pub static METRICS_DISK_WRITE: AtomicU64 = AtomicU64::new(0);
+
+pub static SYSTEM_TOTAL_MEM: AtomicU64 = AtomicU64::new(0);
+pub static SYSTEM_USED_MEM: AtomicU64 = AtomicU64::new(0);
 
 pub fn init_metrics() {
     let now = SystemTime::now()
@@ -34,15 +52,26 @@ pub fn init_metrics() {
                 METRICS_LAG.store(lag_micros, Ordering::Relaxed);
             });
 
-            // 2. Memory & CPU Seconds measurement
+            // Refresh process & system memory stats
             sys.refresh_processes(sysinfo::ProcessesToUpdate::All, false);
+            sys.refresh_memory();
+
+            SYSTEM_TOTAL_MEM.store(sys.total_memory(), Ordering::Relaxed);
+            SYSTEM_USED_MEM.store(sys.used_memory(), Ordering::Relaxed);
+
             if let Some(proc) = sys.process(pid) {
                 // RSS bytes
                 METRICS_RSS.store(proc.memory(), Ordering::Relaxed);
 
+                // VSZ bytes
+                METRICS_VSZ.store(proc.virtual_memory(), Ordering::Relaxed);
+
+                // Disk usage diff
+                let disk = proc.disk_usage();
+                METRICS_DISK_READ.fetch_add(disk.read_bytes, Ordering::Relaxed);
+                METRICS_DISK_WRITE.fetch_add(disk.written_bytes, Ordering::Relaxed);
+
                 // Accumulate CPU usage
-                // proc.cpu_usage() returns % of CPU used.
-                // Accumulated seconds = (cpu_usage / 100) * 15 seconds (since last loop)
                 let cpu_pct = proc.cpu_usage() as f64;
                 let cpu_delta = (cpu_pct / 100.0) * 15.0;
                 last_cpu_total_secs += cpu_delta;
@@ -56,43 +85,108 @@ pub fn init_metrics() {
 
 pub async fn metrics_handler() -> impl IntoResponse {
     let rss = METRICS_RSS.load(Ordering::Relaxed);
+    let vsz = METRICS_VSZ.load(Ordering::Relaxed);
     let lag_secs = METRICS_LAG.load(Ordering::Relaxed) as f64 / 1_000_000.0;
     let cpu_secs = METRICS_CPU_TOTAL.load(Ordering::Relaxed) as f64 / 1_000_000.0;
     let uptime = METRICS_START_TIME.load(Ordering::Relaxed);
-    let in_flight = METRICS_IN_FLIGHT.load(Ordering::Relaxed);
-    let req_total = METRICS_REQ_TOTAL.load(Ordering::Relaxed);
+    let disk_read = METRICS_DISK_READ.load(Ordering::Relaxed);
+    let disk_write = METRICS_DISK_WRITE.load(Ordering::Relaxed);
 
-    let output = format!(
-        r#"# HELP process_resident_set_size_bytes Resident Set Size — total physical RAM used by the process
-# TYPE process_resident_set_size_bytes gauge
-process_resident_set_size_bytes {}
+    let system_total_mem = SYSTEM_TOTAL_MEM.load(Ordering::Relaxed);
+    let system_used_mem = SYSTEM_USED_MEM.load(Ordering::Relaxed);
+    let system_free_mem = system_total_mem.saturating_sub(system_used_mem);
 
-# HELP eventloop_lag_seconds Event loop lag — delay of the event loop for synchronous blocking detection
-# TYPE eventloop_lag_seconds gauge
-eventloop_lag_seconds {:.6}
+    // Tokio runtime stats
+    let handle = tokio::runtime::Handle::current();
+    let tokio_metrics = handle.metrics();
+    let tokio_workers = tokio_metrics.num_workers();
+    let tokio_queue_depth = tokio_metrics.global_queue_depth();
 
-# HELP process_cpu_seconds_total Total user + system CPU time spent (seconds)
-# TYPE process_cpu_seconds_total counter
-process_cpu_seconds_total {:.6}
+    let mut out = String::new();
 
-# HELP process_start_time_seconds Start time of the process since unix epoch (seconds)
-# TYPE process_start_time_seconds gauge
-process_start_time_seconds {}
+    // 1. Process CPU / RAM / Disk / VSZ
+    out.push_str("# HELP process_resident_set_size_bytes Resident Set Size — total physical RAM used by the process\n");
+    out.push_str("# TYPE process_resident_set_size_bytes gauge\n");
+    out.push_str(&format!("process_resident_set_size_bytes {}\n\n", rss));
 
-# HELP http_requests_in_flight Number of HTTP requests currently being processed (active)
-# TYPE http_requests_in_flight gauge
-http_requests_in_flight {}
+    out.push_str("# HELP process_virtual_memory_bytes Virtual Memory Size — total virtual memory size of the process\n");
+    out.push_str("# TYPE process_virtual_memory_bytes gauge\n");
+    out.push_str(&format!("process_virtual_memory_bytes {}\n\n", vsz));
 
-# HELP http_requests_total Total number of HTTP requests processed
-# TYPE http_requests_total counter
-http_requests_total {}
-"#,
-        rss, lag_secs, cpu_secs, uptime, in_flight, req_total
-    );
+    out.push_str("# HELP process_start_time_seconds Start time of the process since unix epoch (seconds)\n");
+    out.push_str("# TYPE process_start_time_seconds gauge\n");
+    out.push_str(&format!("process_start_time_seconds {}\n\n", uptime));
+
+    out.push_str("# HELP process_cpu_seconds_total Total user + system CPU time spent (seconds)\n");
+    out.push_str("# TYPE process_cpu_seconds_total counter\n");
+    out.push_str(&format!("process_cpu_seconds_total {:.6}\n\n", cpu_secs));
+
+    out.push_str("# HELP process_disk_read_bytes_total Total disk read bytes\n");
+    out.push_str("# TYPE process_disk_read_bytes_total counter\n");
+    out.push_str(&format!("process_disk_read_bytes_total {}\n\n", disk_read));
+
+    out.push_str("# HELP process_disk_written_bytes_total Total disk written bytes\n");
+    out.push_str("# TYPE process_disk_written_bytes_total counter\n");
+    out.push_str(&format!("process_disk_written_bytes_total {}\n\n", disk_write));
+
+    out.push_str("# HELP eventloop_lag_seconds Event loop lag — delay of the event loop for synchronous blocking detection\n");
+    out.push_str("# TYPE eventloop_lag_seconds gauge\n");
+    out.push_str(&format!("eventloop_lag_seconds {:.6}\n\n", lag_secs));
+
+    // 2. System RAM Stats
+    out.push_str("# HELP system_total_memory_bytes Total physical system memory (bytes)\n");
+    out.push_str("# TYPE system_total_memory_bytes gauge\n");
+    out.push_str(&format!("system_total_memory_bytes {}\n\n", system_total_mem));
+
+    out.push_str("# HELP system_used_memory_bytes Used physical system memory (bytes)\n");
+    out.push_str("# TYPE system_used_memory_bytes gauge\n");
+    out.push_str(&format!("system_used_memory_bytes {}\n\n", system_used_mem));
+
+    out.push_str("# HELP system_free_memory_bytes Free physical system memory (bytes)\n");
+    out.push_str("# TYPE system_free_memory_bytes gauge\n");
+    out.push_str(&format!("system_free_memory_bytes {}\n\n", system_free_mem));
+
+    // 3. Tokio Runtime Stats
+    out.push_str("# HELP tokio_worker_threads Number of Tokio worker threads\n");
+    out.push_str("# TYPE tokio_worker_threads gauge\n");
+    out.push_str(&format!("tokio_worker_threads {}\n\n", tokio_workers));
+
+    out.push_str("# HELP tokio_global_queue_depth Global Tokio scheduler task queue depth\n");
+    out.push_str("# TYPE tokio_global_queue_depth gauge\n");
+    out.push_str(&format!("tokio_global_queue_depth {}\n\n", tokio_queue_depth));
+
+    // 4. HTTP Labeled Metrics
+    out.push_str("# HELP http_requests_in_flight Number of HTTP requests currently being processed (active)\n");
+    out.push_str("# TYPE http_requests_in_flight gauge\n");
+    for item in HTTP_IN_FLIGHT.iter() {
+        let method = item.key();
+        let val = item.value().load(Ordering::Relaxed);
+        out.push_str(&format!("http_requests_in_flight{{method=\"{}\"}} {}\n", method, val));
+    }
+    out.push_str("\n");
+
+    out.push_str("# HELP http_requests_total Total number of HTTP requests processed\n");
+    out.push_str("# TYPE http_requests_total counter\n");
+    for item in HTTP_REQUESTS.iter() {
+        let label_key = item.key();
+        let val = item.value().count.load(Ordering::Relaxed);
+        out.push_str(&format!("http_requests_total{{{}}} {}\n", label_key, val));
+    }
+    out.push_str("\n");
+
+    out.push_str("# HELP http_request_duration_seconds Total request duration in seconds\n");
+    out.push_str("# TYPE http_request_duration_seconds counter\n");
+    for item in HTTP_REQUESTS.iter() {
+        let label_key = item.key();
+        let sum_secs = item.value().duration_sum_micros.load(Ordering::Relaxed) as f64 / 1_000_000.0;
+        let count = item.value().count.load(Ordering::Relaxed);
+        out.push_str(&format!("http_request_duration_seconds_sum{{{}}} {:.6}\n", label_key, sum_secs));
+        out.push_str(&format!("http_request_duration_seconds_count{{{}}} {}\n", label_key, count));
+    }
 
     (
         [("Content-Type", "text/plain; version=0.0.4; charset=utf-8")],
-        output,
+        out,
     )
 }
 
@@ -101,6 +195,7 @@ pub async fn telemetry_middleware(
     next: axum::middleware::Next,
 ) -> impl IntoResponse {
     let method = req.method().clone();
+    let method_str = method.to_string();
     let path = req.uri().path().to_string();
 
     let headers = req.headers();
@@ -121,9 +216,31 @@ pub async fn telemetry_middleware(
 
     tracing::info!("Incoming request: {} {} | IP: {} | UA: {}", method, path, ip, user_agent);
 
-    METRICS_REQ_TOTAL.fetch_add(1, Ordering::Relaxed);
-    METRICS_IN_FLIGHT.fetch_add(1, Ordering::Relaxed);
+    // Track active requests count by method
+    HTTP_IN_FLIGHT
+        .entry(method_str.clone())
+        .or_insert_with(|| AtomicU64::new(0))
+        .fetch_add(1, Ordering::Relaxed);
+
+    let start = Instant::now();
     let res = next.run(req).await;
-    METRICS_IN_FLIGHT.fetch_sub(1, Ordering::Relaxed);
+    let elapsed = start.elapsed();
+
+    // Decrement active requests count
+    if let Some(counter) = HTTP_IN_FLIGHT.get(&method_str) {
+        counter.fetch_sub(1, Ordering::Relaxed);
+    }
+
+    let status_code = res.status().as_u16().to_string();
+
+    // Record request count and duration grouped by labels
+    let key = format!("method=\"{}\",path=\"{}\",status=\"{}\"", method_str, path, status_code);
+    let metric = HTTP_REQUESTS.entry(key).or_insert_with(|| RequestMetric {
+        count: AtomicU64::new(0),
+        duration_sum_micros: AtomicU64::new(0),
+    });
+    metric.count.fetch_add(1, Ordering::Relaxed);
+    metric.duration_sum_micros.fetch_add(elapsed.as_micros() as u64, Ordering::Relaxed);
+
     res
 }
