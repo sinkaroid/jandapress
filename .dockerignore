@@ -1,0 +1,6 @@
+.git
+.github
+resources
+**/*.md
+LICENSE
+.env.schema
