@@ -87,30 +87,31 @@ impl RateLimitState {
     }
 }
 
+static ALLOW_UNTRUSTED_PROXY: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| {
+    std::env::var("ALLOW_UNTRUSTED_PROXY_HEADERS")
+        .ok()
+        .map(|v| v.trim().to_lowercase() == "true")
+        .unwrap_or(false)
+});
+
 fn get_client_ip(headers: &HeaderMap) -> String {
     let trusted_ip_headers = ["cf-connecting-ip", "fly-client-ip", "x-vercel-forwarded-for", "x-client-ip"];
     for header in trusted_ip_headers {
-        if let Some(val) = headers.get(header).and_then(|v| v.to_str().ok()) {
-            if let Some(first_ip) = val.split(',').next() {
-                let cleaned = first_ip.trim();
-                if !cleaned.is_empty() {
-                    return cleaned.to_string();
-                }
+        if let Some(val) = headers.get(header).and_then(|v| v.to_str().ok())
+            && let Some(first_ip) = val.split(',').next()
+        {
+            let cleaned = first_ip.trim();
+            if !cleaned.is_empty() {
+                return cleaned.to_string();
             }
         }
     }
 
-    // Fallback checking if allowed proxy headers is set in env
-    let allow_untrusted = std::env::var("ALLOW_UNTRUSTED_PROXY_HEADERS")
-        .ok()
-        .map(|v| v.trim().to_lowercase() == "true")
-        .unwrap_or(false);
-
-    if allow_untrusted {
-        if let Some(val) = headers.get("x-forwarded-for").and_then(|v| v.to_str().ok()) {
-            if let Some(first_ip) = val.split(',').next() {
-                return first_ip.trim().to_string();
-            }
+    if *ALLOW_UNTRUSTED_PROXY {
+        if let Some(val) = headers.get("x-forwarded-for").and_then(|v| v.to_str().ok())
+            && let Some(first_ip) = val.split(',').next()
+        {
+            return first_ip.trim().to_string();
         }
         if let Some(val) = headers.get("x-real-ip").and_then(|v| v.to_str().ok()) {
             return val.trim().to_string();

@@ -46,6 +46,20 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_nhentai_search() {
+        let janda = get_test_janda();
+        let res = nhentai::scrape_search(&janda, "milf", 1, "date").await;
+        if let Ok(val) = res {
+            assert_eq!(val["success"], true);
+            let items = val["data"].as_array().unwrap();
+            assert_eq!(items.len(), 25);
+            for item in items {
+                assert_eq!(item["upload_date"], "");
+            }
+        }
+    }
+
+    #[tokio::test]
     async fn test_pururin_scraper() {
         let janda = get_test_janda();
         let res = pururin::scrape_get(&janda, "47226").await;
@@ -122,6 +136,18 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_threehentai_random() {
+        let janda = get_test_janda();
+        let res = threehentai::scrape_random(&janda).await;
+        assert!(res.is_ok(), "3Hentai random failed: {:?}", res.err());
+        let val = res.unwrap();
+        assert_eq!(val["success"], true);
+        assert!(val["data"]["id"].as_i64().unwrap() > 0);
+        assert!(!val["data"]["title"].as_str().unwrap().is_empty());
+        assert!(!val["data"]["image"].as_array().unwrap().is_empty());
+    }
+
+    #[tokio::test]
     async fn test_redis_connection_direct() {
         let _ = crate::logger::init();
         let config = Config::from_env();
@@ -137,5 +163,33 @@ mod tests {
         
         let retrieved = janda.cache.get(test_key).await;
         assert_eq!(retrieved, Some(test_val));
+    }
+
+    #[tokio::test]
+    async fn test_current_process_and_location_cache() {
+        let janda = get_test_janda();
+
+        // 1. Process memory formatting
+        let (rss, heap) = janda.current_process();
+        assert!(rss.ends_with("MB"), "rss should end with MB: {}", rss);
+        assert!(heap.ends_with("MB"), "heap should end with MB: {}", heap);
+
+        // 2. Server location caching
+        let loc1 = janda.get_server_location().await;
+        let loc2 = janda.get_server_location().await;
+        assert_eq!(loc1, loc2);
+    }
+
+    #[tokio::test]
+    async fn test_root_handler_response() {
+        let janda = get_test_janda();
+        let axum::Json(res) = crate::routes::status::root_handler(axum::extract::State(janda)).await;
+
+        assert_eq!(res["success"], true);
+        assert_eq!(res["message"], "Hi, I'm alive!");
+        assert!(res["rss"].is_string());
+        assert!(res["heap"].is_string());
+        assert!(res["server"].is_string());
+        assert_eq!(res["version"], env!("CARGO_PKG_VERSION"));
     }
 }

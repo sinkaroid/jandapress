@@ -16,19 +16,13 @@ pub struct SimplyHentaiGetParity {
     pub language: String,
 }
 
-pub async fn check_mock(client: &reqwest::Client, url: &str) -> bool {
-    match client.get(url).send().await {
-        Ok(res) => {
-            let status = res.status();
-            status == StatusCode::OK || status == StatusCode::PERMANENT_REDIRECT
-        }
-        Err(_) => false,
-    }
+pub async fn check_mock(janda: &JandaPress, url: &str) -> bool {
+    janda.check_simply_hentai_mock(url).await
 }
 
 pub async fn scrape_get(janda: &JandaPress, book_path: &str) -> Result<Value, AppError> {
     let mut actual_api = SIMPLY_HENTAI_URL;
-    if !check_mock(&janda.client, SIMPLY_HENTAI_URL).await {
+    if !check_mock(janda, SIMPLY_HENTAI_URL).await {
         actual_api = SIMPLY_HENTAI_PROXIFIED_URL;
     }
 

@@ -4,11 +4,9 @@ use crate::error::AppError;
 use crate::jandapress::JandaPress;
 use crate::scraper::NHENTAI_URL;
 use crate::utils::format_upload_date;
-use futures::future::join_all;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::collections::HashMap;
-use std::sync::Arc;
 
 // --- Raw API Deserialization Structs ---
 
@@ -113,6 +111,7 @@ pub struct NhentaiSearchParity {
     pub title: NhentaiTitleParity,
     pub id: i64,
     pub language: String,
+    #[deprecated(note = "Deprecated in API v2, always returns empty string on search")]
     pub upload_date: String,
     pub total: u32,
     pub cover: String,
@@ -124,6 +123,7 @@ pub struct NhentaiRelatedParity {
     pub title: NhentaiTitleParity,
     pub id: i64,
     pub language: String,
+    #[deprecated(note = "Deprecated in API v2, always returns empty string on related")]
     pub upload_date: String,
     pub total: u32,
     pub tags: Vec<String>,
@@ -222,6 +222,7 @@ pub async fn scrape_get(janda: &JandaPress, book_id: &str) -> Result<Value, AppE
     }))
 }
 
+#[allow(deprecated)]
 pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32, sort: &str) -> Result<Value, AppError> {
     let url = format!(
         "{}/api/v2/search?query={}&sort={}&page={}",
@@ -235,7 +236,6 @@ pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32, sort: &str)
     let raw: NhentaiV2ListResponse = serde_json::from_value(raw_val)?;
 
     let tag_map = resolve_tag_map(janda, &raw.result).await;
-    let upload_date_map = resolve_upload_date_map(janda, &raw.result.iter().map(|item| item.id).collect::<Vec<_>>()).await;
 
     let content: Vec<NhentaiSearchParity> = raw.result
         .into_iter()
@@ -260,13 +260,6 @@ pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32, sort: &str)
                 .map(|t| t.name.clone())
                 .collect();
 
-            let upload_secs = upload_date_map.get(&item.id).copied().unwrap_or(0);
-            let upload_date = if upload_secs > 0 {
-                format_upload_date(upload_secs)
-            } else {
-                "".to_string()
-            };
-
             let english = item.english_title.unwrap_or_default();
             let japanese = item.japanese_title.unwrap_or_default();
             let pretty = if !english.is_empty() {
@@ -283,7 +276,7 @@ pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32, sort: &str)
                 },
                 id: item.id,
                 language,
-                upload_date,
+                upload_date: String::new(),
                 total: item.num_pages,
                 cover: item.thumbnail,
                 tags,
@@ -300,13 +293,13 @@ pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32, sort: &str)
     }))
 }
 
+#[allow(deprecated)]
 pub async fn scrape_related(janda: &JandaPress, book_id: &str) -> Result<Value, AppError> {
     let url = format!("{}/api/v2/galleries/{}/related", NHENTAI_URL, book_id);
     let raw_val = janda.fetch_json(&url).await?;
     let raw: NhentaiV2RelatedResponse = serde_json::from_value(raw_val)?;
 
     let tag_map = resolve_tag_map(janda, &raw.result).await;
-    let upload_date_map = resolve_upload_date_map(janda, &raw.result.iter().map(|item| item.id).collect::<Vec<_>>()).await;
 
     let content: Vec<NhentaiRelatedParity> = raw.result
         .into_iter()
@@ -331,13 +324,6 @@ pub async fn scrape_related(janda: &JandaPress, book_id: &str) -> Result<Value, 
                 .map(|t| t.name.clone())
                 .collect();
 
-            let upload_secs = upload_date_map.get(&item.id).copied().unwrap_or(0);
-            let upload_date = if upload_secs > 0 {
-                format_upload_date(upload_secs)
-            } else {
-                "".to_string()
-            };
-
             let english = item.english_title.unwrap_or_default();
             let japanese = item.japanese_title.unwrap_or_default();
             let pretty = if !english.is_empty() {
@@ -354,7 +340,7 @@ pub async fn scrape_related(janda: &JandaPress, book_id: &str) -> Result<Value, 
                 },
                 id: item.id,
                 language,
-                upload_date,
+                upload_date: String::new(),
                 total: item.num_pages,
                 tags,
             }
@@ -429,35 +415,6 @@ async fn resolve_tag_map(
     tag_map
 }
 
-async fn resolve_upload_date_map(janda: &JandaPress, ids: &[i64]) -> HashMap<i64, i64> {
-    let mut upload_date_map = HashMap::new();
-    const CHUNK_SIZE: usize = 5;
-
-    // Use Arc to share janda client in spawned threads/futures
-    let janda_arc = Arc::new(janda.clone());
-
-    for chunk in ids.chunks(CHUNK_SIZE) {
-        let futures = chunk.iter().map(|&id| {
-            let janda_clone = Arc::clone(&janda_arc);
-            async move {
-                let endpoint = format!("{}/api/v2/galleries/{}", NHENTAI_URL, id);
-                if let Ok(val) = janda_clone.fetch_json(&endpoint).await {
-                    if let Some(upload_date) = val["upload_date"].as_i64() {
-                        return Some((id, upload_date));
-                    }
-                }
-                None
-            }
-        });
-
-        let results = join_all(futures).await;
-        for res in results.into_iter().flatten() {
-            upload_date_map.insert(res.0, res.1);
-        }
-    }
-
-    upload_date_map
-}
 
 fn extract_nhentai_id(val: &Value) -> Option<i64> {
     if let Some(n) = val.as_i64() {

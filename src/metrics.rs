@@ -41,6 +41,16 @@ pub fn init_metrics() {
         let pid = sysinfo::Pid::from(std::process::id() as usize);
         let mut last_cpu_total_secs = 0.0;
 
+        // Perform initial refresh immediately on startup
+        sys.refresh_processes(sysinfo::ProcessesToUpdate::Some(&[pid]), false);
+        sys.refresh_memory();
+        SYSTEM_TOTAL_MEM.store(sys.total_memory(), Ordering::Relaxed);
+        SYSTEM_USED_MEM.store(sys.used_memory(), Ordering::Relaxed);
+        if let Some(proc) = sys.process(pid) {
+            METRICS_RSS.store(proc.memory(), Ordering::Relaxed);
+            METRICS_VSZ.store(proc.virtual_memory(), Ordering::Relaxed);
+        }
+
         loop {
             tokio::time::sleep(Duration::from_secs(15)).await;
 
@@ -52,8 +62,8 @@ pub fn init_metrics() {
                 METRICS_LAG.store(lag_micros, Ordering::Relaxed);
             });
 
-            // Refresh process & system memory stats
-            sys.refresh_processes(sysinfo::ProcessesToUpdate::All, false);
+            // Refresh process & system memory stats (only current process)
+            sys.refresh_processes(sysinfo::ProcessesToUpdate::Some(&[pid]), false);
             sys.refresh_memory();
 
             SYSTEM_TOTAL_MEM.store(sys.total_memory(), Ordering::Relaxed);
@@ -163,7 +173,7 @@ pub async fn metrics_handler() -> impl IntoResponse {
         let val = item.value().load(Ordering::Relaxed);
         out.push_str(&format!("http_requests_in_flight{{method=\"{}\"}} {}\n", method, val));
     }
-    out.push_str("\n");
+    out.push('\n');
 
     out.push_str("# HELP http_requests_total Total number of HTTP requests processed\n");
     out.push_str("# TYPE http_requests_total counter\n");
@@ -172,7 +182,7 @@ pub async fn metrics_handler() -> impl IntoResponse {
         let val = item.value().count.load(Ordering::Relaxed);
         out.push_str(&format!("http_requests_total{{{}}} {}\n", label_key, val));
     }
-    out.push_str("\n");
+    out.push('\n');
 
     out.push_str("# HELP http_request_duration_seconds Total request duration in seconds\n");
     out.push_str("# TYPE http_request_duration_seconds counter\n");
@@ -196,7 +206,19 @@ pub async fn telemetry_middleware(
 ) -> impl IntoResponse {
     let method = req.method().clone();
     let method_str = method.to_string();
-    let path = req.uri().path().to_string();
+    let raw_path = req.uri().path().to_string();
+
+    let matched_path = req
+        .extensions()
+        .get::<axum::extract::MatchedPath>()
+        .map(|mp| mp.as_str().to_string())
+        .unwrap_or_else(|| {
+            if raw_path == "/" {
+                "/".to_string()
+            } else {
+                "/unmatched".to_string()
+            }
+        });
 
     let headers = req.headers();
     let ip = headers
@@ -214,7 +236,7 @@ pub async fn telemetry_middleware(
         .unwrap_or("unknown")
         .to_string();
 
-    tracing::info!("Incoming request: {} {} | IP: {} | UA: {}", method, path, ip, user_agent);
+    tracing::info!("Incoming request: {} {} | IP: {} | UA: {}", method, raw_path, ip, user_agent);
 
     // Track active requests count by method
     HTTP_IN_FLIGHT
@@ -233,8 +255,8 @@ pub async fn telemetry_middleware(
 
     let status_code = res.status().as_u16().to_string();
 
-    // Record request count and duration grouped by labels
-    let key = format!("method=\"{}\",path=\"{}\",status=\"{}\"", method_str, path, status_code);
+    // Record request count and duration grouped by normalized route labels
+    let key = format!("method=\"{}\",path=\"{}\",status=\"{}\"", method_str, matched_path, status_code);
     let metric = HTTP_REQUESTS.entry(key).or_insert_with(|| RequestMetric {
         count: AtomicU64::new(0),
         duration_sum_micros: AtomicU64::new(0),

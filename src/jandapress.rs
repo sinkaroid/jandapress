@@ -3,7 +3,10 @@ use crate::config::Config;
 use crate::error::AppError;
 use reqwest::header::{AUTHORIZATION, HeaderMap, HeaderValue, USER_AGENT};
 use serde_json::Value;
-use std::time::Duration;
+use std::sync::atomic::Ordering;
+use std::sync::Arc;
+use std::time::{Duration, Instant};
+use tokio::sync::RwLock;
 use tracing::info;
 
 use crate::middleware::RateLimitState;
@@ -12,21 +15,49 @@ use crate::middleware::RateLimitState;
 pub struct JandaPress {
     pub client: reqwest::Client,
     pub cache: CacheManager,
+    #[allow(dead_code)]
     pub nhentai_api_key: Option<String>,
     pub user_agent: String,
     pub rate_limit: RateLimitState,
+    pub nhentai_headers: HeaderMap,
+    server_location_cache: Arc<RwLock<Option<(Instant, String)>>>,
+    simply_hentai_mock_cache: Arc<RwLock<Option<(Instant, bool)>>>,
 }
 
 impl JandaPress {
     pub fn new(config: &Config) -> Self {
         let client = reqwest::Client::builder()
             .timeout(Duration::from_secs(15))
-            .danger_accept_invalid_certs(true)
             .build()
             .unwrap_or_default();
 
         let cache = CacheManager::new(config.redis_url.as_deref(), config.expire_cache);
         let rate_limit = RateLimitState::new();
+
+        let mut nhentai_headers = HeaderMap::new();
+        nhentai_headers.insert(
+            USER_AGENT,
+            HeaderValue::from_str(&config.user_agent)
+                .unwrap_or_else(|_| HeaderValue::from_static("")),
+        );
+        let mut auth_type = "none";
+        let masked_key = match &config.nhentai_api_key {
+            Some(k) if !k.trim().is_empty() => {
+                let trimmed = k.trim();
+                if let Ok(val) = HeaderValue::from_str(&format!("Key {}", trimmed)) {
+                    nhentai_headers.insert(AUTHORIZATION, val);
+                    auth_type = "Key";
+                }
+                let prefix = if trimmed.len() >= 6 { &trimmed[..6] } else { trimmed };
+                format!("{}...({})", prefix, trimmed.len())
+            }
+            _ => "none".to_string(),
+        };
+        info!(
+            "[nhentai] headers ready | apiKey={} | auth={} | ua={}",
+            masked_key, auth_type, config.user_agent
+        );
+
 
         Self {
             client,
@@ -34,27 +65,14 @@ impl JandaPress {
             nhentai_api_key: config.nhentai_api_key.clone(),
             user_agent: config.user_agent.clone(),
             rate_limit,
+            nhentai_headers,
+            server_location_cache: Arc::new(RwLock::new(None)),
+            simply_hentai_mock_cache: Arc::new(RwLock::new(None)),
         }
     }
 
     pub fn nhentai_headers(&self) -> HeaderMap {
-        let mut headers = HeaderMap::new();
-        headers.insert(
-            USER_AGENT,
-            HeaderValue::from_str(&self.user_agent)
-                .unwrap_or_else(|_| HeaderValue::from_static("")),
-        );
-
-        if let Some(key) = &self.nhentai_api_key {
-            let key = key.trim();
-            if !key.is_empty() {
-                if let Ok(val) = HeaderValue::from_str(&format!("Bearer {}", key)) {
-                    headers.insert(AUTHORIZATION, val);
-                }
-            }
-        }
-
-        headers
+        self.nhentai_headers.clone()
     }
 
     pub async fn simulate_nhentai_request(&self, target: &str) -> Result<Value, AppError> {
@@ -141,52 +159,104 @@ impl JandaPress {
     }
 
     pub fn current_process(&self) -> (String, String) {
-        // Read RSS using sysinfo
-        let mut sys = sysinfo::System::new();
-        sys.refresh_processes(sysinfo::ProcessesToUpdate::All, false);
+        let mem_bytes = crate::metrics::METRICS_RSS.load(Ordering::Relaxed);
+        let virt_bytes = crate::metrics::METRICS_VSZ.load(Ordering::Relaxed);
 
-        let pid = sysinfo::Pid::from(std::process::id() as usize);
-        let (rss_mb, heap_mb) = if let Some(process) = sys.process(pid) {
-            let mem_bytes = process.memory(); // in bytes
-            let rss = mem_bytes as f64 / 1024.0 / 1024.0;
-            // Since Rust uses standard allocator directly without custom VM heap structures,
-            // we'll report virtual memory or represent heapUsed as a proxy (e.g. 70% of RSS).
-            let virt = process.virtual_memory() as f64 / 1024.0 / 1024.0;
-            (rss, virt)
-        } else {
-            (0.0, 0.0)
-        };
+        let rss_mb = mem_bytes as f64 / 1024.0 / 1024.0;
+        let virt_mb = virt_bytes as f64 / 1024.0 / 1024.0;
 
         (
             format!("{:.2} MB", rss_mb),
-            format!("{:.2}/{:.2} MB", rss_mb * 0.7, heap_mb),
+            format!("{:.2}/{:.2} MB", rss_mb * 0.7, virt_mb),
         )
     }
 
     pub async fn get_server_location(&self) -> String {
-        // Run a lightweight geoloc lookup (using ipwho.is as in legacy)
-        // With a short timeout (3 seconds)
-        let client = reqwest::Client::builder()
-            .timeout(Duration::from_secs(3))
-            .build()
-            .unwrap_or_default();
+        const LOCATION_TTL: Duration = Duration::from_secs(30 * 60);
 
-        match client.get("https://ipwho.is/").send().await {
-            Ok(res) => {
-                if res.status().is_success() {
-                    if let Ok(json) = res.json::<Value>().await {
-                        if json["success"].as_bool().unwrap_or(false) {
-                            let country = json["country"].as_str().unwrap_or("").trim();
-                            let region = json["region"].as_str().unwrap_or("").trim();
-                            if !country.is_empty() && !region.is_empty() {
-                                return format!("{}, {}", country, region);
-                            }
-                        }
-                    }
-                }
-                "Unknown".to_string()
+        // Fast path: check read lock
+        {
+            let cache_read = self.server_location_cache.read().await;
+            if let Some((timestamp, ref location)) = *cache_read
+                && timestamp.elapsed() < LOCATION_TTL
+            {
+                return location.clone();
             }
-            Err(_) => "Unknown".to_string(),
         }
+
+        // Slow path: acquire write lock and refresh
+        let mut cache_write = self.server_location_cache.write().await;
+        if let Some((timestamp, ref location)) = *cache_write
+            && timestamp.elapsed() < LOCATION_TTL
+        {
+            return location.clone();
+        }
+
+        let result = match self
+            .client
+            .get("https://ipwho.is/")
+            .timeout(Duration::from_secs(3))
+            .send()
+            .await
+        {
+            Ok(res) if res.status().is_success() => {
+                if let Ok(json) = res.json::<Value>().await
+                    && json["success"].as_bool().unwrap_or(false)
+                {
+                    let country = json["country"].as_str().unwrap_or("").trim();
+                    let region = json["region"].as_str().unwrap_or("").trim();
+                    if !country.is_empty() && !region.is_empty() {
+                        format!("{}, {}", country, region)
+                    } else {
+                        "Unknown".to_string()
+                    }
+                } else {
+                    "Unknown".to_string()
+                }
+            }
+            _ => "Unknown".to_string(),
+        };
+
+        *cache_write = Some((Instant::now(), result.clone()));
+        result
+    }
+
+    pub async fn check_simply_hentai_mock(&self, url: &str) -> bool {
+        const MOCK_TTL: Duration = Duration::from_secs(10 * 60);
+
+        // Fast path: check read lock
+        {
+            let cache_read = self.simply_hentai_mock_cache.read().await;
+            if let Some((timestamp, is_healthy)) = *cache_read
+                && timestamp.elapsed() < MOCK_TTL
+            {
+                return is_healthy;
+            }
+        }
+
+        let mut cache_write = self.simply_hentai_mock_cache.write().await;
+        if let Some((timestamp, is_healthy)) = *cache_write
+            && timestamp.elapsed() < MOCK_TTL
+        {
+            return is_healthy;
+        }
+
+        let is_healthy = match self
+            .client
+            .get(url)
+            .timeout(Duration::from_secs(5))
+            .send()
+            .await
+        {
+            Ok(res) => {
+                let status = res.status();
+                status == axum::http::StatusCode::OK
+                    || status == axum::http::StatusCode::PERMANENT_REDIRECT
+            }
+            Err(_) => false,
+        };
+
+        *cache_write = Some((Instant::now(), is_healthy));
+        is_healthy
     }
 }

@@ -67,11 +67,12 @@ pub async fn scrape_get(janda: &JandaPress, book_id: &str) -> Result<Value, AppE
         .collect();
 
     let first_pages_sel = Selector::parse("div.pages").unwrap();
+    let first_child_sel = Selector::parse(":first-child").unwrap();
     let total_if_broken = document
         .select(&first_pages_sel)
         .next()
         .map(|el| {
-            el.select(&Selector::parse(":first-child").unwrap())
+            el.select(&first_child_sel)
                 .next()
                 .map(|first| first.text().collect::<String>())
                 .unwrap_or_default()
