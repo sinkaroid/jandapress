@@ -40,3 +40,9 @@ sysinfo = "0.33"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 urlencoding = "2.1"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true
+

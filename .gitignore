@@ -11,11 +11,14 @@ p.ts
 CHANGELOG.md
 theme.zip
 ## .agent
+.agent/*
+PRD-*
 /scratch
 /prd
 AGENT_SPECS/
 **/AGENT_SPECS/
 /legacy
+auto-commit.md
 
 # Added by cargo
 
