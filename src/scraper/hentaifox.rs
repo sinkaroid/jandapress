@@ -155,6 +155,7 @@ pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32, sort: &str)
 
     let g_title_sel = Selector::parse("h2.g_title").unwrap();
     let g_cat_sel = Selector::parse("h3.g_cat").unwrap();
+    let a_sel = Selector::parse("a").unwrap();
 
     let titles: Vec<String> = document
         .select(&g_title_sel)
@@ -163,13 +164,13 @@ pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32, sort: &str)
 
     let links: Vec<String> = document
         .select(&g_title_sel)
-        .filter_map(|el| el.select(&Selector::parse("a").unwrap()).next())
+        .filter_map(|el| el.select(&a_sel).next())
         .filter_map(|a| a.value().attr("href").and_then(|h| h.split('/').nth(2).map(|s| s.to_string())))
         .collect();
 
     let categories: Vec<String> = document
         .select(&g_cat_sel)
-        .filter_map(|el| el.select(&Selector::parse("a").unwrap()).next())
+        .filter_map(|el| el.select(&a_sel).next())
         .filter_map(|a| a.value().attr("href").and_then(|h| h.split('/').nth(2).map(|s| s.to_string())))
         .collect();
 
