@@ -3,9 +3,10 @@ use axum::{
     Json,
 };
 use serde_json::{json, Value};
+use std::sync::LazyLock;
 
-pub async fn doc_handler() -> Json<Value> {
-    Json(json!({
+static OPENAPI_SPEC: LazyLock<Value> = LazyLock::new(|| {
+    json!({
       "openapi": "3.0.0",
       "info": {
         "title": "JandaPress API",
@@ -299,7 +300,11 @@ pub async fn doc_handler() -> Json<Value> {
           }
         }
       }
-    }))
+    })
+});
+
+pub async fn doc_handler() -> Json<Value> {
+    Json(OPENAPI_SPEC.clone())
 }
 
 pub async fn playground_handler() -> impl IntoResponse {
