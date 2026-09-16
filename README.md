@@ -1,5 +1,5 @@
 <div align="center">
-<a href="http://localhost:3000"><img width="500" src="resources/project/images/tomoe-janda.webp" alt="jandapress"></a>
+<a href="https://sinkaroid.github.io/jandapress"><img width="500" src="resources/project/images/tomoe-janda.webp" alt="jandapress"></a>
 
 <h4 align="center">Unified REST + GraphQL API for nhentai and other doujinshi</h4>
 <p align="center">
@@ -18,7 +18,7 @@ The motivation behind this project is to provide, accessible and actionable data
 
 ---
 
-<a href="http://localhost:3000"><img align="right" src="resources/project/images/tomoe.webp" width="300"></a>
+<a href="https://sinkaroid.github.io/jandapress"><img align="right" src="resources/project/images/tomoe.webp" width="300"></a>
 
 - [Jandapress](#)
   - [The problem](#the-problem)
@@ -47,13 +47,13 @@ Many people consume doujin websites as a source of data when building web applic
 
 As a result, they often need to implement their own scraping logic, build multiple abstractions, and manually maintain integrations for each site.
 
-Jandapress aims to simplify this process by providing a unified interface for accessing data across multiple doujin sites. Instead of maintaining separate implementations, they can rely on Jandapress to reduce complexity and development overhead.
-
-The current state of the service is **free to use**, meaning anonymous usage is allowed. No authentication is required, and **CORS is enabled** to support browser-based applications.
-
 ## The solution
 
 <a href="https://github.com/sinkaroid/jandapress/wiki/Routing"><img src="resources/project/images/jandapressflow_1.png" width="800"></a>
+
+Jandapress acts as a unified data gateway and abstraction layer across fragmented doujin platforms. By normalizing disparate upstream sources into a single, cohesive REST and GraphQL interface, developers can bypass custom scraping pipelines and brittle integration maintenance entirely.
+
+The service is designed for zero-friction adoption: anonymous access is permitted, no authentication is required, and CORS is enabled out of the box for seamless client-side and browser integration.
 
 ## Running tests
 
@@ -129,12 +129,16 @@ docker run -d \
 
 ### Manual
 
-    git clone https://github.com/sinkaroid/jandapress.git
+```sh
+## clone
+git clone https://github.com/sinkaroid/jandapress.git
 
-- Jandapress production
-  - `cargo start-prod`
-- Jandapress testing and hot reload
-  - `cargo start-dev`
+## dev
+cargo start-dev
+
+## prod
+cargo start-prod
+```
 
 ## Nhentai Guide
 
@@ -299,6 +303,22 @@ The missing piece of asmhentai - https://sinkaroid.github.io/jandapress/#GET/asm
     - http://localhost:3000/asmhentai/search?key=futanari&page=2
     - http://localhost:3000/asmhentai/random
 
+### 3hentai
+
+The missing piece of 3hentai - https://sinkaroid.github.io/jandapress/#GET/3hentai
+
+- `/3hentai`: 3hentai api
+  - **get**, takes parameters : `book`
+  - **search**, takes parameters : `key`, `?page`, `?sort`
+  - **random**
+  - <u>sort parameters on search</u>
+    - "recent", "popular-24h", "popular-7d", "popular"
+  - Example
+    - http://localhost:3000/3hentai/get?book=608979
+    - http://localhost:3000/3hentai/search?key=futanari
+    - http://localhost:3000/3hentai/search?key=futanari&page=2&sort=popular-7d
+    - http://localhost:3000/3hentai/random
+
 ### Hentai2read
 
 The missing piece of hentai2read - https://sinkaroid.github.io/jandapress/#GET/hentai2read
@@ -322,22 +342,6 @@ The missing piece of simply-hentai - https://sinkaroid.github.io/jandapress/#GET
     - TBA
   - Example
     - http://localhost:3000/simply-hentai/get?book=fate-grand-order/fgo-sanbunkatsuhou/all-pages
-
-### 3hentai
-
-The missing piece of 3hentai - https://sinkaroid.github.io/jandapress/#GET/3hentai
-
-- `/3hentai`: 3hentai api
-  - **get**, takes parameters : `book`
-  - **search**, takes parameters : `key`, `?page`, `?sort`
-  - **random**
-  - <u>sort parameters on search</u>
-    - "recent", "popular-24h", "popular-7d", "popular"
-  - Example
-    - http://localhost:3000/3hentai/get?book=608979
-    - http://localhost:3000/3hentai/search?key=futanari
-    - http://localhost:3000/3hentai/search?key=futanari&page=2&sort=popular-7d
-    - http://localhost:3000/3hentai/random
 
 ## Status response
 
@@ -367,17 +371,17 @@ The project has gone through three major architectural phases, with each iterati
 
 - **Serving large production workload while continuously reducing runtime overhead and memory consumption.** The jandapress powers [scathachbot.xyz](https://scathachbot.xyz/) which serves more than 60K servers. It is intentionally deployed on low-memory VMs with less than 4 GB of RAM, where every megabyte matters because the machine also hosts multiple other services.
 
-### First Ascension — NodeJS, Express
+### First Ascension — NodeJS, Express + cheerio
 
 The initial version was built with **Express.js**. The `janda(press)` branding came from this version. But it's bloated.
 
-### Second Ascension — Bun, Hono
+### Second Ascension — Bun, Hono + cheerio
 
 The second iteration migrated to **Hono running on Bun** significantly reducing the overhead compared to the first implementation.
 
 - This was significant improvements. However, after running continuously for several weeks, its memory usage could reach approximately >350 MB. While reasonable in isolation, that footprint becomes significant when multiple services share the same constrained VM.
 
-### Third Ascension — Rust, Axum
+### Third Ascension — Rust, Axum + scraper
 
 Focus on minimal runtime overhead, predictable resource consumption, and long-term performance. I will keep looking forward on it.
 
