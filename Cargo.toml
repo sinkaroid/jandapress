@@ -1,6 +1,6 @@
 [package]
 name = "jandapress"
-version = "10.6.7"
+version = "10.6.8"
 edition = "2024"
 rust-version = "1.96.0"
 
