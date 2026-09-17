@@ -83,7 +83,9 @@ Some tests may fail in CI environments because certain doujin websites restrict 
   <td><b>NOTE:</b> Rust 1.96.0 or higher / or simply just use docker</td>
 </table>
 
-To handle several requests, You also need [Redis](https://redis.io/) for persistent caching, free tier is available on [Redis Labs](https://redislabs.com/).
+To handle several requests, You also need [Redis](https://redis.io/) for persistent caching:
+- You can use `docker pull ghcr.io/sinkaroid/jandapress-redis:latest` for full control.
+- If just small usage or experimenting, You can get [redis.io/try-free](https://redis.io/try-free/) for demo and free tier available on [Redis Labs](https://redislabs.com/).
 
 ## Installation
 
@@ -125,6 +127,23 @@ docker run -d \
   -e EXPIRE_CACHE='1' \
   -e NHENTAI_API_KEY='some_nice_key' \
   ghcr.io/sinkaroid/jandapress:latest
+```
+
+### Redis (Docker or Podman)
+
+Dedicated lightweight Redis image configured for `jandapress`:
+
+```bash
+docker run -d \
+  --name=jandapress-redis \
+  --restart unless-stopped \
+  -p 6379:6379 \
+  ghcr.io/sinkaroid/jandapress-redis:latest
+```
+
+Connect your `jandapress` container or local instance using the default password:
+```env
+REDIS_URL='redis://default:jandapress@localhost:6379'
 ```
 
 ### Manual

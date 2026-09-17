@@ -22,6 +22,7 @@ jobs:
         shell: bash
         run: |
           echo "image_name=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+          echo "owner_lower=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
           echo "image_tag=$(grep -m1 '^version =' Cargo.toml | cut -d '"' -f2)" >> "$GITHUB_OUTPUT"
 
       - name: Log into GitHub Container Registry
@@ -48,6 +49,19 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ${{ steps.meta.outputs.image_name }}:${{ steps.meta.outputs.image_tag }}
 
+      - name: Build Redis image (PR validation)
+        if: github.event_name == 'pull_request'
+        uses: docker/build-push-action@v6
+        with:
+          context: ./redis
+          file: ./redis/Dockerfile
+          push: false
+          pull: true
+          provenance: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: ghcr.io/${{ steps.meta.outputs.owner_lower }}/jandapress-redis:${{ steps.meta.outputs.image_tag }}
+
       - name: Build and push Docker image
         if: github.event_name == 'push'
         uses: docker/build-push-action@v6
@@ -62,3 +76,19 @@ jobs:
           tags: |
             ${{ steps.meta.outputs.image_name }}:${{ steps.meta.outputs.image_tag }}
             ${{ steps.meta.outputs.image_name }}:latest
+
+      - name: Build and push Redis image
+        if: github.event_name == 'push'
+        uses: docker/build-push-action@v6
+        with:
+          context: ./redis
+          file: ./redis/Dockerfile
+          push: true
+          pull: true
+          provenance: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ghcr.io/${{ steps.meta.outputs.owner_lower }}/jandapress-redis:${{ steps.meta.outputs.image_tag }}
+            ghcr.io/${{ steps.meta.outputs.owner_lower }}/jandapress-redis:latest
+
