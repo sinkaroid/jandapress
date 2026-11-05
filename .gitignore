@@ -10,8 +10,6 @@ p.ts
 .idea
 CHANGELOG.md
 theme.zip
-## .agent
-.agent/*
 PRD-*
 /scratch
 /prd
@@ -23,4 +21,3 @@ auto-commit.md
 # Added by cargo
 
 /target
-
