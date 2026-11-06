@@ -29,10 +29,5 @@ pub async fn graphql_get_handler(
         return GraphQLResponse::from(response).into_response();
     }
 
-    Html(
-        GraphiQLSource::build()
-            .endpoint("/graphql")
-            .finish(),
-    )
-    .into_response()
+    Html(GraphiQLSource::build().endpoint("/graphql").finish()).into_response()
 }

@@ -3,10 +3,16 @@ name: Dockerized
 on:
   push:
     branches: [master]
+  pull_request:
+    branches: [master]
 
 permissions:
   contents: read
   packages: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -24,6 +30,8 @@ jobs:
           echo "image_name=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
           echo "owner_lower=${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
           echo "image_tag=$(grep -m1 '^version =' Cargo.toml | cut -d '"' -f2)" >> "$GITHUB_OUTPUT"
+          echo "image_sha=sha-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+          echo "short_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
       - name: Log into GitHub Container Registry
         if: github.event_name == 'push'
@@ -75,6 +83,8 @@ jobs:
           cache-to: type=gha,mode=max
           tags: |
             ${{ steps.meta.outputs.image_name }}:${{ steps.meta.outputs.image_tag }}
+            ${{ steps.meta.outputs.image_name }}:${{ steps.meta.outputs.image_sha }}
+            ${{ steps.meta.outputs.image_name }}:${{ steps.meta.outputs.short_sha }}
             ${{ steps.meta.outputs.image_name }}:latest
 
       - name: Build and push Redis image
@@ -90,5 +100,7 @@ jobs:
           cache-to: type=gha,mode=max
           tags: |
             ghcr.io/${{ steps.meta.outputs.owner_lower }}/jandapress-redis:${{ steps.meta.outputs.image_tag }}
+            ghcr.io/${{ steps.meta.outputs.owner_lower }}/jandapress-redis:${{ steps.meta.outputs.image_sha }}
+            ghcr.io/${{ steps.meta.outputs.owner_lower }}/jandapress-redis:${{ steps.meta.outputs.short_sha }}
             ghcr.io/${{ steps.meta.outputs.owner_lower }}/jandapress-redis:latest
 

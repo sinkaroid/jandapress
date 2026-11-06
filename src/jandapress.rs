@@ -3,8 +3,8 @@ use crate::config::Config;
 use crate::error::AppError;
 use reqwest::header::{AUTHORIZATION, HeaderMap, HeaderValue, USER_AGENT};
 use serde_json::Value;
-use std::sync::atomic::Ordering;
 use std::sync::Arc;
+use std::sync::atomic::Ordering;
 use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
 use tracing::info;
@@ -28,6 +28,11 @@ impl JandaPress {
     pub fn new(config: &Config) -> Self {
         let client = reqwest::Client::builder()
             .timeout(Duration::from_secs(15))
+            .pool_idle_timeout(Duration::from_secs(90))
+            .pool_max_idle_per_host(10)
+            .tcp_keepalive(Duration::from_secs(60))
+            .gzip(true)
+            .deflate(true)
             .build()
             .unwrap_or_default();
 
@@ -48,7 +53,11 @@ impl JandaPress {
                     nhentai_headers.insert(AUTHORIZATION, val);
                     auth_type = "Key";
                 }
-                let prefix = if trimmed.len() >= 6 { &trimmed[..6] } else { trimmed };
+                let prefix = if trimmed.len() >= 6 {
+                    &trimmed[..6]
+                } else {
+                    trimmed
+                };
                 format!("{}...({})", prefix, trimmed.len())
             }
             _ => "none".to_string(),
@@ -57,7 +66,6 @@ impl JandaPress {
             "[nhentai] headers ready | apiKey={} | auth={} | ua={}",
             masked_key, auth_type, config.user_agent
         );
-
 
         Self {
             client,
@@ -95,29 +103,15 @@ impl JandaPress {
     }
 
     pub async fn fetch_body(&self, url: &str) -> Result<Vec<u8>, AppError> {
-        if let Some(cached) = self.cache.get(url).await {
-            info!("Fetching from cache: {}", url);
-            return Ok(cached);
-        }
+        let is_volatile = url.contains("/random");
 
-        if url.contains("/random") {
-            info!("Random should not be cached: {}", url);
-            let res = self
-                .client
-                .get(url)
-                .header(USER_AGENT, &self.user_agent)
-                .send()
-                .await?;
-
-            if !res.status().is_success() {
-                return Err(AppError::ScraperError {
-                    status: res.status(),
-                    message: format!("Request failed with status {}", res.status()),
-                });
+        if !is_volatile {
+            if let Some(cached) = self.cache.get(url).await {
+                info!("Fetching from cache: {}", url);
+                return Ok(cached);
             }
-
-            let bytes = res.bytes().await?.to_vec();
-            return Ok(bytes);
+        } else {
+            info!("Random endpoint is volatile, bypassing cache: {}", url);
         }
 
         info!("Fetching from source: {}", url);
@@ -136,7 +130,9 @@ impl JandaPress {
         }
 
         let bytes = res.bytes().await?.to_vec();
-        self.cache.set(url, &bytes).await;
+        if !is_volatile {
+            self.cache.set(url, &bytes).await;
+        }
 
         Ok(bytes)
     }

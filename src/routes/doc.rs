@@ -1,8 +1,8 @@
 use axum::{
-    response::{Html, IntoResponse},
     Json,
+    response::{Html, IntoResponse},
 };
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::sync::LazyLock;
 
 static OPENAPI_SPEC: LazyLock<Value> = LazyLock::new(|| {
@@ -308,7 +308,8 @@ pub async fn doc_handler() -> Json<Value> {
 }
 
 pub async fn playground_handler() -> impl IntoResponse {
-    Html(r#"<!DOCTYPE html>
+    Html(
+        r#"<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -328,7 +329,8 @@ pub async fn playground_handler() -> impl IntoResponse {
     };
   </script>
 </body>
-</html>"#)
+</html>"#,
+    )
 }
 
 #[cfg(test)]
@@ -341,6 +343,7 @@ mod tests {
     async fn dump_openapi() {
         let json_val = doc_handler().await.0;
         let mut file = File::create("openapi.json").unwrap();
-        file.write_all(serde_json::to_string_pretty(&json_val).unwrap().as_bytes()).unwrap();
+        file.write_all(serde_json::to_string_pretty(&json_val).unwrap().as_bytes())
+            .unwrap();
     }
 }
