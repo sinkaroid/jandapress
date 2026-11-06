@@ -1386,7 +1386,7 @@ checksum = "8f42a60cbdf9a97f5d2305f08a87dc4e09308d1276d28c869c684d7777685682"
 
 [[package]]
 name = "jandapress"
-version = "10.6.8"
+version = "10.7.0"
 dependencies = [
  "async-graphql",
  "async-graphql-axum",
@@ -1396,6 +1396,7 @@ dependencies = [
  "deadpool-redis",
  "dotenvy",
  "futures",
+ "libc",
  "moka",
  "redis",
  "reqwest",

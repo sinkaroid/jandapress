@@ -1,5 +1,9 @@
 .git
 .github
+.agents
+.vscode
+target/
+*.env*
 resources
 **/*.md
 LICENSE

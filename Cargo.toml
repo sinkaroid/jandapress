@@ -1,6 +1,6 @@
 [package]
 name = "jandapress"
-version = "10.6.8"
+version = "10.7.0"
 edition = "2024"
 rust-version = "1.96.0"
 
@@ -40,9 +40,12 @@ sysinfo = "0.33"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 urlencoding = "2.1"
+libc = "0.2"
 
 [profile.release]
+opt-level = 3
 lto = "thin"
 codegen-units = 1
+panic = "abort"
 strip = true
 

@@ -17,7 +17,8 @@ AGENT_SPECS/
 **/AGENT_SPECS/
 /legacy
 auto-commit.md
-
+chat_history.md
+CURRENT_STATE.md
 # Added by cargo
 
 /target
