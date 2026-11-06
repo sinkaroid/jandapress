@@ -48,10 +48,10 @@ fn get_pururin_info(value: &str) -> String {
 
 fn get_pururin_page_count(value: &str) -> u32 {
     let cleaned = get_pururin_info(value);
-    if let Some(last_part) = cleaned.split(", ").last() {
-        if let Some(first_word) = last_part.split_whitespace().next() {
-            return first_word.parse::<u32>().unwrap_or(0);
-        }
+    if let Some(last_part) = cleaned.split(", ").last()
+        && let Some(first_word) = last_part.split_whitespace().next()
+    {
+        return first_word.parse::<u32>().unwrap_or(0);
     }
     0
 }
@@ -73,17 +73,57 @@ fn get_url(url: &str) -> String {
     }
 }
 
+use std::sync::LazyLock;
+
+static SEL_META_TITLE: LazyLock<Selector> =
+    LazyLock::new(|| Selector::parse("meta[property='og:title']").expect("valid selector: meta_title"));
+static SEL_TAG_LI: LazyLock<Selector> =
+    LazyLock::new(|| Selector::parse("div.content-wrapper ul.list-inline li").expect("valid selector: tag_li"));
+static SEL_META_IMAGE: LazyLock<Selector> =
+    LazyLock::new(|| Selector::parse("meta[property='og:image']").expect("valid selector: meta_image"));
+static SEL_PAGES: LazyLock<Selector> =
+    LazyLock::new(|| Selector::parse("span[itemprop='numberOfPages']").expect("valid selector: pages"));
+static SEL_META_URL: LazyLock<Selector> =
+    LazyLock::new(|| Selector::parse("meta[property='og:url']").expect("valid selector: meta_url"));
+static SEL_CARD_GALLERY: LazyLock<Selector> =
+    LazyLock::new(|| Selector::parse(".card.card-gallery").expect("valid selector: card_gallery"));
+static SEL_INFO: LazyLock<Selector> =
+    LazyLock::new(|| Selector::parse("div.info").expect("valid selector: info"));
+static SEL_CARD_IMG: LazyLock<Selector> =
+    LazyLock::new(|| Selector::parse("img.card-img-top").expect("valid selector: card_img"));
+
+pub fn prune_search_html(html: &str) -> &str {
+    let end_pos = html
+        .find("<footer")
+        .or_else(|| html.find("id=\"footer\""))
+        .or_else(|| html.find("class=\"footer\""))
+        .or_else(|| html.rfind("class=\"pagination\""))
+        .unwrap_or(html.len());
+    &html[..end_pos]
+}
+
+pub fn prune_gallery_html(html: &str) -> &str {
+    let end_pos = html
+        .find("<footer")
+        .or_else(|| html.find("id=\"footer\""))
+        .or_else(|| html.find("class=\"footer\""))
+        .unwrap_or(html.len());
+    &html[..end_pos]
+}
+
+pub fn prune_head_html(html: &str) -> &str {
+    let end_pos = html
+        .find("</head>")
+        .or_else(|| html.find("<body"))
+        .unwrap_or(html.len());
+    &html[..end_pos]
+}
+
 // --- Scraper Implementation ---
 
-pub async fn scrape_get(janda: &JandaPress, book_id: &str) -> Result<Value, AppError> {
-    let url = format!("{}/gallery/{}/janda", PURURIN_URL, book_id);
-    let bytes = janda.fetch_body(&url).await?;
-    let html_str = String::from_utf8_lossy(&bytes);
-    let document = Html::parse_document(&html_str);
-
-    let meta_title_sel = Selector::parse("meta[property='og:title']").unwrap();
+fn parse_gallery_document(document: &Html, book_id: &str) -> Result<Value, AppError> {
     let title = document
-        .select(&meta_title_sel)
+        .select(&SEL_META_TITLE)
         .next()
         .and_then(|el| el.value().attr("content"))
         .ok_or_else(|| AppError::ScraperError {
@@ -92,39 +132,35 @@ pub async fn scrape_get(janda: &JandaPress, book_id: &str) -> Result<Value, AppE
         })?
         .to_string();
 
-    let tag_li_sel = Selector::parse("div.content-wrapper ul.list-inline li").unwrap();
     let tags: Vec<String> = document
-        .select(&tag_li_sel)
+        .select(&SEL_TAG_LI)
         .map(|el| get_pururin_info(&el.text().collect::<String>()))
         .collect();
 
-    let meta_image_sel = Selector::parse("meta[property='og:image']").unwrap();
     let cover = document
-        .select(&meta_image_sel)
+        .select(&SEL_META_IMAGE)
         .next()
         .and_then(|el| el.value().attr("content"))
         .unwrap_or("");
 
     let extension = if !cover.is_empty() {
-        format!(".{}", cover.split('.').last().unwrap_or("jpg"))
+        format!(".{}", cover.split('.').next_back().unwrap_or("jpg"))
     } else {
         ".jpg".to_string()
     };
 
-    let pages_sel = Selector::parse("span[itemprop='numberOfPages']").unwrap();
     let total = document
-        .select(&pages_sel)
+        .select(&SEL_PAGES)
         .next()
         .and_then(|el| el.text().collect::<String>().trim().parse::<u32>().ok())
         .unwrap_or(0);
 
-    let meta_url_sel = Selector::parse("meta[property='og:url']").unwrap();
     let id_str = document
-        .select(&meta_url_sel)
+        .select(&SEL_META_URL)
         .next()
         .and_then(|el| el.value().attr("content"))
         .and_then(|url| url.split('/').nth(4))
-        .unwrap_or("0");
+        .unwrap_or(book_id);
     let id = id_str.parse::<i64>().unwrap_or(0);
 
     let mut image = Vec::new();
@@ -151,29 +187,38 @@ pub async fn scrape_get(janda: &JandaPress, book_id: &str) -> Result<Value, AppE
     }))
 }
 
-pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32) -> Result<Value, AppError> {
-    let url = format!("{}/search?q={}&page={}", PURURIN_URL, urlencoding::encode(key), page);
+pub async fn scrape_get(janda: &JandaPress, book_id: &str) -> Result<Value, AppError> {
+    let url = format!("{}/gallery/{}/janda", PURURIN_URL, book_id);
     let bytes = janda.fetch_body(&url).await?;
     let html_str = String::from_utf8_lossy(&bytes);
-    let document = Html::parse_document(&html_str);
 
-    let gallery_sel = Selector::parse(".card.card-gallery").unwrap();
-    let info_sel = Selector::parse("div.info").unwrap();
-    let img_sel = Selector::parse("img.card-img-top").unwrap();
+    // 1. Fast path: parse pruned HTML
+    let pruned_html = prune_gallery_html(&html_str);
+    let res = parse_gallery_document(&Html::parse_document(pruned_html), book_id);
 
+    // 2. Adaptive fallback: if pruned parsing failed, re-parse full HTML
+    if res.is_err() {
+        let full_doc = Html::parse_document(&html_str);
+        return parse_gallery_document(&full_doc, book_id);
+    }
+
+    res
+}
+
+fn parse_search_document(document: &Html) -> Vec<PururinSearchParity> {
     let covers: Vec<String> = document
-        .select(&img_sel)
+        .select(&SEL_CARD_IMG)
         .filter_map(|el| el.value().attr("src").map(|s| s.to_string()))
         .collect();
 
     let infos: Vec<String> = document
-        .select(&info_sel)
+        .select(&SEL_INFO)
         .map(|el| get_pururin_info(&el.text().collect::<String>()))
         .collect();
 
     let mut content = Vec::new();
 
-    for (index, abc) in document.select(&gallery_sel).enumerate() {
+    for (index, abc) in document.select(&SEL_CARD_GALLERY).enumerate() {
         let title = abc.value().attr("title").unwrap_or("").to_string();
         let cover = covers.get(index).cloned();
         
@@ -191,6 +236,23 @@ pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32) -> Result<V
             info: info_str,
             total,
         });
+    }
+
+    content
+}
+
+pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32) -> Result<Value, AppError> {
+    let url = format!("{}/search?q={}&page={}", PURURIN_URL, urlencoding::encode(key), page);
+    let bytes = janda.fetch_body(&url).await?;
+    let html_str = String::from_utf8_lossy(&bytes);
+
+    // 1. Fast path: parse pruned HTML
+    let pruned_html = prune_search_html(&html_str);
+    let mut content = parse_search_document(&Html::parse_document(pruned_html));
+
+    // 2. Adaptive fallback: if pruned search yielded 0 items, re-parse full HTML
+    if content.is_empty() {
+        content = parse_search_document(&Html::parse_document(&html_str));
     }
 
     if content.is_empty() {
@@ -212,19 +274,34 @@ pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32) -> Result<V
 pub async fn scrape_random(janda: &JandaPress) -> Result<Value, AppError> {
     let url = format!("{}/random", PURURIN_URL);
     let bytes = janda.fetch_body(&url).await?;
+    let html_str = String::from_utf8_lossy(&bytes);
     
-    let id_str = {
-        let html_str = String::from_utf8_lossy(&bytes);
-        let document = Html::parse_document(&html_str);
+    // 1. Try fast path on head slice
+    let id_opt = {
+        let pruned_html = prune_head_html(&html_str);
+        let document = Html::parse_document(pruned_html);
 
-        let meta_url_sel = Selector::parse("meta[property='og:url']").unwrap();
         document
-            .select(&meta_url_sel)
+            .select(&SEL_META_URL)
             .next()
             .and_then(|el| el.value().attr("content"))
             .and_then(|url| url.split('/').nth(4))
-            .unwrap_or("")
-            .to_string()
+            .map(|s| s.to_string())
+    };
+
+    // 2. Adaptive fallback to full document if head slice missed it
+    let id_str = match id_opt {
+        Some(id) if !id.is_empty() => id,
+        _ => {
+            let full_doc = Html::parse_document(&html_str);
+            full_doc
+                .select(&SEL_META_URL)
+                .next()
+                .and_then(|el| el.value().attr("content"))
+                .and_then(|url| url.split('/').nth(4))
+                .unwrap_or("")
+                .to_string()
+        }
     };
 
     if id_str.is_empty() {

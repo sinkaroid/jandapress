@@ -143,24 +143,24 @@ pub async fn scrape_get(janda: &JandaPress, book_id: &str) -> Result<Value, AppE
         for page in pages {
             image_list.push(format!("{}/{}", cdn, page.path));
         }
-    } else if let Some(images) = &raw.images {
-        if let Some(pages) = &images.pages {
-            for (index, page) in pages.iter().enumerate() {
-                let ext = match page.t.as_deref() {
-                    Some("j") => "jpg",
-                    Some("p") => "png",
-                    Some("g") => "gif",
-                    Some("w") => "webp",
-                    _ => "jpg",
-                };
-                image_list.push(format!(
-                    "{}/galleries/{}/{}.{}",
-                    cdn,
-                    raw.media_id,
-                    index + 1,
-                    ext
-                ));
-            }
+    } else if let Some(images) = &raw.images
+        && let Some(pages) = &images.pages
+    {
+        for (index, page) in pages.iter().enumerate() {
+            let ext = match page.t.as_deref() {
+                Some("j") => "jpg",
+                Some("p") => "png",
+                Some("g") => "gif",
+                Some("w") => "webp",
+                _ => "jpg",
+            };
+            image_list.push(format!(
+                "{}/galleries/{}/{}.{}",
+                cdn,
+                raw.media_id,
+                index + 1,
+                ext
+            ));
         }
     }
 
@@ -403,11 +403,11 @@ async fn resolve_tag_map(
         let chunk_strs: Vec<String> = chunk.iter().map(|id| id.to_string()).collect();
         let endpoint = format!("{}/api/v2/tags/ids?ids={}", NHENTAI_URL, chunk_strs.join(","));
 
-        if let Ok(val) = janda.fetch_json(&endpoint).await {
-            if let Ok(tags) = serde_json::from_value::<Vec<NhentaiTag>>(val) {
-                for tag in tags {
-                    tag_map.insert(tag.id, tag);
-                }
+        if let Ok(val) = janda.fetch_json(&endpoint).await
+            && let Ok(tags) = serde_json::from_value::<Vec<NhentaiTag>>(val)
+        {
+            for tag in tags {
+                tag_map.insert(tag.id, tag);
             }
         }
     }
