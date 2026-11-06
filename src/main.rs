@@ -10,8 +10,8 @@ mod metrics;
 mod middleware;
 mod routes;
 mod scraper;
-mod utils;
 mod tests;
+mod utils;
 
 use crate::config::Config;
 use crate::graphql::JandaSchema;
@@ -20,12 +20,8 @@ use crate::middleware::{rate_limiter_middleware, slow_down_middleware};
 use crate::routes::{doc, redirect, rest, status};
 use async_graphql::{EmptyMutation, EmptySubscription, Schema};
 use axum::{
-    body::Body,
-    extract::Request,
-    http::StatusCode,
-    response::IntoResponse,
+    Json, Router, body::Body, extract::Request, http::StatusCode, response::IntoResponse,
     routing::get,
-    Json, Router,
 };
 use serde_json::json;
 use std::net::SocketAddr;
@@ -34,14 +30,8 @@ use tracing::{info, warn};
 async fn not_found_handler(req: Request<Body>) -> impl IntoResponse {
     let path = req.uri().path();
     let method = req.method().as_str();
-    let message = format!(
-        "The page not found in path {} and method {}",
-        path, method
-    );
-    (
-        StatusCode::NOT_FOUND,
-        Json(json!({ "message": message })),
-    )
+    let message = format!("The page not found in path {} and method {}", path, method);
+    (StatusCode::NOT_FOUND, Json(json!({ "message": message })))
 }
 
 #[tokio::main]
@@ -64,8 +54,13 @@ async fn main() {
         let janda_clone = janda.clone();
         tokio::spawn(async move {
             match janda_clone.cache.test_connection().await {
-                Ok(_) => info!("Redis cache connection verified successfully! Backend status: Connected"),
-                Err(err) => warn!("Redis connection verification failed: {}. Falling back to In-Memory operations.", err),
+                Ok(_) => {
+                    info!("Redis cache connection verified successfully! Backend status: Connected")
+                }
+                Err(err) => warn!(
+                    "Redis connection verification failed: {}. Falling back to In-Memory operations.",
+                    err
+                ),
             }
         });
     }
@@ -142,15 +137,11 @@ async fn main() {
     // 8. Conditional GraphQL Integration
     if config.jandapress_graphql {
         info!("Integrating GraphQL routes (/graphql) with active schema");
-        let schema: JandaSchema = Schema::build(
-            graphql::Query,
-            EmptyMutation,
-            EmptySubscription,
-        )
-        .data(janda.clone())
-        .limit_depth(5)
-        .limit_complexity(50)
-        .finish();
+        let schema: JandaSchema = Schema::build(graphql::Query, EmptyMutation, EmptySubscription)
+            .data(janda.clone())
+            .limit_depth(5)
+            .limit_complexity(50)
+            .finish();
 
         app = app.route(
             "/graphql",
@@ -185,7 +176,9 @@ async fn shutdown_signal() {
 
     #[cfg(unix)]
     let terminate = async {
-        if let Ok(mut sig) = tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate()) {
+        if let Ok(mut sig) =
+            tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())
+        {
             sig.recv().await;
         } else {
             std::future::pending::<()>().await;

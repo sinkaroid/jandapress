@@ -1,3 +1,4 @@
+use crate::jandapress::JandaPress;
 use axum::{
     body::Body,
     extract::State,
@@ -5,7 +6,6 @@ use axum::{
     middleware::Next,
     response::Response,
 };
-use crate::jandapress::JandaPress;
 use dashmap::DashMap;
 use serde::Serialize;
 use std::{
@@ -70,7 +70,8 @@ impl RateLimitState {
         // Bounded capacity protection
         if self.buckets.len() >= BUCKET_MAX_SIZE {
             // Sweep expired keys first
-            self.buckets.retain(|_, counter| counter.reset_at > now_instant);
+            self.buckets
+                .retain(|_, counter| counter.reset_at > now_instant);
         }
 
         let fresh = Counter {
@@ -95,7 +96,12 @@ static ALLOW_UNTRUSTED_PROXY: std::sync::LazyLock<bool> = std::sync::LazyLock::n
 });
 
 fn get_client_ip(headers: &HeaderMap) -> String {
-    let trusted_ip_headers = ["cf-connecting-ip", "fly-client-ip", "x-vercel-forwarded-for", "x-client-ip"];
+    let trusted_ip_headers = [
+        "cf-connecting-ip",
+        "fly-client-ip",
+        "x-vercel-forwarded-for",
+        "x-client-ip",
+    ];
     for header in trusted_ip_headers {
         if let Some(val) = headers.get(header).and_then(|v| v.to_str().ok())
             && let Some(first_ip) = val.split(',').next()
@@ -181,9 +187,12 @@ pub async fn rate_limiter_middleware(
 
         let mut res = Response::new(Body::from(serde_json::to_string(&payload).unwrap()));
         *res.status_mut() = StatusCode::TOO_MANY_REQUESTS;
-        
+
         let headers = res.headers_mut();
-        headers.insert("Content-Type", HeaderValue::from_static("application/json; charset=UTF-8"));
+        headers.insert(
+            "Content-Type",
+            HeaderValue::from_static("application/json; charset=UTF-8"),
+        );
         headers.insert("X-RateLimit-Limit", HeaderValue::from(LIMIT_MAX));
         headers.insert("X-RateLimit-Remaining", HeaderValue::from(0));
         headers.insert("X-RateLimit-Reset", HeaderValue::from(reset_timestamp));

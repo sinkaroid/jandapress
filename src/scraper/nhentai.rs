@@ -5,7 +5,7 @@ use crate::jandapress::JandaPress;
 use crate::scraper::NHENTAI_URL;
 use crate::utils::format_upload_date;
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::collections::HashMap;
 
 // --- Raw API Deserialization Structs ---
@@ -191,7 +191,10 @@ pub async fn scrape_get(janda: &JandaPress, book_id: &str) -> Result<Value, AppE
     tags.sort();
 
     let pretty = raw.title.pretty.unwrap_or_else(|| {
-        raw.title.english.clone().unwrap_or_else(|| raw.title.japanese.clone().unwrap_or_default())
+        raw.title
+            .english
+            .clone()
+            .unwrap_or_else(|| raw.title.japanese.clone().unwrap_or_default())
     });
 
     let data_parity = NhentaiGetParity {
@@ -223,7 +226,12 @@ pub async fn scrape_get(janda: &JandaPress, book_id: &str) -> Result<Value, AppE
 }
 
 #[allow(deprecated)]
-pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32, sort: &str) -> Result<Value, AppError> {
+pub async fn scrape_search(
+    janda: &JandaPress,
+    key: &str,
+    page: u32,
+    sort: &str,
+) -> Result<Value, AppError> {
     let url = format!(
         "{}/api/v2/search?query={}&sort={}&page={}",
         NHENTAI_URL,
@@ -237,7 +245,8 @@ pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32, sort: &str)
 
     let tag_map = resolve_tag_map(janda, &raw.result).await;
 
-    let content: Vec<NhentaiSearchParity> = raw.result
+    let content: Vec<NhentaiSearchParity> = raw
+        .result
         .into_iter()
         .map(|item| {
             let tag_ids = item.tag_ids.unwrap_or_default();
@@ -301,7 +310,8 @@ pub async fn scrape_related(janda: &JandaPress, book_id: &str) -> Result<Value, 
 
     let tag_map = resolve_tag_map(janda, &raw.result).await;
 
-    let content: Vec<NhentaiRelatedParity> = raw.result
+    let content: Vec<NhentaiRelatedParity> = raw
+        .result
         .into_iter()
         .map(|item| {
             let tag_ids = item.tag_ids.unwrap_or_default();
@@ -358,22 +368,24 @@ pub async fn scrape_random(janda: &JandaPress) -> Result<Value, AppError> {
     let url = format!("{}/api/v2/galleries/random", NHENTAI_URL);
     // Since random shouldn't be cached, fetch directly
     let raw_val = janda.simulate_nhentai_request(&url).await?;
-    
+
     // We want the random gallery id from the returned JSON
-    let id = extract_nhentai_id(&raw_val)
-        .ok_or_else(|| AppError::ScraperError {
-            status: axum::http::StatusCode::INTERNAL_SERVER_ERROR,
-            message: "Cannot parse nhentai random gallery id".to_string(),
-        })?;
+    let id = extract_nhentai_id(&raw_val).ok_or_else(|| AppError::ScraperError {
+        status: axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+        message: "Cannot parse nhentai random gallery id".to_string(),
+    })?;
 
     // Now call scrape_get for this specific id, with random = true logic matching Hono
     let mut get_result = scrape_get(janda, &id.to_string()).await?;
-    
+
     // Adjust source parameter in the JSON matching Hono `scrapeContent` with random parameter
     if let Some(obj) = get_result.as_object_mut() {
-        obj.insert("source".to_string(), json!(format!("{}/g/{}", NHENTAI_URL, id)));
+        obj.insert(
+            "source".to_string(),
+            json!(format!("{}/g/{}", NHENTAI_URL, id)),
+        );
     }
-    
+
     Ok(get_result)
 }
 
@@ -388,7 +400,7 @@ async fn resolve_tag_map(
         .filter_map(|item| item.tag_ids.clone())
         .flatten()
         .collect();
-    
+
     ids.sort();
     ids.dedup();
 
@@ -401,7 +413,11 @@ async fn resolve_tag_map(
 
     for chunk in ids.chunks(CHUNK_SIZE) {
         let chunk_strs: Vec<String> = chunk.iter().map(|id| id.to_string()).collect();
-        let endpoint = format!("{}/api/v2/tags/ids?ids={}", NHENTAI_URL, chunk_strs.join(","));
+        let endpoint = format!(
+            "{}/api/v2/tags/ids?ids={}",
+            NHENTAI_URL,
+            chunk_strs.join(",")
+        );
 
         if let Ok(val) = janda.fetch_json(&endpoint).await
             && let Ok(tags) = serde_json::from_value::<Vec<NhentaiTag>>(val)
@@ -414,7 +430,6 @@ async fn resolve_tag_map(
 
     tag_map
 }
-
 
 fn extract_nhentai_id(val: &Value) -> Option<i64> {
     if let Some(n) = val.as_i64() {

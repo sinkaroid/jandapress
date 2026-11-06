@@ -1,7 +1,7 @@
 use axum::{http::header::USER_AGENT, response::IntoResponse};
 use dashmap::DashMap;
-use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::LazyLock;
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 // Global metrics data registry
@@ -129,7 +129,9 @@ pub async fn metrics_handler() -> impl IntoResponse {
     out.push_str("# TYPE process_virtual_memory_bytes gauge\n");
     out.push_str(&format!("process_virtual_memory_bytes {}\n\n", vsz));
 
-    out.push_str("# HELP process_start_time_seconds Start time of the process since unix epoch (seconds)\n");
+    out.push_str(
+        "# HELP process_start_time_seconds Start time of the process since unix epoch (seconds)\n",
+    );
     out.push_str("# TYPE process_start_time_seconds gauge\n");
     out.push_str(&format!("process_start_time_seconds {}\n\n", uptime));
 
@@ -143,7 +145,10 @@ pub async fn metrics_handler() -> impl IntoResponse {
 
     out.push_str("# HELP process_disk_written_bytes_total Total disk written bytes\n");
     out.push_str("# TYPE process_disk_written_bytes_total counter\n");
-    out.push_str(&format!("process_disk_written_bytes_total {}\n\n", disk_write));
+    out.push_str(&format!(
+        "process_disk_written_bytes_total {}\n\n",
+        disk_write
+    ));
 
     out.push_str("# HELP eventloop_lag_seconds Event loop lag — delay of the event loop for synchronous blocking detection\n");
     out.push_str("# TYPE eventloop_lag_seconds gauge\n");
@@ -152,7 +157,10 @@ pub async fn metrics_handler() -> impl IntoResponse {
     // 2. System RAM Stats
     out.push_str("# HELP system_total_memory_bytes Total physical system memory (bytes)\n");
     out.push_str("# TYPE system_total_memory_bytes gauge\n");
-    out.push_str(&format!("system_total_memory_bytes {}\n\n", system_total_mem));
+    out.push_str(&format!(
+        "system_total_memory_bytes {}\n\n",
+        system_total_mem
+    ));
 
     out.push_str("# HELP system_used_memory_bytes Used physical system memory (bytes)\n");
     out.push_str("# TYPE system_used_memory_bytes gauge\n");
@@ -169,7 +177,10 @@ pub async fn metrics_handler() -> impl IntoResponse {
 
     out.push_str("# HELP tokio_global_queue_depth Global Tokio scheduler task queue depth\n");
     out.push_str("# TYPE tokio_global_queue_depth gauge\n");
-    out.push_str(&format!("tokio_global_queue_depth {}\n\n", tokio_queue_depth));
+    out.push_str(&format!(
+        "tokio_global_queue_depth {}\n\n",
+        tokio_queue_depth
+    ));
 
     // 4. HTTP Labeled Metrics
     out.push_str("# HELP http_requests_in_flight Number of HTTP requests currently being processed (active)\n");
@@ -177,7 +188,10 @@ pub async fn metrics_handler() -> impl IntoResponse {
     for item in HTTP_IN_FLIGHT.iter() {
         let method = item.key();
         let val = item.value().load(Ordering::Relaxed);
-        out.push_str(&format!("http_requests_in_flight{{method=\"{}\"}} {}\n", method, val));
+        out.push_str(&format!(
+            "http_requests_in_flight{{method=\"{}\"}} {}\n",
+            method, val
+        ));
     }
     out.push('\n');
 
@@ -194,10 +208,17 @@ pub async fn metrics_handler() -> impl IntoResponse {
     out.push_str("# TYPE http_request_duration_seconds counter\n");
     for item in HTTP_REQUESTS.iter() {
         let label_key = item.key();
-        let sum_secs = item.value().duration_sum_micros.load(Ordering::Relaxed) as f64 / 1_000_000.0;
+        let sum_secs =
+            item.value().duration_sum_micros.load(Ordering::Relaxed) as f64 / 1_000_000.0;
         let count = item.value().count.load(Ordering::Relaxed);
-        out.push_str(&format!("http_request_duration_seconds_sum{{{}}} {:.6}\n", label_key, sum_secs));
-        out.push_str(&format!("http_request_duration_seconds_count{{{}}} {}\n", label_key, count));
+        out.push_str(&format!(
+            "http_request_duration_seconds_sum{{{}}} {:.6}\n",
+            label_key, sum_secs
+        ));
+        out.push_str(&format!(
+            "http_request_duration_seconds_count{{{}}} {}\n",
+            label_key, count
+        ));
     }
 
     (
@@ -242,7 +263,13 @@ pub async fn telemetry_middleware(
         .unwrap_or("unknown")
         .to_string();
 
-    tracing::info!("Incoming request: {} {} | IP: {} | UA: {}", method, raw_path, ip, user_agent);
+    tracing::info!(
+        "Incoming request: {} {} | IP: {} | UA: {}",
+        method,
+        raw_path,
+        ip,
+        user_agent
+    );
 
     // Track active requests count by method
     HTTP_IN_FLIGHT
@@ -262,13 +289,18 @@ pub async fn telemetry_middleware(
     let status_code = res.status().as_u16().to_string();
 
     // Record request count and duration grouped by normalized route labels
-    let key = format!("method=\"{}\",path=\"{}\",status=\"{}\"", method_str, matched_path, status_code);
+    let key = format!(
+        "method=\"{}\",path=\"{}\",status=\"{}\"",
+        method_str, matched_path, status_code
+    );
     let metric = HTTP_REQUESTS.entry(key).or_insert_with(|| RequestMetric {
         count: AtomicU64::new(0),
         duration_sum_micros: AtomicU64::new(0),
     });
     metric.count.fetch_add(1, Ordering::Relaxed);
-    metric.duration_sum_micros.fetch_add(elapsed.as_micros() as u64, Ordering::Relaxed);
+    metric
+        .duration_sum_micros
+        .fetch_add(elapsed.as_micros() as u64, Ordering::Relaxed);
 
     res
 }

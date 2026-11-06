@@ -3,7 +3,7 @@ use crate::jandapress::JandaPress;
 use crate::scraper::HENTAI2READ_URL;
 use scraper::{Html, Selector};
 use serde::Serialize;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 #[derive(Serialize)]
 pub struct Hentai2readGetParity {
@@ -157,19 +157,27 @@ fn parse_search_document(document: &Html) -> Vec<Hentai2readSearchParity> {
 
     let img_srcs: Vec<String> = document
         .select(&SEL_IMG)
-        .filter_map(|el| el.value().attr("data-src").or_else(|| el.value().attr("src")).map(|s| s.to_string()))
+        .filter_map(|el| {
+            el.value()
+                .attr("data-src")
+                .or_else(|| el.value().attr("src"))
+                .map(|s| s.to_string())
+        })
         .collect();
 
     let ids: Vec<String> = document
         .select(&SEL_ID)
-        .filter_map(|el| el.value().attr("href").map(|s| {
-            let mut cleaned = s.replace("http://hentai2read.com", "")
-                               .replace("https://hentai2read.com", "");
-            if cleaned.ends_with('/') {
-                cleaned.pop();
-            }
-            cleaned
-        }))
+        .filter_map(|el| {
+            el.value().attr("href").map(|s| {
+                let mut cleaned = s
+                    .replace("http://hentai2read.com", "")
+                    .replace("https://hentai2read.com", "");
+                if cleaned.ends_with('/') {
+                    cleaned.pop();
+                }
+                cleaned
+            })
+        })
         .collect();
 
     let mut content = Vec::new();

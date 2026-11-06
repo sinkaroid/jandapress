@@ -1,7 +1,7 @@
 use axum::{
+    Json,
     http::StatusCode,
     response::{IntoResponse, Response},
-    Json,
 };
 use serde::Serialize;
 use tracing::error;
@@ -74,10 +74,13 @@ impl IntoResponse for AppError {
                     message: "Too nasty, please slow down".to_string(),
                 };
                 let mut response = (StatusCode::TOO_MANY_REQUESTS, Json(payload)).into_response();
-                
+
                 let headers = response.headers_mut();
                 headers.insert("X-RateLimit-Limit", limit.to_string().parse().unwrap());
-                headers.insert("X-RateLimit-Remaining", remaining.to_string().parse().unwrap());
+                headers.insert(
+                    "X-RateLimit-Remaining",
+                    remaining.to_string().parse().unwrap(),
+                );
                 headers.insert("X-RateLimit-Reset", reset.to_string().parse().unwrap());
                 headers.insert("Retry-After", retry_after.to_string().parse().unwrap());
 

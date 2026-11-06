@@ -4,14 +4,16 @@ use crate::scraper::{SIMPLY_HENTAI_PROXIFIED_URL, SIMPLY_HENTAI_URL};
 use axum::http::StatusCode;
 use scraper::{Html, Selector};
 use serde::Serialize;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::sync::LazyLock;
 
-static NEXT_DATA_SEL: LazyLock<Selector> =
-    LazyLock::new(|| Selector::parse("script#__NEXT_DATA__").expect("valid selector: __NEXT_DATA__"));
+static NEXT_DATA_SEL: LazyLock<Selector> = LazyLock::new(|| {
+    Selector::parse("script#__NEXT_DATA__").expect("valid selector: __NEXT_DATA__")
+});
 
 pub fn extract_next_data(html: &str) -> Option<&str> {
-    let marker = html.find("id=\"__NEXT_DATA__\"")
+    let marker = html
+        .find("id=\"__NEXT_DATA__\"")
         .or_else(|| html.find("id='__NEXT_DATA__'"))?;
     let content_start = html[marker..].find('>')? + marker + 1;
     let content_end = html[content_start..].find("</script>")? + content_start;
@@ -60,16 +62,18 @@ pub async fn scrape_get(janda: &JandaPress, book_path: &str) -> Result<Value, Ap
                     message: "script#__NEXT_DATA__ not found".to_string(),
                 })?;
 
-            serde_json::from_str::<Value>(&script_content).map_err(|err| AppError::ScraperError {
-                status: StatusCode::INTERNAL_SERVER_ERROR,
-                message: format!("Failed to parse __NEXT_DATA__ JSON: {:?}", err),
+            serde_json::from_str::<Value>(&script_content).map_err(|err| {
+                AppError::ScraperError {
+                    status: StatusCode::INTERNAL_SERVER_ERROR,
+                    message: format!("Failed to parse __NEXT_DATA__ JSON: {:?}", err),
+                }
             })?
         }
     };
 
     // Navigate to pageProps data
     let data = &json_val["props"]["pageProps"]["data"];
-    
+
     let pages = data["pages"]
         .as_array()
         .ok_or_else(|| AppError::ScraperError {

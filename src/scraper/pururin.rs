@@ -3,7 +3,7 @@ use crate::jandapress::JandaPress;
 use crate::scraper::PURURIN_URL;
 use scraper::{Html, Selector};
 use serde::Serialize;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 #[derive(Serialize)]
 pub struct PururinGetParity {
@@ -59,7 +59,12 @@ fn get_pururin_page_count(value: &str) -> u32 {
 fn get_pururin_language(value: &str) -> String {
     let parts: Vec<&str> = value.split(',').collect();
     if parts.len() >= 2 {
-        parts.iter().rev().nth(1).map(|s| s.trim().to_string()).unwrap_or_else(|| "Unknown".to_string())
+        parts
+            .iter()
+            .rev()
+            .nth(1)
+            .map(|s| s.trim().to_string())
+            .unwrap_or_else(|| "Unknown".to_string())
     } else {
         "Unknown".to_string()
     }
@@ -75,14 +80,18 @@ fn get_url(url: &str) -> String {
 
 use std::sync::LazyLock;
 
-static SEL_META_TITLE: LazyLock<Selector> =
-    LazyLock::new(|| Selector::parse("meta[property='og:title']").expect("valid selector: meta_title"));
-static SEL_TAG_LI: LazyLock<Selector> =
-    LazyLock::new(|| Selector::parse("div.content-wrapper ul.list-inline li").expect("valid selector: tag_li"));
-static SEL_META_IMAGE: LazyLock<Selector> =
-    LazyLock::new(|| Selector::parse("meta[property='og:image']").expect("valid selector: meta_image"));
-static SEL_PAGES: LazyLock<Selector> =
-    LazyLock::new(|| Selector::parse("span[itemprop='numberOfPages']").expect("valid selector: pages"));
+static SEL_META_TITLE: LazyLock<Selector> = LazyLock::new(|| {
+    Selector::parse("meta[property='og:title']").expect("valid selector: meta_title")
+});
+static SEL_TAG_LI: LazyLock<Selector> = LazyLock::new(|| {
+    Selector::parse("div.content-wrapper ul.list-inline li").expect("valid selector: tag_li")
+});
+static SEL_META_IMAGE: LazyLock<Selector> = LazyLock::new(|| {
+    Selector::parse("meta[property='og:image']").expect("valid selector: meta_image")
+});
+static SEL_PAGES: LazyLock<Selector> = LazyLock::new(|| {
+    Selector::parse("span[itemprop='numberOfPages']").expect("valid selector: pages")
+});
 static SEL_META_URL: LazyLock<Selector> =
     LazyLock::new(|| Selector::parse("meta[property='og:url']").expect("valid selector: meta_url"));
 static SEL_CARD_GALLERY: LazyLock<Selector> =
@@ -221,7 +230,7 @@ fn parse_search_document(document: &Html) -> Vec<PururinSearchParity> {
     for (index, abc) in document.select(&SEL_CARD_GALLERY).enumerate() {
         let title = abc.value().attr("title").unwrap_or("").to_string();
         let cover = covers.get(index).cloned();
-        
+
         let data_gid_str = abc.value().attr("data-gid").unwrap_or("0");
         let id = data_gid_str.parse::<i64>().unwrap_or(0);
 
@@ -242,7 +251,12 @@ fn parse_search_document(document: &Html) -> Vec<PururinSearchParity> {
 }
 
 pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32) -> Result<Value, AppError> {
-    let url = format!("{}/search?q={}&page={}", PURURIN_URL, urlencoding::encode(key), page);
+    let url = format!(
+        "{}/search?q={}&page={}",
+        PURURIN_URL,
+        urlencoding::encode(key),
+        page
+    );
     let bytes = janda.fetch_body(&url).await?;
     let html_str = String::from_utf8_lossy(&bytes);
 
@@ -275,7 +289,7 @@ pub async fn scrape_random(janda: &JandaPress) -> Result<Value, AppError> {
     let url = format!("{}/random", PURURIN_URL);
     let bytes = janda.fetch_body(&url).await?;
     let html_str = String::from_utf8_lossy(&bytes);
-    
+
     // 1. Try fast path on head slice
     let id_opt = {
         let pruned_html = prune_head_html(&html_str);

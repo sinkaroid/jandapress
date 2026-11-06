@@ -1,7 +1,7 @@
 use crate::jandapress::JandaPress;
-use axum::{extract::State, Json};
+use axum::{Json, extract::State};
 use chrono::Local;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 pub async fn root_handler(State(janda): State<JandaPress>) -> Json<Value> {
     let (rss, heap) = janda.current_process();

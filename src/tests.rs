@@ -15,17 +15,17 @@ mod tests {
     fn test_config_loaded() {
         let config = Config::from_env();
         println!("Loaded config: {:?}", config);
-        
+
         if let Some(ref key) = config.nhentai_api_key {
             assert!(!key.starts_with('\'') && !key.ends_with('\''));
             assert!(key.starts_with("nhk_"));
         }
-        
+
         if let Some(ref redis) = config.redis_url {
             assert!(!redis.starts_with('\'') && !redis.ends_with('\''));
             assert!(redis.starts_with("redis://"));
         }
-        
+
         assert_eq!(config.expire_cache, 1);
     }
 
@@ -40,7 +40,10 @@ mod tests {
                 assert!(!val["data"]["image"].as_array().unwrap().is_empty());
             }
             Err(e) => {
-                println!("NHentai scraper was blocked or returned error (expected if without API Key): {:?}", e);
+                println!(
+                    "NHentai scraper was blocked or returned error (expected if without API Key): {:?}",
+                    e
+                );
             }
         }
     }
@@ -103,7 +106,10 @@ mod tests {
                 assert!(!val["data"]["image"].as_array().unwrap().is_empty());
             }
             Err(e) => {
-                println!("Hentai2read scraper was blocked or returned error (expected under Cloudflare challenge): {:?}", e);
+                println!(
+                    "Hentai2read scraper was blocked or returned error (expected under Cloudflare challenge): {:?}",
+                    e
+                );
             }
         }
     }
@@ -119,7 +125,10 @@ mod tests {
                 assert!(!val["data"]["image"].as_array().unwrap().is_empty());
             }
             Err(e) => {
-                println!("Simply Hentai scraper was blocked or returned error (expected under Cloudflare challenge): {:?}", e);
+                println!(
+                    "Simply Hentai scraper was blocked or returned error (expected under Cloudflare challenge): {:?}",
+                    e
+                );
             }
         }
     }
@@ -152,15 +161,15 @@ mod tests {
         let _ = crate::logger::init();
         let config = Config::from_env();
         let janda = JandaPress::new(&config);
-        
+
         let test_key = "jandapress_test_key";
         let test_val = b"hello_redis".to_vec();
-        
+
         janda.cache.set(test_key, &test_val).await;
-        
+
         // Wait a tiny bit for it to resolve (since Redis set is async in set calls)
         tokio::time::sleep(tokio::time::Duration::from_millis(500)).await;
-        
+
         let retrieved = janda.cache.get(test_key).await;
         assert_eq!(retrieved, Some(test_val));
     }
@@ -183,7 +192,8 @@ mod tests {
     #[tokio::test]
     async fn test_root_handler_response() {
         let janda = get_test_janda();
-        let axum::Json(res) = crate::routes::status::root_handler(axum::extract::State(janda)).await;
+        let axum::Json(res) =
+            crate::routes::status::root_handler(axum::extract::State(janda)).await;
 
         assert_eq!(res["success"], true);
         assert_eq!(res["message"], "Hi, I'm alive!");

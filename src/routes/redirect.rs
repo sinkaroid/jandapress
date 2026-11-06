@@ -2,7 +2,7 @@ use crate::error::AppError;
 use crate::utils::is_numeric;
 use axum::{
     extract::Path,
-    http::{header::LOCATION, StatusCode},
+    http::{StatusCode, header::LOCATION},
     response::{IntoResponse, Response},
 };
 

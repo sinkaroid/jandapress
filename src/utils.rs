@@ -44,10 +44,18 @@ pub fn time_ago(sys_time: SystemTime) -> String {
 
     let minutes = elapsed / 60;
     if minutes > 0 {
-        return format!("{} minute{} ago", minutes, if minutes > 1 { "s" } else { "" });
+        return format!(
+            "{} minute{} ago",
+            minutes,
+            if minutes > 1 { "s" } else { "" }
+        );
     }
 
-    format!("{} second{} ago", elapsed, if elapsed != 1 { "s" } else { "" })
+    format!(
+        "{} second{} ago",
+        elapsed,
+        if elapsed != 1 { "s" } else { "" }
+    )
 }
 
 pub fn format_upload_date(unix_seconds: i64) -> String {

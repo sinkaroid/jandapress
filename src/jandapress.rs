@@ -3,8 +3,8 @@ use crate::config::Config;
 use crate::error::AppError;
 use reqwest::header::{AUTHORIZATION, HeaderMap, HeaderValue, USER_AGENT};
 use serde_json::Value;
-use std::sync::atomic::Ordering;
 use std::sync::Arc;
+use std::sync::atomic::Ordering;
 use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
 use tracing::info;
@@ -53,7 +53,11 @@ impl JandaPress {
                     nhentai_headers.insert(AUTHORIZATION, val);
                     auth_type = "Key";
                 }
-                let prefix = if trimmed.len() >= 6 { &trimmed[..6] } else { trimmed };
+                let prefix = if trimmed.len() >= 6 {
+                    &trimmed[..6]
+                } else {
+                    trimmed
+                };
                 format!("{}...({})", prefix, trimmed.len())
             }
             _ => "none".to_string(),
@@ -62,7 +66,6 @@ impl JandaPress {
             "[nhentai] headers ready | apiKey={} | auth={} | ua={}",
             masked_key, auth_type, config.user_agent
         );
-
 
         Self {
             client,

@@ -4,7 +4,7 @@ use crate::scraper::HENTAIFOX_URL;
 use crate::utils::remove_non_numeric;
 use scraper::{Html, Selector};
 use serde::Serialize;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 #[derive(Serialize)]
 pub struct HentaifoxGetParity {
@@ -98,13 +98,22 @@ fn parse_gallery_document(
         .select(&SEL_TAG_BTN)
         .map(|el| {
             let text = el.text().collect::<String>();
-            text.chars().filter(|c| !c.is_ascii_digit()).collect::<String>().trim().to_string()
+            text.chars()
+                .filter(|c| !c.is_ascii_digit())
+                .collect::<String>()
+                .trim()
+                .to_string()
         })
         .collect();
 
     let img_srcs: Vec<String> = document
         .select(&SEL_IMG)
-        .filter_map(|el| el.value().attr("data-src").or_else(|| el.value().attr("src")).map(|s| s.to_string()))
+        .filter_map(|el| {
+            el.value()
+                .attr("data-src")
+                .or_else(|| el.value().attr("src"))
+                .map(|s| s.to_string())
+        })
         .collect();
 
     if img_srcs.is_empty() {
@@ -141,7 +150,9 @@ fn parse_gallery_document(
         .next()
         .map(|el| el.text().collect::<String>())
         .unwrap_or_default();
-    let page_count = remove_non_numeric(&page_count_str).parse::<u32>().unwrap_or(0);
+    let page_count = remove_non_numeric(&page_count_str)
+        .parse::<u32>()
+        .unwrap_or(0);
 
     let title = document
         .select(&SEL_INFO_H1)
@@ -161,13 +172,21 @@ fn parse_search_document(document: &Html) -> Vec<HentaifoxSearchParity> {
     let links: Vec<String> = document
         .select(&SEL_G_TITLE)
         .filter_map(|el| el.select(&SEL_A).next())
-        .filter_map(|a| a.value().attr("href").and_then(|h| h.split('/').nth(2).map(|s| s.to_string())))
+        .filter_map(|a| {
+            a.value()
+                .attr("href")
+                .and_then(|h| h.split('/').nth(2).map(|s| s.to_string()))
+        })
         .collect();
 
     let categories: Vec<String> = document
         .select(&SEL_G_CAT)
         .filter_map(|el| el.select(&SEL_A).next())
-        .filter_map(|a| a.value().attr("href").and_then(|h| h.split('/').nth(2).map(|s| s.to_string())))
+        .filter_map(|a| {
+            a.value()
+                .attr("href")
+                .and_then(|h| h.split('/').nth(2).map(|s| s.to_string()))
+        })
         .collect();
 
     let mut content = Vec::new();
@@ -243,8 +262,19 @@ pub async fn scrape_get(janda: &JandaPress, book_id: &str) -> Result<Value, AppE
     }))
 }
 
-pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32, sort: &str) -> Result<Value, AppError> {
-    let url = format!("{}/search/?q={}&sort={}&page={}", HENTAIFOX_URL, urlencoding::encode(key), urlencoding::encode(sort), page);
+pub async fn scrape_search(
+    janda: &JandaPress,
+    key: &str,
+    page: u32,
+    sort: &str,
+) -> Result<Value, AppError> {
+    let url = format!(
+        "{}/search/?q={}&sort={}&page={}",
+        HENTAIFOX_URL,
+        urlencoding::encode(key),
+        urlencoding::encode(sort),
+        page
+    );
     let bytes = janda.fetch_body(&url).await?;
     let html_str = String::from_utf8_lossy(&bytes);
 

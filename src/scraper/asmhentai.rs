@@ -4,7 +4,7 @@ use crate::scraper::ASMHENTAI_URL;
 use crate::utils::remove_non_numeric;
 use scraper::{Html, Selector};
 use serde::Serialize;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 #[derive(Serialize)]
 pub struct AsmhentaiGetParity {
@@ -75,14 +75,16 @@ fn parse_get_document(document: &Html, fallback_book_id: &str) -> Option<Asmhent
         .next()
         .and_then(|el| el.value().attr("href"))
         .unwrap_or("");
-    
+
     let book = actual_id_path
         .replace("/gallery/", "")
         .split('/')
         .next()
         .unwrap_or(fallback_book_id)
         .to_string();
-    let actual_book = book.parse::<i64>().unwrap_or_else(|_| fallback_book_id.parse::<i64>().unwrap_or(0));
+    let actual_book = book
+        .parse::<i64>()
+        .unwrap_or_else(|_| fallback_book_id.parse::<i64>().unwrap_or(0));
 
     let title = document
         .select(&SEL_H1)
@@ -112,9 +114,9 @@ fn parse_get_document(document: &Html, fallback_book_id: &str) -> Option<Asmhent
                 .unwrap_or_default()
         })
         .unwrap_or_default();
-    
+
     let actual_total = remove_non_numeric(&total_if_broken);
-    
+
     let total_val = document
         .select(&SEL_T_PAGES)
         .next()
@@ -171,7 +173,7 @@ fn parse_search_document(document: &Html) -> Vec<AsmhentaiSearchParity> {
             .next()
             .and_then(|img| img.value().attr("alt"))
             .unwrap_or("");
-        
+
         let title = title_raw.split('\n').next().unwrap_or("").to_string();
 
         let href_raw = el
@@ -179,7 +181,7 @@ fn parse_search_document(document: &Html) -> Vec<AsmhentaiSearchParity> {
             .next()
             .and_then(|a| a.value().attr("href"))
             .unwrap_or("");
-        
+
         let id = remove_non_numeric(href_raw).parse::<i64>().unwrap_or(0);
 
         if !title.is_empty() && id > 0 {
@@ -230,7 +232,12 @@ pub async fn scrape_get(janda: &JandaPress, book_id: &str) -> Result<Value, AppE
 }
 
 pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32) -> Result<Value, AppError> {
-    let url = format!("{}/search/?q={}&page={}", ASMHENTAI_URL, urlencoding::encode(key), page);
+    let url = format!(
+        "{}/search/?q={}&page={}",
+        ASMHENTAI_URL,
+        urlencoding::encode(key),
+        page
+    );
     let bytes = janda.fetch_body(&url).await?;
     let html_str = String::from_utf8_lossy(&bytes);
 
@@ -273,7 +280,7 @@ pub async fn scrape_random(janda: &JandaPress) -> Result<Value, AppError> {
                 .next()
                 .and_then(|el| el.value().attr("href"))
                 .unwrap_or("");
-            
+
             actual_id_path
                 .replace("/gallery/", "")
                 .split('/')

@@ -38,7 +38,10 @@ impl CacheManager {
         let ttl = Duration::from_secs(expire_hours * 3600);
 
         let backend = if let Some(url) = redis_url {
-            info!("Initializing Redis cache backend with url: {}", mask_redis_url(url));
+            info!(
+                "Initializing Redis cache backend with url: {}",
+                mask_redis_url(url)
+            );
             let cfg = RedisConfig {
                 url: Some(url.to_string()),
                 connection: None,
@@ -47,7 +50,10 @@ impl CacheManager {
             match cfg.create_pool(Some(Runtime::Tokio1)) {
                 Ok(pool) => CacheBackend::Redis(pool),
                 Err(err) => {
-                    warn!("Failed to create Redis pool: {:?}. Falling back to In-Memory cache.", err);
+                    warn!(
+                        "Failed to create Redis pool: {:?}. Falling back to In-Memory cache.",
+                        err
+                    );
                     Self::create_in_memory_backend(ttl)
                 }
             }
@@ -72,7 +78,10 @@ impl CacheManager {
         match &self.backend {
             CacheBackend::InMemory(_) => Ok(()),
             CacheBackend::Redis(pool) => {
-                let mut conn = pool.get().await.map_err(|e| format!("Failed to get Redis connection: {:?}", e))?;
+                let mut conn = pool
+                    .get()
+                    .await
+                    .map_err(|e| format!("Failed to get Redis connection: {:?}", e))?;
                 let pong: String = redis::cmd("PING")
                     .query_async(&mut conn)
                     .await
@@ -98,7 +107,10 @@ impl CacheManager {
                     }
                 };
 
-                let cmd = redis::cmd("GET").arg(key).query_async::<Option<Vec<u8>>>(&mut conn).await;
+                let cmd = redis::cmd("GET")
+                    .arg(key)
+                    .query_async::<Option<Vec<u8>>>(&mut conn)
+                    .await;
                 match cmd {
                     Ok(val) => val,
                     Err(err) => {

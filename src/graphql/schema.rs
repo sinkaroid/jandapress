@@ -276,7 +276,11 @@ pub struct NhentaiQueries;
 
 #[Object]
 impl NhentaiQueries {
-    async fn get(&self, ctx: &Context<'_>, book: i32) -> Result<NHentaiGetResult, async_graphql::Error> {
+    async fn get(
+        &self,
+        ctx: &Context<'_>,
+        book: i32,
+    ) -> Result<NHentaiGetResult, async_graphql::Error> {
         let janda = ctx.data::<JandaPress>()?;
         let val = nhentai::scrape_get(janda, &book.to_string()).await?;
         let res = serde_json::from_value(val)?;
@@ -303,7 +307,11 @@ impl NhentaiQueries {
         Ok(res)
     }
 
-    async fn related(&self, ctx: &Context<'_>, book: i32) -> Result<NHentaiRelatedResult, async_graphql::Error> {
+    async fn related(
+        &self,
+        ctx: &Context<'_>,
+        book: i32,
+    ) -> Result<NHentaiRelatedResult, async_graphql::Error> {
         let janda = ctx.data::<JandaPress>()?;
         let val = nhentai::scrape_related(janda, &book.to_string()).await?;
         let res = serde_json::from_value(val)?;
@@ -315,7 +323,11 @@ pub struct PururinQueries;
 
 #[Object]
 impl PururinQueries {
-    async fn get(&self, ctx: &Context<'_>, book: i32) -> Result<PururinGetResult, async_graphql::Error> {
+    async fn get(
+        &self,
+        ctx: &Context<'_>,
+        book: i32,
+    ) -> Result<PururinGetResult, async_graphql::Error> {
         let janda = ctx.data::<JandaPress>()?;
         let val = pururin::scrape_get(janda, &book.to_string()).await?;
         let res = serde_json::from_value(val)?;
@@ -346,7 +358,11 @@ pub struct HentaifoxQueries;
 
 #[Object]
 impl HentaifoxQueries {
-    async fn get(&self, ctx: &Context<'_>, book: i32) -> Result<HentaifoxGetResult, async_graphql::Error> {
+    async fn get(
+        &self,
+        ctx: &Context<'_>,
+        book: i32,
+    ) -> Result<HentaifoxGetResult, async_graphql::Error> {
         let janda = ctx.data::<JandaPress>()?;
         let val = hentaifox::scrape_get(janda, &book.to_string()).await?;
         let res = serde_json::from_value(val)?;
@@ -378,7 +394,11 @@ pub struct AsmhentaiQueries;
 
 #[Object]
 impl AsmhentaiQueries {
-    async fn get(&self, ctx: &Context<'_>, book: i32) -> Result<AsmhentaiGetResult, async_graphql::Error> {
+    async fn get(
+        &self,
+        ctx: &Context<'_>,
+        book: i32,
+    ) -> Result<AsmhentaiGetResult, async_graphql::Error> {
         let janda = ctx.data::<JandaPress>()?;
         let val = asmhentai::scrape_get(janda, &book.to_string()).await?;
         let res = serde_json::from_value(val)?;
@@ -409,7 +429,11 @@ pub struct Hentai2readQueries;
 
 #[Object]
 impl Hentai2readQueries {
-    async fn get(&self, ctx: &Context<'_>, book: String) -> Result<Hentai2readGetResult, async_graphql::Error> {
+    async fn get(
+        &self,
+        ctx: &Context<'_>,
+        book: String,
+    ) -> Result<Hentai2readGetResult, async_graphql::Error> {
         let janda = ctx.data::<JandaPress>()?;
         let val = hentai2read::scrape_get(janda, &book).await?;
         let res = serde_json::from_value(val)?;
@@ -433,7 +457,11 @@ pub struct SimplyHentaiQueries;
 
 #[Object]
 impl SimplyHentaiQueries {
-    async fn get(&self, ctx: &Context<'_>, book: String) -> Result<SimplyHentaiGetResult, async_graphql::Error> {
+    async fn get(
+        &self,
+        ctx: &Context<'_>,
+        book: String,
+    ) -> Result<SimplyHentaiGetResult, async_graphql::Error> {
         let janda = ctx.data::<JandaPress>()?;
         let val = simply_hentai::scrape_get(janda, &book).await?;
         let res = serde_json::from_value(val)?;
@@ -445,7 +473,11 @@ pub struct ThreehentaiQueries;
 
 #[Object]
 impl ThreehentaiQueries {
-    async fn get(&self, ctx: &Context<'_>, book: i32) -> Result<ThreehentaiGetResult, async_graphql::Error> {
+    async fn get(
+        &self,
+        ctx: &Context<'_>,
+        book: i32,
+    ) -> Result<ThreehentaiGetResult, async_graphql::Error> {
         let janda = ctx.data::<JandaPress>()?;
         let val = threehentai::scrape_get(janda, &book.to_string()).await?;
         let res = serde_json::from_value(val)?;
@@ -465,7 +497,10 @@ impl ThreehentaiQueries {
         Ok(res)
     }
 
-    async fn random(&self, ctx: &Context<'_>) -> Result<ThreehentaiGetResult, async_graphql::Error> {
+    async fn random(
+        &self,
+        ctx: &Context<'_>,
+    ) -> Result<ThreehentaiGetResult, async_graphql::Error> {
         let janda = ctx.data::<JandaPress>()?;
         let val = threehentai::scrape_random(janda).await?;
         let res = serde_json::from_value(val)?;
@@ -510,4 +545,5 @@ impl Query {
     }
 }
 
-pub type JandaSchema = Schema<Query, async_graphql::EmptyMutation, async_graphql::EmptySubscription>;
+pub type JandaSchema =
+    Schema<Query, async_graphql::EmptyMutation, async_graphql::EmptySubscription>;

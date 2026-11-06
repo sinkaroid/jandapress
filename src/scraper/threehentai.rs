@@ -4,7 +4,7 @@ use crate::scraper::THREEHENTAI_URL;
 use crate::utils::remove_non_numeric;
 use scraper::{Html, Selector};
 use serde::Serialize;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 #[derive(Serialize)]
 pub struct ThreehentaiGetParity {
@@ -26,16 +26,19 @@ use std::sync::LazyLock;
 
 static SEL_CANONICAL: LazyLock<Selector> =
     LazyLock::new(|| Selector::parse("link[rel='canonical']").expect("valid selector: canonical"));
-static SEL_COVER: LazyLock<Selector> =
-    LazyLock::new(|| Selector::parse(".main-cover, a.main-cover, #main-cover a, div.main-cover a").expect("valid selector: cover"));
+static SEL_COVER: LazyLock<Selector> = LazyLock::new(|| {
+    Selector::parse(".main-cover, a.main-cover, #main-cover a, div.main-cover a")
+        .expect("valid selector: cover")
+});
 static SEL_D_HREF: LazyLock<Selector> =
     LazyLock::new(|| Selector::parse("a[href*='/d/']").expect("valid selector: d_href"));
 static SEL_H1: LazyLock<Selector> =
     LazyLock::new(|| Selector::parse("h1").expect("valid selector: h1"));
 static SEL_FILTER_ELEM: LazyLock<Selector> =
     LazyLock::new(|| Selector::parse("span.filter-elem").expect("valid selector: filter_elem"));
-static SEL_SINGLE_THUMB: LazyLock<Selector> =
-    LazyLock::new(|| Selector::parse("div.single-thumb-col img").expect("valid selector: single_thumb"));
+static SEL_SINGLE_THUMB: LazyLock<Selector> = LazyLock::new(|| {
+    Selector::parse("div.single-thumb-col img").expect("valid selector: single_thumb")
+});
 static SEL_TIME: LazyLock<Selector> =
     LazyLock::new(|| Selector::parse("time").expect("valid selector: time"));
 static SEL_DOUJIN: LazyLock<Selector> =
@@ -142,7 +145,12 @@ fn parse_gallery_document(document: &Html, book_id: &str) -> Result<Value, AppEr
 
     let image_srcs: Vec<String> = document
         .select(&SEL_SINGLE_THUMB)
-        .filter_map(|el| el.value().attr("data-src").or_else(|| el.value().attr("src")).map(|s| s.to_string()))
+        .filter_map(|el| {
+            el.value()
+                .attr("data-src")
+                .or_else(|| el.value().attr("src"))
+                .map(|s| s.to_string())
+        })
         .collect();
 
     if image_srcs.is_empty() {
@@ -172,7 +180,11 @@ fn parse_gallery_document(document: &Html, book_id: &str) -> Result<Value, AppEr
         upload_date,
     };
 
-    let final_id_str = if id > 0 { id.to_string() } else { book_id.to_string() };
+    let final_id_str = if id > 0 {
+        id.to_string()
+    } else {
+        book_id.to_string()
+    };
 
     Ok(json!({
         "success": true,
@@ -231,8 +243,19 @@ fn parse_search_document(document: &Html) -> Vec<ThreehentaiSearchParity> {
     content
 }
 
-pub async fn scrape_search(janda: &JandaPress, key: &str, page: u32, sort: &str) -> Result<Value, AppError> {
-    let url = format!("{}/search?q={}&page={}&sort={}", THREEHENTAI_URL, urlencoding::encode(key), page, urlencoding::encode(sort));
+pub async fn scrape_search(
+    janda: &JandaPress,
+    key: &str,
+    page: u32,
+    sort: &str,
+) -> Result<Value, AppError> {
+    let url = format!(
+        "{}/search?q={}&page={}&sort={}",
+        THREEHENTAI_URL,
+        urlencoding::encode(key),
+        page,
+        urlencoding::encode(sort)
+    );
     let bytes = janda.fetch_body(&url).await?;
     let html_str = String::from_utf8_lossy(&bytes);
 
@@ -277,11 +300,9 @@ pub async fn scrape_random(janda: &JandaPress) -> Result<Value, AppError> {
             Some(b) => Ok(b),
             None => {
                 let full_doc = Html::parse_document(&html_str);
-                extract_gallery_id_from_document(&full_doc).ok_or_else(|| {
-                    AppError::ScraperError {
-                        status: axum::http::StatusCode::INTERNAL_SERVER_ERROR,
-                        message: "Failed to resolve random gallery id".to_string(),
-                    }
+                extract_gallery_id_from_document(&full_doc).ok_or_else(|| AppError::ScraperError {
+                    status: axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                    message: "Failed to resolve random gallery id".to_string(),
                 })
             }
         }
