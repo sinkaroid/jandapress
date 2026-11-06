@@ -60,11 +60,11 @@ impl RateLimitState {
         let now_sys = SystemTime::now();
 
         // Check if there is an existing counter that hasn't expired
-        if let Some(mut r) = self.buckets.get_mut(&key) {
-            if r.reset_at > now_instant {
-                r.count += 1;
-                return r.clone();
-            }
+        if let Some(mut r) = self.buckets.get_mut(&key)
+            && r.reset_at > now_instant
+        {
+            r.count += 1;
+            return r.clone();
         }
 
         // Bounded capacity protection

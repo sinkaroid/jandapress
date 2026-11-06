@@ -12,12 +12,11 @@ pub struct Config {
 
 fn clean_env_val(val: String) -> String {
     let trimmed = val.trim();
-    if (trimmed.starts_with('\'') && trimmed.ends_with('\''))
-        || (trimmed.starts_with('"') && trimmed.ends_with('"'))
+    if ((trimmed.starts_with('\'') && trimmed.ends_with('\''))
+        || (trimmed.starts_with('"') && trimmed.ends_with('"')))
+        && trimmed.len() >= 2
     {
-        if trimmed.len() >= 2 {
-            return trimmed[1..trimmed.len() - 1].to_string();
-        }
+        return trimmed[1..trimmed.len() - 1].to_string();
     }
     trimmed.to_string()
 }

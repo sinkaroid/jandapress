@@ -39,9 +39,11 @@ impl CacheManager {
 
         let backend = if let Some(url) = redis_url {
             info!("Initializing Redis cache backend with url: {}", mask_redis_url(url));
-            let mut cfg = RedisConfig::default();
-            cfg.url = Some(url.to_string());
-            cfg.connection = None;
+            let cfg = RedisConfig {
+                url: Some(url.to_string()),
+                connection: None,
+                ..Default::default()
+            };
             match cfg.create_pool(Some(Runtime::Tokio1)) {
                 Ok(pool) => CacheBackend::Redis(pool),
                 Err(err) => {

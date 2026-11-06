@@ -62,6 +62,12 @@ pub fn init_metrics() {
                 METRICS_LAG.store(lag_micros, Ordering::Relaxed);
             });
 
+            // 1b. Linux glibc heap trimming: release unused pages back to the OS
+            #[cfg(all(target_os = "linux", target_env = "gnu"))]
+            unsafe {
+                libc::malloc_trim(0);
+            }
+
             // Refresh process & system memory stats (only current process)
             sys.refresh_processes(sysinfo::ProcessesToUpdate::Some(&[pid]), false);
             sys.refresh_memory();

@@ -148,6 +148,8 @@ async fn main() {
             EmptySubscription,
         )
         .data(janda.clone())
+        .limit_depth(5)
+        .limit_complexity(50)
         .finish();
 
         app = app.route(
@@ -168,5 +170,33 @@ async fn main() {
     info!("jandapress is running on port {}", config.port);
 
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
-    axum::serve(listener, app).await.unwrap();
+    axum::serve(listener, app)
+        .with_graceful_shutdown(shutdown_signal())
+        .await
+        .unwrap();
+}
+
+async fn shutdown_signal() {
+    let ctrl_c = async {
+        tokio::signal::ctrl_c()
+            .await
+            .expect("failed to install Ctrl+C handler");
+    };
+
+    #[cfg(unix)]
+    let terminate = async {
+        if let Ok(mut sig) = tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate()) {
+            sig.recv().await;
+        } else {
+            std::future::pending::<()>().await;
+        }
+    };
+
+    #[cfg(not(unix))]
+    let terminate = std::future::pending::<()>();
+
+    tokio::select! {
+        _ = ctrl_c => tracing::info!("Received SIGINT (Ctrl+C), draining active connections..."),
+        _ = terminate => tracing::info!("Received SIGTERM, draining active connections..."),
+    }
 }
